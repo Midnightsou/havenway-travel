@@ -1,0 +1,8 @@
+/* Base entry styles - global styles are in ./styles/global.css */
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}

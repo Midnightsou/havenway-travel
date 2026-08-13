@@ -1,0 +1,517 @@
+.trip-summary {
+  padding: 64px 0 80px;
+
+  background: #f7f8fa;
+
+  border-top: 1px solid #e0e0e0;
+}
+
+.summary-heading {
+  margin-bottom: 32px;
+}
+
+.summary-heading h2 {
+  margin-bottom: 8px;
+
+  font-size: 30px;
+}
+
+.summary-heading p {
+  margin: 0;
+
+  color: var(--color-text-secondary);
+}
+
+
+/* =========================
+   LAYOUT
+======================= */
+
+.summary-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    360px;
+
+  gap: 28px;
+
+  align-items: start;
+}
+
+
+/* =========================
+   SUMMARY DETAILS
+======================= */
+
+.summary-details {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+
+.summary-card {
+  padding: 26px;
+
+  background: #ffffff;
+
+  border: 1px solid #dedede;
+  border-radius: 12px;
+}
+
+
+/* =========================
+   CARD HEADER
+======================= */
+
+.summary-card-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-bottom: 24px;
+}
+
+.summary-card-heading > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.summary-card-heading span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+.summary-card-heading strong {
+  font-size: 17px;
+}
+
+
+/* =========================
+   CAR
+======================= */
+
+.summary-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+}
+
+.summary-icon.flight {
+  background: #eaf1fa;
+
+  color: var(--color-primary);
+}
+
+.summary-icon.hotel {
+  background: #f6efe5;
+
+  color: #8a5a21;
+}
+
+.summary-icon.car {
+  background: #e7f2eb;
+
+  color: #2d6a3f;
+}
+
+.selected-car-info {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+}
+
+.selected-car-info > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.selected-car-info span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+.car-dates {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 16px;
+
+  color: #444;
+
+  font-size: 14px;
+}
+
+.car-dates div {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.car-dates > span {
+  color: var(--color-text-secondary);
+}
+
+.no-car {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 18px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   FLIGHT
+======================= */
+
+.summary-flight {
+  display: grid;
+
+  grid-template-columns: 1fr 60px 1fr;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+}
+
+.summary-flight > div:not(.summary-flight-line) {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.summary-flight > div:last-child {
+  text-align: right;
+}
+
+.summary-flight strong {
+  font-size: 18px;
+}
+
+.summary-flight span {
+  color: #444;
+
+  font-size: 14px;
+}
+
+.summary-flight small {
+  color: var(--color-text-secondary);
+
+  font-size: 12px;
+}
+
+
+.summary-flight-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  margin: auto;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: var(--color-primary);
+}
+
+
+.return-label {
+  margin: 20px 0 10px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+
+/* =========================
+   HOTEL
+======================= */
+
+.selected-room-info {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+}
+
+.selected-room-info > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.selected-room-info span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+.hotel-dates {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 16px;
+
+  color: #444;
+
+  font-size: 14px;
+}
+
+.hotel-dates div {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.hotel-dates > span {
+  color: var(--color-text-secondary);
+}
+
+
+.no-room {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 18px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   TOTAL INSIDE CARD
+======================= */
+
+.summary-card-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid #e0e0e0;
+}
+
+.summary-card-total span {
+  color: var(--color-text-secondary);
+
+  font-size: 14px;
+}
+
+.summary-card-total strong {
+  font-size: 19px;
+}
+
+
+/* =========================
+   PRICE CARD
+======================= */
+
+.price-card {
+  position: sticky;
+
+  top: 20px;
+
+  padding: 28px;
+
+  background: #ffffff;
+
+  border: 1px solid #d7d7d7;
+  border-radius: 12px;
+
+  box-shadow:
+    0 4px 16px
+    rgba(0, 0, 0, 0.08);
+}
+
+
+.price-card-top {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  margin-bottom: 24px;
+}
+
+.price-card-top span {
+  color: var(--color-text-secondary);
+
+  font-size: 14px;
+}
+
+.price-card-top strong {
+  font-size: 34px;
+
+  letter-spacing: -1px;
+}
+
+.price-card-top small {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   BREAKDOWN
+======================= */
+
+.price-breakdown {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+.price-breakdown div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.price-breakdown span {
+  color: #555;
+
+  font-size: 14px;
+}
+
+.price-breakdown strong {
+  font-size: 14px;
+}
+
+
+/* =========================
+   FINAL TOTAL
+======================= */
+
+.price-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 22px;
+}
+
+.price-total span {
+  font-weight: 600;
+}
+
+.price-total strong {
+  font-size: 24px;
+}
+
+
+/* =========================
+   CONTINUE
+======================= */
+
+.continue-button {
+  width: 100%;
+
+  padding: 15px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: var(--color-primary);
+
+  color: #1f1f1f;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.continue-button:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+}
+
+.continue-button:disabled {
+  background: #b7b7b7;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   SECURITY
+======================= */
+
+.secure-booking {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  margin-top: 16px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 12px;
+}

@@ -1,0 +1,274 @@
+.car-rental {
+  padding: 56px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+
+/* SECTION HEADER */
+
+.car-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 28px;
+}
+
+.car-section-heading h2 {
+  margin-bottom: 8px;
+
+  font-size: 28px;
+}
+
+.car-section-heading p {
+  margin: 0;
+
+  color: var(--color-text-secondary);
+}
+
+.car-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+
+  background: #f3f5f8;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* CAR LIST */
+
+.car-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.car-card {
+  padding: 28px;
+
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.car-card-top {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 24px;
+}
+
+.car-type {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.car-card h3 {
+  margin: 0;
+
+  font-size: 20px;
+}
+
+.car-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.car-price span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.car-price strong {
+  font-size: 24px;
+}
+
+.car-price small {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+
+/* FEATURES */
+
+.car-features {
+  display: flex;
+  gap: 24px;
+
+  padding: 16px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+}
+
+.car-features div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #444;
+  font-size: 14px;
+}
+
+.car-features svg {
+  color: var(--color-primary);
+}
+
+
+/* BENEFITS */
+
+.car-benefits {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.car-benefit {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 12px;
+
+  background: #f0f7f1;
+
+  border-radius: 6px;
+
+  color: #2d6a3f;
+  font-size: 13px;
+}
+
+.car-benefit svg {
+  flex-shrink: 0;
+}
+
+
+/* TOTAL */
+
+.car-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid #e2e2e2;
+}
+
+.car-total span {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.car-total strong {
+  font-size: 22px;
+}
+
+
+/* SELECT BUTTON */
+
+.select-car-button {
+  width: 100%;
+
+  margin-top: 18px;
+  padding: 12px 20px;
+
+  background: var(--color-primary);
+  color: #1f1f1f;
+
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
+}
+
+.select-car-button:hover {
+  background: var(--color-primary-dark, #0d5c8a);
+}
+
+.select-car-button.car-selected {
+  background: #f0f7f1;
+  color: #2d6a3f;
+
+  border-color: #2d6a3f;
+}
+
+.car-card.selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+
+/* SELECTED CAR SUMMARY */
+
+.selected-car-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  margin-top: 24px;
+  padding: 20px 24px;
+
+  background: #f0f7f1;
+
+  border: 1px solid #cde8d3;
+  border-radius: 10px;
+}
+
+.selected-car-summary > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.selected-car-summary span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.selected-car-summary strong {
+  font-size: 17px;
+}
+
+.selected-car-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.selected-car-price strong {
+  font-size: 22px;
+  color: #2d6a3f;
+}

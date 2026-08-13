@@ -1,0 +1,114 @@
+.header {
+  background: #ffffff;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.header-container {
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  gap: 22px;
+}
+
+.header-right {
+  gap: 16px;
+}
+
+.brand {
+  border: none;
+  background: transparent;
+
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  color: #1f1f1f;
+
+  cursor: pointer;
+}
+
+.brand:hover {
+  color: var(--color-primary);
+}
+
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.nav-link {
+  border: none;
+  background: transparent;
+  padding: 8px 4px;
+
+  font-size: 15px;
+  color: #3d3d3d;
+
+  transition: color 0.2s ease;
+
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: var(--color-primary);
+}
+
+.nav-link.active {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+}
+
+.icon-button:hover {
+  background: #f2f2f2;
+}
+
+.header-action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  background: transparent;
+  border: none;
+
+  color: #333333;
+  font-size: 14px;
+}
+
+.sign-in-button {
+  border: none;
+  background: transparent;
+
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.menu-button {
+  display: none;
+}

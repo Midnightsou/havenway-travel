@@ -1,0 +1,118 @@
+.traveller-selector {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 14px 16px;
+
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+
+.traveller-selector-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.traveller-icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #f1f3f5;
+
+  color: var(--color-primary);
+}
+
+
+.traveller-label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: var(--color-text-muted);
+
+  font-size: 12px;
+}
+
+
+.traveller-selector-info strong {
+  display: block;
+
+  font-size: 15px;
+}
+
+
+.traveller-controls {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.traveller-button {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--color-primary);
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: var(--color-primary);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.traveller-button:hover:not(:disabled) {
+  background: var(--color-primary);
+
+  color: #ffffff;
+}
+
+
+.traveller-button:disabled {
+  border-color: #d6d6d6;
+
+  color: var(--color-text-muted);
+
+  cursor: not-allowed;
+}
+
+
+.traveller-count {
+  min-width: 20px;
+
+  text-align: center;
+
+  font-size: 16px;
+  font-weight: 700;
+}

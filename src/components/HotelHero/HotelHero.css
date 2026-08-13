@@ -1,0 +1,306 @@
+.hotel-hero {
+  padding: 24px 0 48px;
+  background: #ffffff;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  margin-bottom: 20px;
+  padding: 6px 0;
+
+  border: none;
+  background: transparent;
+
+  color: #333;
+  font-size: 14px;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   IMAGE GALLERY
+======================= */
+
+.hotel-gallery {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  gap: 8px;
+
+  height: 500px;
+
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.gallery-main {
+  height: 100%;
+}
+
+.gallery-main img,
+.gallery-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.gallery-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+
+  gap: 8px;
+}
+
+.gallery-image {
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-main img,
+.gallery-image img {
+  transition: transform 0.3s ease;
+}
+
+.gallery-main:hover img,
+.gallery-image:hover img {
+  transform: scale(1.04);
+}
+
+
+/* =========================
+   GALLERY ACTIONS
+======================= */
+
+.gallery-actions {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  display: flex;
+  gap: 10px;
+}
+
+.gallery-action {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+
+  border: none;
+  border-radius: 50%;
+
+  color: #222;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+}
+
+.gallery-action:hover {
+  transform: scale(1.05);
+}
+
+
+/* =========================
+   SEE ALL PHOTOS
+======================= */
+
+.last-image {
+  position: relative;
+}
+
+.last-image::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.see-more-photos {
+  position: absolute;
+
+  left: 50%;
+  bottom: 16px;
+
+  transform: translateX(-50%);
+
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+
+  background: #ffffff;
+
+  border: none;
+  border-radius: 6px;
+
+  color: #222;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+/* Mobile-only "See all photos" button */
+.see-more-photos-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .see-more-photos-mobile {
+    position: absolute;
+
+    left: 50%;
+    bottom: 14px;
+
+    transform: translateX(-50%);
+
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 16px;
+
+    background: #ffffff;
+
+    border: none;
+    border-radius: 6px;
+
+    color: #222;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+
+/* =========================
+   HOTEL INFORMATION
+======================= */
+
+.hotel-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 48px;
+
+  padding-top: 32px;
+}
+
+.hotel-main-info {
+  max-width: 720px;
+}
+
+.hotel-main-info h1 {
+  margin-bottom: 18px;
+
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 800;
+  line-height: 1.2;
+
+  letter-spacing: -0.7px;
+}
+
+.hotel-rating {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+}
+
+.rating-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 8px;
+
+  background: #1f4f8f;
+  color: #1f1f1f;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.rating-details {
+  display: flex;
+  flex-direction: column;
+
+  font-size: 14px;
+}
+
+.rating-details span {
+  color: var(--color-text-secondary);
+}
+
+.hotel-location {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 18px;
+
+  color: #444;
+  font-size: 15px;
+}
+
+.hotel-description {
+  margin: 0;
+
+  color: #4e4e4e;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.hotel-highlights {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  min-width: 240px;
+
+  padding: 22px;
+
+  background: #f7f7f7;
+
+  border-radius: 10px;
+}
+
+.highlight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 14px;
+}

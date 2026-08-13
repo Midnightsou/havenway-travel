@@ -1,0 +1,77 @@
+.travel-tabs {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  overflow-x: auto;
+
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+
+  border-bottom: 1px solid #dddddd;
+
+  background: #ffffff;
+}
+
+.travel-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+
+.travel-tab {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex: 0 0 auto;
+
+  white-space: nowrap;
+
+  padding: 16px 18px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #555555;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+.travel-tab::after {
+  content: "";
+
+  position: absolute;
+
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  height: 3px;
+
+  background: transparent;
+}
+
+
+.travel-tab:hover {
+  color: var(--color-primary);
+}
+
+
+.travel-tab.active {
+  color: var(--color-primary);
+}
+
+
+.travel-tab.active::after {
+  background: var(--color-primary);
+}

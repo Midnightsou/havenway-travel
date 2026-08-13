@@ -1,0 +1,180 @@
+.activities {
+  padding: 56px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+
+/* SECTION HEADER */
+
+.activity-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 28px;
+}
+
+.activity-heading h2 {
+  margin-bottom: 8px;
+
+  font-size: 28px;
+}
+
+.activity-heading p {
+  margin: 0;
+
+  color: var(--color-text-secondary);
+}
+
+.activity-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 14px;
+
+  background: #f3f5f8;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* ACTIVITY LIST */
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.activity-card {
+  padding: 28px;
+
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.activity-card-top {
+  display: flex;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  margin-bottom: 20px;
+}
+
+.activity-type {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.activity-card h3 {
+  margin: 0 0 8px;
+
+  font-size: 20px;
+}
+
+.activity-card-top p {
+  margin: 0;
+
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.activity-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+
+  flex-shrink: 0;
+}
+
+.activity-price span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.activity-price strong {
+  font-size: 24px;
+}
+
+.activity-price small {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+
+/* META */
+
+.activity-meta {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 20px;
+
+  padding: 14px 16px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+}
+
+.activity-meta div {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  color: #444;
+  font-size: 14px;
+}
+
+.activity-meta svg {
+  color: var(--color-primary);
+}
+
+
+/* INCLUDES */
+
+.activity-includes {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 16px;
+}
+
+.activity-include {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 7px 11px;
+
+  background: #f0f7f1;
+
+  border-radius: 6px;
+
+  color: #2d6a3f;
+  font-size: 13px;
+}
+
+.activity-include svg {
+  flex-shrink: 0;
+}
