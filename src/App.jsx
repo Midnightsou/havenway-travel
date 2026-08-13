@@ -17,7 +17,7 @@ import "./styles/responsive.css";
 function App() {
 
   const [activeTab, setActiveTab] =
-    useState("Cars");
+    useState("Stays");
 
   const [travellers, setTravellers] =
     useState(1);
