@@ -13,12 +13,7 @@ function MobileNav({
   onNavigate,
 }) {
   const navItems = [
-    {
-      label: "Search",
-      icon: Search,
-      tab: null,
-      target: null,
-    },
+  
     {
       label: "Flight",
       icon: Plane,

@@ -143,7 +143,11 @@ function HotelRooms({
                         isSelected ? "room-selected" : ""
                       }`}
                       onClick={() =>
-                        onSelectRoom(room.id)
+                        onSelectRoom(
+                          isSelected
+                            ? null
+                            : room.id
+                        )
                       }
                     >
                       {isSelected

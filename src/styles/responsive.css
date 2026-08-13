@@ -492,11 +492,26 @@
   }
 
   .itinerary-event {
-    grid-template-columns: 80px 45px 1fr;
+    grid-template-columns: 42px 1fr;
+    gap: 8px 14px;
   }
 
   .event-time {
-    font-size: 12px;
+    grid-column: 1 / -1;
+    text-align: left;
+    padding-left: 56px;
+    font-size: 14px;
+  }
+
+  .event-timeline {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .event-content {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
   }
 
   .day-header {
@@ -778,26 +793,6 @@
   /* =========================
      ITINERARY
   ========================= */
-
-  .itinerary-event {
-    grid-template-columns: 1fr 45px;
-    gap: 10px;
-  }
-
-  .event-time {
-    grid-column: 1 / -1;
-    text-align: left;
-    padding-left: 55px;
-  }
-
-  .event-timeline {
-    grid-column: 1;
-  }
-
-  .event-content {
-    grid-column: 2;
-    grid-row: 2;
-  }
 
   .day-date {
     width: 52px;

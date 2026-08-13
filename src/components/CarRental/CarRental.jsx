@@ -165,7 +165,11 @@ function CarRental({
                     isSelected ? "car-selected" : ""
                   }`}
                   onClick={() =>
-                    onSelectCar(car.id)
+                    onSelectCar(
+                      isSelected
+                        ? null
+                        : car.id
+                    )
                   }
                 >
                   {isSelected

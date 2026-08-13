@@ -173,7 +173,9 @@ function App() {
       </main>
 
 
-      <Footer />
+      <Footer
+        onNavigate={handleNavigate}
+      />
 
 
       <MobileNav
