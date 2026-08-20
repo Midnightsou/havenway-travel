@@ -9,6 +9,7 @@ import MobileNav from "./components/MobileNav/MobileNav";
 
 import BookingModal from "./components/BookingModal/BookingModal";
 import BookingConfirmation from "./components/BookingConfirmation/BookingConfirmation";
+import BitcoinPayment from "./components/BitcoinPayment/BitcoinPayment";
 
 import Home from "./components/Home/Home";
 
@@ -59,6 +60,9 @@ function App() {
     useState(false);
 
   const [booking, setBooking] =
+    useState(null);
+
+  const [paymentBooking, setPaymentBooking] =
     useState(null);
 
   const { nights, days } =
@@ -247,12 +251,12 @@ function App() {
       itinerary,
 
       totals: {
-        flights: flightTotal,
-        hotel: hotelTotal,
-        car: carTotal,
-        activities: 0,
-        package: 0,
-        total,
+        flightTotal,
+        hotelTotal,
+        carTotal,
+        activitiesTotal: 0,
+        packageTotal: 0,
+        tripTotal: total,
       },
 
     };
@@ -263,7 +267,7 @@ function App() {
      * intact.
      */
 
-    setBooking(completeBooking);
+    setPaymentBooking(completeBooking);
 
     setBookingOpen(false);
 
@@ -275,9 +279,40 @@ function App() {
   };
 
 
+  const handlePaymentComplete = () => {
+
+    if (!paymentBooking) return;
+
+    const completedBooking = {
+      ...paymentBooking,
+    };
+
+    setBooking(completedBooking);
+
+    setPaymentBooking(null);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+  };
+
+
+  const handleBackToBooking = () => {
+
+    setPaymentBooking(null);
+
+    setBookingOpen(true);
+
+  };
+
+
   const handleReturnHome = () => {
 
     setBooking(null);
+
+    setPaymentBooking(null);
 
     setSelectedRoom(null);
 
@@ -287,9 +322,32 @@ function App() {
 
     setSelectedPackage(null);
 
+    setStartDate(null);
+
+    setEndDate(null);
+
+    setTravellers(1);
+
     setCurrentPage("home");
 
   };
+
+
+  if (paymentBooking) {
+
+    return (
+      <BitcoinPayment
+        booking={paymentBooking}
+        onPaymentComplete={
+          handlePaymentComplete
+        }
+        onBack={
+          handleBackToBooking
+        }
+      />
+    );
+
+  }
 
 
   if (booking) {
