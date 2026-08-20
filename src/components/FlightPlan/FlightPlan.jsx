@@ -8,10 +8,12 @@ import {
 
 import flights from "../../data/flight";
 
+import { formatDate } from "../../utils/dates";
+
 import "./Flightplan.css";
 
 
-function FlightCard({ flight }) {
+function FlightCard({ flight, date }) {
   return (
     <article className="flight-card">
 
@@ -23,7 +25,7 @@ function FlightCard({ flight }) {
           </span>
 
           <h3>
-            {flight.date}
+            {date}
           </h3>
         </div>
 
@@ -190,12 +192,20 @@ function FlightCard({ flight }) {
 }
 
 
-function FlightPlan({ travellers = 1 }) {
+function FlightPlan({
+  travellers = 1,
+  startDate,
+  endDate,
+}) {
 
   const flightTotal =
     (flights.outbound.price +
       flights.return.price) *
     travellers;
+
+  const dateRange = startDate && endDate
+    ? `${formatDate(startDate)} – ${formatDate(endDate)}`
+    : "";
 
   return (
     <section
@@ -218,7 +228,7 @@ function FlightPlan({ travellers = 1 }) {
 
             <p>
               Washington to Los Angeles ·
-              Oct 12 – Oct 15, 2026
+              {dateRange}
             </p>
           </div>
 
@@ -235,10 +245,12 @@ function FlightPlan({ travellers = 1 }) {
 
           <FlightCard
             flight={flights.outbound}
+            date={startDate ? formatDate(startDate) : ""}
           />
 
           <FlightCard
             flight={flights.return}
+            date={endDate ? formatDate(endDate) : ""}
           />
 
         </div>

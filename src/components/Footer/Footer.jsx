@@ -4,6 +4,9 @@ import {
   Map,
   CircleHelp,
   ChevronUp,
+  Mail,
+  Phone,
+  MapPin,
 } from "lucide-react";
 
 import "./Footer.css";
@@ -133,91 +136,55 @@ function Footer({
 
           </div>
 
+
+          {/* CONTACT */}
+
+          <div className="footer-column footer-contact">
+
+            <h3>Contact</h3>
+
+            <div className="footer-contact-address">
+
+              <MapPin size={16} />
+
+              <span>
+                Havenway Travel Agency
+                <br />
+                3050 Post Oak Blvd, Unit 510
+                <br />
+                Houston, TX 77056
+                <br />
+                United States
+              </span>
+
+            </div>
+
+            <a
+              className="footer-contact-link"
+              href="mailto:havenwaytravels@gmail.com"
+            >
+              <Mail size={16} />
+              havenwaytravels@gmail.com
+            </a>
+
+            <a
+  className="footer-contact-link"
+  href="https://wa.me/+15876632982"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <Phone size={16} />
+  +1 587 663 2982
+</a>
+
+          </div>
+
         </div>
 
 
         {/* TRAVEL FEATURES */}
 
-        <div className="footer-features">
-
-          <div className="footer-feature">
-
-            <div className="footer-feature-icon">
-              <Plane size={20} />
-            </div>
-
-            <div>
-              <strong>
-                Flights included
-              </strong>
-
-              <span>
-                Round-trip travel details
-              </span>
-            </div>
-
-          </div>
-
-
-          <div className="footer-feature">
-
-            <div className="footer-feature-icon">
-              <Hotel size={20} />
-            </div>
-
-            <div>
-              <strong>
-                Hotel stay
-              </strong>
-
-              <span>
-                3 nights in Los Angeles
-              </span>
-            </div>
-
-          </div>
-
-
-          <div className="footer-feature">
-
-            <div className="footer-feature-icon">
-              <Map size={20} />
-            </div>
-
-            <div>
-              <strong>
-                Full itinerary
-              </strong>
-
-              <span>
-                Your trip organized in one place
-              </span>
-            </div>
-
-          </div>
-
-
-          <div className="footer-feature">
-
-            <div className="footer-feature-icon">
-              <CircleHelp size={20} />
-            </div>
-
-            <div>
-              <strong>
-                Travel support
-              </strong>
-
-              <span>
-                Important trip information
-              </span>
-            </div>
-
-          </div>
-
-        </div>
-
-
+     
         {/* BOTTOM */}
 
         <div className="footer-bottom">

@@ -8,6 +8,8 @@ import {
 
 import cars from "../../data/cars";
 
+import { formatShortDate } from "../../utils/dates";
+
 import "./CarRental.css";
 
 
@@ -15,9 +17,16 @@ function CarRental({
   travellers = 1,
   selectedCar,
   onSelectCar,
+  startDate,
+  endDate,
+  days = 0,
 }) {
 
-  const rentalDays = 3;
+  const rentalDays = days;
+
+  const dateRange = startDate && endDate
+    ? `${formatShortDate(startDate)} – ${formatShortDate(endDate)}`
+    : "";
 
   return (
     <section
@@ -39,7 +48,7 @@ function CarRental({
             </h2>
 
             <p>
-              Los Angeles · Oct 12 – Oct 15, 2026 ·
+              Los Angeles · {dateRange} ·
               {rentalDays} days
             </p>
           </div>

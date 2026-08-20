@@ -94,7 +94,7 @@
 
 
 /* =========================
-   CAR
+   ICONS
 ======================= */
 
 .summary-icon {
@@ -127,6 +127,23 @@
 
   color: #2d6a3f;
 }
+
+.summary-icon.activities {
+  background: #f0eaf7;
+
+  color: #6b3fa0;
+}
+
+.summary-icon.package {
+  background: #fdf6e7;
+
+  color: #8a5a21;
+}
+
+
+/* =========================
+   CAR
+======================= */
 
 .selected-car-info {
   display: flex;
@@ -340,6 +357,81 @@
   color: var(--color-text-secondary);
 
   font-size: 14px;
+}
+
+
+/* =========================
+   ACTIVITIES
+======================= */
+
+.selected-activities-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.selected-activity-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  background: #f7f7f7;
+
+  border-radius: 8px;
+}
+
+.selected-activity-item > div {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+
+  gap: 3px;
+}
+
+.selected-activity-item span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+.selected-activity-item > strong:last-child {
+  font-size: 15px;
+}
+
+
+/* =========================
+   PACKAGE
+======================= */
+
+.selected-package-info {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px;
+
+  background: #fdf6e7;
+
+  border-radius: 8px;
+}
+
+.selected-package-info > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.selected-package-info span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
 }
 
 

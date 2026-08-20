@@ -5,7 +5,6 @@ const rooms = [
     beds: "1 King Bed",
     guests: "Sleeps 2",
     pricePerNight: 185,
-    nights: 3,
     amenities: [
       "Free WiFi",
       "Smart TV",
@@ -28,7 +27,6 @@ const rooms = [
     beds: "2 Queen Beds",
     guests: "Sleeps 4",
     pricePerNight: 210,
-    nights: 3,
     amenities: [
       "Free WiFi",
       "Smart TV",
@@ -52,7 +50,6 @@ const rooms = [
     beds: "1 King Bed",
     guests: "Sleeps 2",
     pricePerNight: 245,
-    nights: 3,
     amenities: [
       "Free WiFi",
       "Smart TV",
@@ -77,7 +74,6 @@ const rooms = [
     beds: "1 King Bed + Sofa Bed",
     guests: "Sleeps 4",
     pricePerNight: 310,
-    nights: 3,
     amenities: [
       "Free WiFi",
       "Smart TV",

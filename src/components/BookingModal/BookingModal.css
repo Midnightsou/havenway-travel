@@ -70,6 +70,77 @@
 }
 
 
+/* ACTIVITIES */
+
+.booking-activities {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.booking-activity-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  background: #f7f8fa;
+
+  border-radius: 8px;
+}
+
+.booking-activity-item > div {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+
+  gap: 3px;
+}
+
+.booking-activity-item span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+.booking-activity-item > strong:last-child {
+  font-size: 15px;
+}
+
+
+/* PACKAGE */
+
+.booking-package {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  background: #fdf6e7;
+
+  border-radius: 8px;
+}
+
+.booking-package > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.booking-package span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+
 /* CONTENT */
 
 .booking-content {

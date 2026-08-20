@@ -178,3 +178,51 @@
 .activity-include svg {
   flex-shrink: 0;
 }
+
+
+/* SELECT BUTTON */
+
+.select-activity-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  width: 100%;
+
+  margin-top: 16px;
+  padding: 12px;
+
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: var(--color-primary);
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.select-activity-button:hover {
+  background: #f0f4fa;
+}
+
+.select-activity-button.activity-selected {
+  background: var(--color-primary);
+
+  color: #1f1f1f;
+
+  border-color: var(--color-primary);
+}
+
+.activity-card.selected {
+  border-color: var(--color-primary);
+
+  box-shadow:
+    0 0 0 3px
+    rgba(31, 79, 143, 0.1);
+}

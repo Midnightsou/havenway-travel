@@ -10,11 +10,26 @@ import MobileNav from "./components/MobileNav/MobileNav";
 import BookingModal from "./components/BookingModal/BookingModal";
 import BookingConfirmation from "./components/BookingConfirmation/BookingConfirmation";
 
+import Home from "./components/Home/Home";
+
+import { getTripDuration } from "./utils/dates";
+
+import rooms from "./data/rooms";
+import cars from "./data/cars";
+import flights from "./data/flight";
+
+import {
+  generateItinerary,
+} from "./data/itinerary";
+
 import "./styles/global.css";
 import "./styles/responsive.css";
 
 
 function App() {
+
+  const [currentPage, setCurrentPage] =
+    useState("home");
 
   const [activeTab, setActiveTab] =
     useState("Stays");
@@ -22,10 +37,22 @@ function App() {
   const [travellers, setTravellers] =
     useState(1);
 
+  const [startDate, setStartDate] =
+    useState(null);
+
+  const [endDate, setEndDate] =
+    useState(null);
+
   const [selectedRoom, setSelectedRoom] =
     useState(null);
 
   const [selectedCar, setSelectedCar] =
+    useState(null);
+
+  const [selectedActivities, setSelectedActivities] =
+    useState([]);
+
+  const [selectedPackage, setSelectedPackage] =
     useState(null);
 
   const [bookingOpen, setBookingOpen] =
@@ -34,11 +61,29 @@ function App() {
   const [booking, setBooking] =
     useState(null);
 
+  const { nights, days } =
+    getTripDuration(startDate, endDate);
+
+
+  const trip = {
+    startDate,
+    endDate,
+    travellers,
+    nights,
+    days,
+    roomId: selectedRoom,
+    carId: selectedCar,
+    activityIds: selectedActivities,
+    packageId: selectedPackage,
+  };
+
 
   const handleNavigate = (
     tab,
     sectionId
   ) => {
+
+    setCurrentPage("travel");
 
     setActiveTab(tab);
 
@@ -52,6 +97,7 @@ function App() {
           );
 
         if (section) {
+
           section.scrollIntoView({
             behavior: "smooth",
             block: "start",
@@ -59,6 +105,7 @@ function App() {
 
           return;
         }
+
       }
 
       window.scrollTo({
@@ -67,6 +114,18 @@ function App() {
       });
 
     }, 120);
+
+  };
+
+
+  const handleGoHome = () => {
+
+    setCurrentPage("home");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
 
   };
 
@@ -90,23 +149,121 @@ function App() {
       )}`;
 
 
-    // Car-only booking: keep the car selected
-    // and return to Stays so the user can
-    // also choose a room.
-    if (bookingData.car && !bookingData.room) {
+    const room = selectedRoom
+      ? rooms.find(
+          (item) => item.id === selectedRoom
+        )
+      : null;
 
-      setBookingOpen(false);
+    const car = selectedCar
+      ? cars.find(
+          (item) => item.id === selectedCar
+        )
+      : null;
 
-      handleNavigate("Stays", "rooms");
 
-      return;
-    }
+    /*
+     * Pricing
+     */
+
+    const flightTotal =
+      (flights.outbound.price +
+        flights.return.price) *
+      travellers;
+
+    const hotelTotal = room
+      ? room.pricePerNight * nights
+      : 0;
+
+    const carTotal = car
+      ? car.pricePerDay * days
+      : 0;
+
+    const total =
+      flightTotal +
+      hotelTotal +
+      carTotal;
+
+    const itinerary =
+      generateItinerary(
+        startDate,
+        endDate
+      );
 
 
-    setBooking({
+    /*
+     * Build the complete booking object.
+     *
+     * ...bookingData comes first so the
+     * calculated fields below are
+     * authoritative.
+     */
+
+    const completeBooking = {
+
       ...bookingData,
+
       bookingReference,
-    });
+
+      traveler: {
+        firstName:
+          bookingData?.traveler?.firstName ||
+          "",
+        lastName:
+          bookingData?.traveler?.lastName ||
+          "",
+        email:
+          bookingData?.traveler?.email ||
+          "",
+      },
+
+      travellers,
+
+      startDate,
+      endDate,
+
+      nights,
+      days,
+
+      flight: {
+        outbound: {
+          ...flights.outbound,
+          date: startDate,
+        },
+        return: {
+          ...flights.return,
+          date: endDate,
+        },
+      },
+
+      hotel: {
+        name: "The Westin Los Angeles Airport",
+      },
+
+      room: room || null,
+
+      car: car || null,
+
+      itinerary,
+
+      totals: {
+        flights: flightTotal,
+        hotel: hotelTotal,
+        car: carTotal,
+        activities: 0,
+        package: 0,
+        total,
+      },
+
+    };
+
+
+    /*
+     * Keep the complete booking object
+     * intact.
+     */
+
+    setBooking(completeBooking);
 
     setBookingOpen(false);
 
@@ -126,47 +283,113 @@ function App() {
 
     setSelectedCar(null);
 
+    setSelectedActivities([]);
+
+    setSelectedPackage(null);
+
+    setCurrentPage("home");
+
   };
 
 
   if (booking) {
+
     return (
       <BookingConfirmation
         booking={booking}
         onReturnHome={handleReturnHome}
       />
     );
+
+  }
+
+
+  if (currentPage === "home") {
+
+    return (
+      <>
+        <Header
+          activeTab="Home"
+          onNavigate={handleNavigate}
+          onGoHome={handleGoHome}
+        />
+
+        <Home
+          onNavigate={handleNavigate}
+        />
+
+        <Footer
+          onNavigate={handleNavigate}
+        />
+
+        <MobileNav
+          activeTab="Home"
+          onNavigate={handleNavigate}
+          onGoHome={handleGoHome}
+        />
+      </>
+    );
+
   }
 
 
   return (
     <>
+
       <Header
         activeTab={activeTab}
         onNavigate={handleNavigate}
+        onGoHome={handleGoHome}
       />
+
 
       <TravelTabs
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+
+          setActiveTab(tab);
+
+          setCurrentPage("travel");
+
+        }}
       />
+
 
       <main>
 
         <SearchBar
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={(tab) => {
+
+            setActiveTab(tab);
+
+            setCurrentPage("travel");
+
+          }}
           travellers={travellers}
           setTravellers={setTravellers}
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
         />
+
 
         <TravelContent
           activeTab={activeTab}
           travellers={travellers}
+          startDate={startDate}
+          endDate={endDate}
+          nights={nights}
+          days={days}
           selectedRoom={selectedRoom}
           onSelectRoom={setSelectedRoom}
           selectedCar={selectedCar}
           onSelectCar={setSelectedCar}
+          selectedActivities={selectedActivities}
+          onSelectActivities={setSelectedActivities}
+          selectedPackage={selectedPackage}
+          onSelectPackage={setSelectedPackage}
           onContinue={handleContinueBooking}
         />
 
@@ -181,23 +404,25 @@ function App() {
       <MobileNav
         activeTab={activeTab}
         onNavigate={handleNavigate}
+        onGoHome={handleGoHome}
       />
 
 
       {bookingOpen && (
+
         <BookingModal
-          selectedRoom={selectedRoom}
-          selectedCar={selectedCar}
+          trip={trip}
           onClose={() =>
             setBookingOpen(false)
           }
           onConfirm={handleConfirmBooking}
-          travellers={travellers}
         />
+
       )}
 
     </>
   );
+
 }
 
 export default App;

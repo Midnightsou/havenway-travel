@@ -1,7 +1,6 @@
 const flights = {
   outbound: {
     type: "Nonstop",
-    date: "Mon, Oct 12, 2026",
     price: 249,
 
     from: {
@@ -29,7 +28,6 @@ const flights = {
 
   return: {
     type: "Nonstop",
-    date: "Thu, Oct 15, 2026",
     price: 231,
 
     from: {

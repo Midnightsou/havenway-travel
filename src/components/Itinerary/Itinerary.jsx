@@ -7,12 +7,13 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import itinerary from "../../data/itinerary";
+import { generateItinerary } from "../../data/itinerary";
 
 import "./Itinerary.css";
 
 
 function ItineraryEvent({ event }) {
+
   const icons = {
     flight: Plane,
     arrival: MapPin,
@@ -21,7 +22,9 @@ function ItineraryEvent({ event }) {
     free: Coffee,
   };
 
-  const Icon = icons[event.type] || CalendarDays;
+  const Icon =
+    icons[event.type] || CalendarDays;
+
 
   return (
     <div className="itinerary-event">
@@ -33,7 +36,9 @@ function ItineraryEvent({ event }) {
 
       <div className="event-timeline">
 
-        <div className={`event-icon ${event.type}`}>
+        <div
+          className={`event-icon ${event.type}`}
+        >
           <Icon size={20} />
         </div>
 
@@ -75,7 +80,40 @@ function ItineraryEvent({ event }) {
 }
 
 
-function Itinerary() {
+function Itinerary({
+  startDate,
+  endDate,
+}) {
+
+  if (!startDate || !endDate) {
+    return null;
+  }
+
+
+
+
+  const itinerary =
+    generateItinerary(
+      startDate,
+      endDate
+    );
+
+
+
+
+  const totalDays =
+    itinerary.length;
+
+
+
+
+  const formattedStart =
+    itinerary[0]?.date;
+
+  const formattedEnd =
+    itinerary[totalDays - 1]?.date;
+
+
   return (
     <section
       className="itinerary-section"
@@ -97,8 +135,9 @@ function Itinerary() {
             </h2>
 
             <p>
-              Washington → Los Angeles ·
-              Oct 12 – Oct 15, 2026
+              Washington → Los Angeles ·{" "}
+              {formattedStart} –{" "}
+              {formattedEnd}
             </p>
 
           </div>
@@ -109,8 +148,19 @@ function Itinerary() {
             <CalendarDays size={20} />
 
             <div>
-              <strong>4 days</strong>
-              <span>Oct 12 – 15</span>
+
+              <strong>
+                {totalDays}{" "}
+                {totalDays === 1
+                  ? "day"
+                  : "days"}
+              </strong>
+
+              <span>
+                {formattedStart} –{" "}
+                {formattedEnd}
+              </span>
+
             </div>
 
           </div>
@@ -120,50 +170,55 @@ function Itinerary() {
 
         <div className="itinerary">
 
-          {itinerary.map((day) => (
+          {itinerary.map(
+            (day) => (
 
-            <article
-              className="itinerary-day"
-              key={day.id}
-            >
+              <article
+                className="itinerary-day"
+                key={day.id}
+              >
 
-              <div className="day-header">
+                <div className="day-header">
 
-                <div className="day-date">
-                  {day.date}
+                  <div className="day-date">
+                    {day.date}
+                  </div>
+
+
+                  <div>
+
+                    <span className="day-full-date">
+                      {day.fullDate}
+                    </span>
+
+                    <h3>
+                      {day.title}
+                    </h3>
+
+                  </div>
+
                 </div>
 
-                <div>
 
-                  <span className="day-full-date">
-                    {day.fullDate}
-                  </span>
+                <div className="day-events">
 
-                  <h3>
-                    {day.title}
-                  </h3>
+                  {day.events.map(
+                    (event) => (
+
+                      <ItineraryEvent
+                        key={event.id}
+                        event={event}
+                      />
+
+                    )
+                  )}
 
                 </div>
 
-              </div>
+              </article>
 
-
-              <div className="day-events">
-
-                {day.events.map((event) => (
-
-                  <ItineraryEvent
-                    key={event.id}
-                    event={event}
-                  />
-
-                ))}
-
-              </div>
-
-            </article>
-
-          ))}
+            )
+          )}
 
         </div>
 
@@ -177,14 +232,19 @@ function Itinerary() {
             </strong>
 
             <span>
-              Flight, hotel stay, and daily itinerary in one place.
+              Flight, hotel stay, and daily
+              itinerary in one place.
             </span>
 
           </div>
 
+
           <button className="view-trip-button">
+
             View trip details
+
             <ArrowRight size={18} />
+
           </button>
 
         </div>
@@ -194,5 +254,6 @@ function Itinerary() {
     </section>
   );
 }
+
 
 export default Itinerary;

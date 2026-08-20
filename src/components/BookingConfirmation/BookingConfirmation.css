@@ -231,6 +231,77 @@
 }
 
 
+/* ACTIVITIES */
+
+.confirmation-activities {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.confirmation-activity-item {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  background: #f7f8fa;
+
+  border-radius: 8px;
+}
+
+.confirmation-activity-item > div {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+
+  gap: 3px;
+}
+
+.confirmation-activity-item span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+.confirmation-activity-item > strong:last-child {
+  font-size: 15px;
+}
+
+
+/* PACKAGE */
+
+.confirmation-package {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  background: #fdf6e7;
+
+  border-radius: 8px;
+}
+
+.confirmation-package > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.confirmation-package span {
+  color: var(--color-text-secondary);
+
+  font-size: 13px;
+}
+
+
 /* ITINERARY */
 
 .confirmation-itinerary {

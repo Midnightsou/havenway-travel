@@ -4,14 +4,54 @@ import {
   Star,
   Check,
   Ticket,
+  Plus,
 } from "lucide-react";
 
 import activities from "../../data/activities";
 
+import { formatDate } from "../../utils/dates";
+
 import "./Activities.css";
 
 
-function Activities({ travellers = 1 }) {
+function Activities({
+  travellers = 1,
+  startDate,
+  endDate,
+  selectedActivities = [],
+  onSelectActivities,
+}) {
+
+  const dateRange = startDate && endDate
+    ? `${formatDate(startDate)} – ${formatDate(endDate)}`
+    : "";
+
+  const handleToggle = (activityId) => {
+
+    if (!onSelectActivities) return;
+
+    const isSelected =
+      selectedActivities.includes(activityId);
+
+    if (isSelected) {
+
+      onSelectActivities(
+        selectedActivities.filter(
+          (id) => id !== activityId
+        )
+      );
+
+    } else {
+
+      onSelectActivities([
+        ...selectedActivities,
+        activityId,
+      ]);
+
+    }
+
+  };
+
   return (
     <section
       className="activities"
@@ -33,7 +73,7 @@ function Activities({ travellers = 1 }) {
 
             <p>
               Top activities and experiences in
-              Los Angeles · Oct 12 – Oct 15, 2026
+              Los Angeles · {dateRange}
             </p>
           </div>
 
@@ -54,9 +94,14 @@ function Activities({ travellers = 1 }) {
               activity.pricePerPerson *
               travellers;
 
+            const isSelected =
+              selectedActivities.includes(
+                activity.id
+              );
+
             return (
               <article
-                className="activity-card"
+                className={"activity-card" + (isSelected ? " selected" : "")}
                 key={activity.id}
               >
 
@@ -141,6 +186,28 @@ function Activities({ travellers = 1 }) {
                   ))}
 
                 </div>
+
+
+                {onSelectActivities && (
+                  <button
+                    className={"select-activity-button" + (isSelected ? " activity-selected" : "")}
+                    onClick={() =>
+                      handleToggle(activity.id)
+                    }
+                  >
+                    {isSelected ? (
+                      <>
+                        <Check size={17} />
+                        Added to trip
+                      </>
+                    ) : (
+                      <>
+                        <Plus size={17} />
+                        Add to trip
+                      </>
+                    )}
+                  </button>
+                )}
 
               </article>
             );

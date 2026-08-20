@@ -3,20 +3,30 @@ import {
   Hotel,
   Check,
   Sparkles,
+  Plus,
 } from "lucide-react";
 
 import flights from "../../data/flight";
 import rooms from "../../data/rooms";
 
+import { formatShortDate } from "../../utils/dates";
+
 import "./Packages.css";
 
 
-function Packages({ travellers = 1 }) {
+function Packages({
+  travellers = 1,
+  startDate,
+  endDate,
+  nights = 0,
+  selectedPackage = null,
+  onSelectPackage,
+}) {
 
   const room = rooms[0];
 
   const hotelTotal =
-    room.pricePerNight * room.nights;
+    room.pricePerNight * nights;
 
   const flightTotal =
     (flights.outbound.price +
@@ -25,6 +35,13 @@ function Packages({ travellers = 1 }) {
 
   const packageTotal =
     hotelTotal + flightTotal;
+
+  const isSelected =
+    selectedPackage === 1;
+
+  const dateRange = startDate && endDate
+    ? `${formatShortDate(startDate)} – ${formatShortDate(endDate)}`
+    : "";
 
   return (
     <section
@@ -47,7 +64,7 @@ function Packages({ travellers = 1 }) {
 
             <p>
               Washington to Los Angeles ·
-              Oct 12 – Oct 15, 2026
+              {dateRange}
             </p>
           </div>
 
@@ -74,7 +91,7 @@ function Packages({ travellers = 1 }) {
               </h3>
 
               <p>
-                Round-trip flight and 3 nights at
+                Round-trip flight and {nights} nights at
                 The Westin Los Angeles Airport
               </p>
             </div>
@@ -224,7 +241,7 @@ function Packages({ travellers = 1 }) {
                   </span>
 
                   <small>
-                    Oct 12 – Oct 15 · {room.nights} nights
+                    {dateRange} · {nights} nights
                   </small>
 
                 </div>
@@ -266,7 +283,7 @@ function Packages({ travellers = 1 }) {
               <div>
                 <Check size={16} />
 
-                {room.nights} nights hotel
+                {nights} nights hotel
               </div>
 
               <div>
@@ -306,6 +323,30 @@ function Packages({ travellers = 1 }) {
             </strong>
 
           </div>
+
+
+          {onSelectPackage && (
+            <button
+              className={"select-package-button" + (isSelected ? " package-selected" : "")}
+              onClick={() =>
+                onSelectPackage(
+                  isSelected ? null : 1
+                )
+              }
+            >
+              {isSelected ? (
+                <>
+                  <Check size={17} />
+                  Package added to trip
+                </>
+              ) : (
+                <>
+                  <Plus size={17} />
+                  Add package to trip
+                </>
+              )}
+            </button>
+          )}
 
         </div>
 

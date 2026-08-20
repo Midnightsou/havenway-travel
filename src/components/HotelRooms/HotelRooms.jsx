@@ -9,14 +9,19 @@ import rooms from "../../data/rooms";
 
 import RoomGallery from "../RoomGallery/RoomGallery";
 
+import { formatShortDate } from "../../utils/dates";
+
 import "./HotelRooms.css";
 
 function HotelRooms({
   selectedRoom,
   onSelectRoom,
+  startDate,
+  endDate,
+  nights = 0,
 }) {
   const calculateTotal = (room) => {
-    return room.pricePerNight * room.nights;
+    return room.pricePerNight * nights;
   };
 
   return (
@@ -36,9 +41,9 @@ function HotelRooms({
             <h2>Choose your room</h2>
 
             <p>
-              Check-in Oct 12, 2026 ·
-              Check-out Oct 15, 2026 ·
-              3 nights
+              Check-in {startDate ? formatShortDate(startDate) : ""} ·
+              Check-out {endDate ? formatShortDate(endDate) : ""} ·
+              {nights} nights
             </p>
           </div>
 
@@ -132,7 +137,7 @@ function HotelRooms({
                       </strong>
 
                       <small>
-                        for {room.nights} nights
+                        for {nights} nights
                       </small>
 
                     </div>

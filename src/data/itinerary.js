@@ -1,28 +1,30 @@
-const itinerary = [
-  {
-    id: "day-1",
-    date: "Oct 12",
-    fullDate: "Monday, October 12, 2026",
+import flights from "./flight";
+
+const itineraryTemplates = {
+  arrival: {
     title: "Travel to Los Angeles",
+
     events: [
       {
         id: "flight-out",
-        time: "8:15 AM",
+        time: flights.outbound.from.time,
         type: "flight",
         title: "Depart Washington",
         description:
           "Depart Ronald Reagan Washington National Airport (DCA) for Los Angeles International Airport (LAX).",
-        details: "United Airlines · UA 123",
+        details: `${flights.outbound.airline} · ${flights.outbound.flightNumber}`,
       },
+
       {
         id: "arrival",
-        time: "11:05 AM",
+        time: flights.outbound.to.time,
         type: "arrival",
         title: "Arrive in Los Angeles",
         description:
           "Arrive at Los Angeles International Airport (LAX).",
         details: "Los Angeles, California",
       },
+
       {
         id: "checkin",
         time: "3:00 PM",
@@ -30,16 +32,15 @@ const itinerary = [
         title: "Hotel check-in",
         description:
           "Check in to The Westin Los Angeles Airport and settle into your room.",
-        details: "5400 W Century Blvd, Los Angeles",
+        details:
+          "5400 W Century Blvd, Los Angeles",
       },
     ],
   },
 
-  {
-    id: "day-2",
-    date: "Oct 13",
-    fullDate: "Tuesday, October 13, 2026",
+  explore: {
     title: "Explore Los Angeles",
+
     events: [
       {
         id: "morning-la",
@@ -50,6 +51,7 @@ const itinerary = [
           "Spend the day exploring the city and visiting attractions of your choice.",
         details: "Los Angeles, California",
       },
+
       {
         id: "evening-la",
         time: "Evening",
@@ -62,11 +64,9 @@ const itinerary = [
     ],
   },
 
-  {
-    id: "day-3",
-    date: "Oct 14",
-    fullDate: "Wednesday, October 14, 2026",
+  freeDay: {
     title: "Free day in Los Angeles",
+
     events: [
       {
         id: "free-day",
@@ -80,11 +80,9 @@ const itinerary = [
     ],
   },
 
-  {
-    id: "day-4",
-    date: "Oct 15",
-    fullDate: "Thursday, October 15, 2026",
+  departure: {
     title: "Return to Washington",
+
     events: [
       {
         id: "checkout",
@@ -93,28 +91,190 @@ const itinerary = [
         title: "Hotel check-out",
         description:
           "Check out of The Westin Los Angeles Airport.",
-        details: "Remember to collect all belongings",
+        details:
+          "Remember to collect all belongings",
       },
+
       {
         id: "return-flight",
-        time: "4:30 PM",
+        time: flights.return.from.time,
         type: "flight",
         title: "Depart Los Angeles",
         description:
           "Depart Los Angeles International Airport (LAX) for Washington.",
-        details: "United Airlines · UA 456",
+        details: `${flights.return.airline} · ${flights.return.flightNumber}`,
       },
+
       {
         id: "arrive-washington",
-        time: "12:15 AM",
+        time: flights.return.to.time,
         type: "arrival",
         title: "Arrive in Washington",
         description:
           "Arrive at Ronald Reagan Washington National Airport (DCA).",
-        details: "+1 day · Friday, October 16",
+        details: "Washington, DC",
       },
     ],
   },
-];
+};
 
-export default itinerary;
+
+/*
+ * Generate the itinerary from the
+ * user's selected dates.
+ */
+
+export function generateItinerary(
+  startDate,
+  endDate
+) {
+
+  if (!startDate || !endDate) {
+    return [];
+  }
+
+
+  const start =
+    new Date(startDate);
+
+  const end =
+    new Date(endDate);
+
+
+  const MS_PER_DAY =
+    1000 * 60 * 60 * 24;
+
+
+  const totalDays =
+    Math.ceil(
+      (end.getTime() - start.getTime()) /
+      MS_PER_DAY
+    ) + 1;
+
+
+  const formatDate =
+    (date) => {
+
+      return new Intl.DateTimeFormat(
+        "en-US",
+        {
+          month: "short",
+          day: "numeric",
+        }
+      ).format(date);
+
+    };
+
+
+  const formatFullDate =
+    (date) => {
+
+      return new Intl.DateTimeFormat(
+        "en-US",
+        {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }
+      ).format(date);
+
+    };
+
+
+  const itineraryDays = [];
+
+
+  for (
+    let index = 0;
+    index < totalDays;
+    index++
+  ) {
+
+    const currentDate =
+      new Date(start);
+
+    currentDate.setDate(
+      start.getDate() + index
+    );
+
+
+    let template;
+
+
+    /*
+     * First day
+     */
+
+    if (index === 0) {
+
+      template =
+        itineraryTemplates.arrival;
+
+    }
+
+
+    /*
+     * Last day
+     */
+
+    else if (
+      index === totalDays - 1
+    ) {
+
+      template =
+        itineraryTemplates.departure;
+
+    }
+
+
+    /*
+     * Middle days
+     */
+
+    else {
+
+      template =
+        index % 2 === 0
+          ? itineraryTemplates.freeDay
+          : itineraryTemplates.explore;
+
+    }
+
+
+    itineraryDays.push({
+
+      id: `day-${index + 1}`,
+
+      dayNumber: index + 1,
+
+      date:
+        formatDate(currentDate),
+
+      fullDate:
+        formatFullDate(currentDate),
+
+      title:
+        template.title,
+
+      events:
+        template.events.map(
+          (event) => ({
+            ...event,
+
+            id:
+              `${event.id}-${index + 1}`,
+
+          })
+        ),
+
+    });
+
+  }
+
+
+  return itineraryDays;
+}
+
+
+export default itineraryTemplates;

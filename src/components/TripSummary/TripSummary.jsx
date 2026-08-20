@@ -6,11 +6,25 @@ import {
   CalendarDays,
   Users,
   CheckCircle2,
+  Ticket,
+  Sparkles,
 } from "lucide-react";
 
 import rooms from "../../data/rooms";
 import flights from "../../data/flight";
 import cars from "../../data/cars";
+import activities from "../../data/activities";
+import packages from "../../data/packages";
+
+import { formatShortDate } from "../../utils/dates";
+
+import {
+  calculateFlightTotal,
+  calculateHotelTotal,
+  calculateCarTotal,
+  calculateActivitiesTotal,
+  calculatePackageTotal,
+} from "../../utils/pricing";
 
 import "./TripSummary.css";
 
@@ -18,8 +32,14 @@ import "./TripSummary.css";
 function TripSummary({
   selectedRoom,
   selectedCar,
+  selectedActivities = [],
+  selectedPackage = null,
   onContinue,
   travellers = 1,
+  startDate,
+  endDate,
+  nights = 0,
+  days = 0,
 }) {
 
   const room = rooms.find(
@@ -30,27 +50,45 @@ function TripSummary({
     (item) => item.id === selectedCar
   );
 
-  const rentalDays = 3;
-
+  const rentalDays = days;
 
   const flightTotal =
-    (flights.outbound.price +
-      flights.return.price) *
-    travellers;
+    calculateFlightTotal(travellers);
 
+  const hotelTotal =
+    calculateHotelTotal(selectedRoom, nights);
 
-  const hotelTotal = room
-    ? room.pricePerNight * room.nights
-    : 0;
+  const carTotal =
+    calculateCarTotal(selectedCar, rentalDays);
 
+  const activitiesTotal =
+    calculateActivitiesTotal(selectedActivities, travellers);
 
-  const carTotal = car
-    ? car.pricePerDay * rentalDays
-    : 0;
-
+  const packageTotal =
+    calculatePackageTotal(selectedPackage, travellers, nights);
 
   const tripTotal =
-    flightTotal + hotelTotal + carTotal;
+    flightTotal +
+    hotelTotal +
+    carTotal +
+    activitiesTotal -
+    packageTotal;
+
+  const selectedActivityItems =
+    selectedActivities
+      .map((id) =>
+        activities.find((item) => item.id === id)
+      )
+      .filter(Boolean);
+
+  const pkg = selectedPackage
+    ? packages.find((item) => item.id === selectedPackage)
+    : null;
+
+
+  const dateRange = startDate && endDate
+    ? `${formatShortDate(startDate)} – ${formatShortDate(endDate)}`
+    : "";
 
 
   return (
@@ -148,7 +186,7 @@ function TripSummary({
 
 
               <div className="return-label">
-                Return · Oct 15
+                Return · {endDate ? formatShortDate(endDate) : ""}
               </div>
 
 
@@ -259,12 +297,12 @@ function TripSummary({
                       <CalendarDays size={18} />
 
                       <span>
-                        Oct 12 – Oct 15
+                        {dateRange}
                       </span>
                     </div>
 
                     <span>
-                      {room.nights} nights
+                      {nights} nights
                     </span>
 
                   </div>
@@ -349,7 +387,7 @@ function TripSummary({
                       <CalendarDays size={18} />
 
                       <span>
-                        Oct 12 – Oct 15
+                        {dateRange}
                       </span>
                     </div>
 
@@ -380,7 +418,7 @@ function TripSummary({
                   <Car size={20} />
 
                   <span>
-                    Select a car to see your rental total.
+                    Car rental — Not selected
                   </span>
 
                 </div>
@@ -388,6 +426,156 @@ function TripSummary({
               )}
 
             </div>
+
+
+            {/* ACTIVITIES */}
+
+            <div className="summary-card">
+
+              <div className="summary-card-heading">
+
+                <div className="summary-icon activities">
+                  <Ticket size={21} />
+                </div>
+
+                <div>
+                  <span>
+                    Activities
+                  </span>
+
+                  <strong>
+                    Things to do
+                  </strong>
+                </div>
+
+              </div>
+
+
+              {selectedActivityItems.length > 0 ? (
+                <>
+
+                  <div className="selected-activities-list">
+
+                    {selectedActivityItems.map((activity) => (
+                      <div
+                        className="selected-activity-item"
+                        key={activity.id}
+                      >
+
+                        <Ticket size={17} />
+
+                        <div>
+
+                          <strong>
+                            {activity.name}
+                          </strong>
+
+                          <span>
+                            {activity.location} · {activity.duration}
+                          </span>
+
+                        </div>
+
+                        <strong>
+                          ${
+                            activity.pricePerPerson *
+                            travellers
+                          }
+                        </strong>
+
+                      </div>
+                    ))}
+
+                  </div>
+
+
+                  <div className="summary-card-total">
+
+                    <span>
+                      Activities total
+                    </span>
+
+                    <strong>
+                      ${activitiesTotal}
+                    </strong>
+
+                  </div>
+
+                </>
+              ) : (
+
+                <div className="no-car">
+
+                  <Ticket size={20} />
+
+                  <span>
+                    No activities selected.
+                  </span>
+
+                </div>
+
+              )}
+
+            </div>
+
+
+            {/* PACKAGE */}
+
+            {pkg && (
+              <div className="summary-card">
+
+                <div className="summary-card-heading">
+
+                  <div className="summary-icon package">
+                    <Sparkles size={21} />
+                  </div>
+
+                  <div>
+                    <span>
+                      Package
+                    </span>
+
+                    <strong>
+                      {pkg.name}
+                    </strong>
+                  </div>
+
+                </div>
+
+
+                <div className="selected-package-info">
+
+                  <Sparkles size={20} />
+
+                  <div>
+
+                    <strong>
+                      {pkg.name}
+                    </strong>
+
+                    <span>
+                      Flight + hotel bundled · Save 15%
+                    </span>
+
+                  </div>
+
+                </div>
+
+
+                <div className="summary-card-total">
+
+                  <span>
+                    Package total
+                  </span>
+
+                  <strong>
+                    ${packageTotal}
+                  </strong>
+
+                </div>
+
+              </div>
+            )}
 
           </div>
 
@@ -455,6 +643,32 @@ function TripSummary({
               </div>
 
 
+              {selectedActivityItems.length > 0 && (
+                <div>
+                  <span>
+                    Activities
+                  </span>
+
+                  <strong>
+                    ${activitiesTotal}
+                  </strong>
+                </div>
+              )}
+
+
+              {pkg && (
+                <div>
+                  <span>
+                    Package
+                  </span>
+
+                  <strong>
+                    ${packageTotal}
+                  </strong>
+                </div>
+              )}
+
+
               <div>
                 <span>
                   Travelers
@@ -478,9 +692,7 @@ function TripSummary({
               </span>
 
               <strong>
-                {room || car
-                  ? `$${tripTotal}`
-                  : `$${flightTotal}`}
+                ${tripTotal}
               </strong>
 
             </div>

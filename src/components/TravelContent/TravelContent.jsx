@@ -18,10 +18,18 @@ import Activities from "../Activities/Activities";
 function TravelContent({
   activeTab,
   travellers,
+  startDate,
+  endDate,
+  nights,
+  days,
   selectedRoom,
   onSelectRoom,
   selectedCar,
   onSelectCar,
+  selectedActivities,
+  onSelectActivities,
+  selectedPackage,
+  onSelectPackage,
   onContinue,
 }) {
 
@@ -35,15 +43,27 @@ function TravelContent({
         <HotelRooms
           selectedRoom={selectedRoom}
           onSelectRoom={onSelectRoom}
+          startDate={startDate}
+          endDate={endDate}
+          nights={nights}
         />
 
-        <Itinerary />
+        <Itinerary
+          startDate={startDate}
+          endDate={endDate}
+        />
 
         <TripSummary
           selectedRoom={selectedRoom}
           selectedCar={selectedCar}
+          selectedActivities={selectedActivities}
+          selectedPackage={selectedPackage}
           onContinue={onContinue}
           travellers={travellers}
+          startDate={startDate}
+          endDate={endDate}
+          nights={nights}
+          days={days}
         />
       </>
     );
@@ -54,6 +74,8 @@ function TravelContent({
     return (
       <FlightPlan
         travellers={travellers}
+        startDate={startDate}
+        endDate={endDate}
       />
     );
   }
@@ -66,13 +88,22 @@ function TravelContent({
           travellers={travellers}
           selectedCar={selectedCar}
           onSelectCar={onSelectCar}
+          startDate={startDate}
+          endDate={endDate}
+          days={days}
         />
 
         <TripSummary
           selectedRoom={selectedRoom}
           selectedCar={selectedCar}
+          selectedActivities={selectedActivities}
+          selectedPackage={selectedPackage}
           onContinue={onContinue}
           travellers={travellers}
+          startDate={startDate}
+          endDate={endDate}
+          nights={nights}
+          days={days}
         />
       </>
     );
@@ -83,6 +114,11 @@ function TravelContent({
     return (
       <Packages
         travellers={travellers}
+        startDate={startDate}
+        endDate={endDate}
+        nights={nights}
+        selectedPackage={selectedPackage}
+        onSelectPackage={onSelectPackage}
       />
     );
   }
@@ -92,6 +128,10 @@ function TravelContent({
     return (
       <Activities
         travellers={travellers}
+        startDate={startDate}
+        endDate={endDate}
+        selectedActivities={selectedActivities}
+        onSelectActivities={onSelectActivities}
       />
     );
   }

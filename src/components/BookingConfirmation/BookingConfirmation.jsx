@@ -6,9 +6,12 @@ import {
   CalendarDays,
   User,
   Mail,
-  MapPin,
   ArrowLeft,
+  Ticket,
+  Sparkles,
 } from "lucide-react";
+
+import { formatShortDate } from "../../utils/dates";
 
 import "./BookingConfirmation.css";
 
@@ -22,19 +25,121 @@ function BookingConfirmation({
     traveler,
     room,
     car,
-    flightTotal,
-    hotelTotal,
-    carTotal,
-    tripTotal,
-    travellers,
+    activities = [],
+    package: pkg,
+    flight,
+    totals = {},
+    travellers = 1,
     bookingReference,
+    startDate,
+    endDate,
+    nights = 0,
+    days = 0,
+    itinerary = [],
+    hotel,
   } = booking;
+
+
+  /*
+   * ------------------------------------------------
+   * TOTALS
+   * ------------------------------------------------
+   *
+   * These now support the new booking structure:
+   *
+   * totals: {
+   *   flights,
+   *   hotel,
+   *   car,
+   *   activities,
+   *   package,
+   *   total
+   * }
+   */
+
+  const flightTotal =
+    totals.flights ??
+    totals.flightTotal ??
+    0;
+
+  const hotelTotal =
+    totals.hotel ??
+    totals.hotelTotal ??
+    0;
+
+  const carTotal =
+    totals.car ??
+    totals.carTotal ??
+    0;
+
+  const activitiesTotal =
+    totals.activities ??
+    totals.activitiesTotal ??
+    0;
+
+  const packageTotal =
+    totals.package ??
+    totals.packageTotal ??
+    0;
+
+  const tripTotal =
+    totals.total ??
+    totals.tripTotal ??
+    (
+      flightTotal +
+      hotelTotal +
+      carTotal +
+      activitiesTotal +
+      packageTotal
+    );
+
+
+  /*
+   * ------------------------------------------------
+   * DATES
+   * ------------------------------------------------
+   */
+
+  const dateRange =
+    startDate && endDate
+      ? `${formatShortDate(startDate)} – ${formatShortDate(endDate)}`
+      : "";
+
+
+  /*
+   * ------------------------------------------------
+   * FLIGHT DATA
+   * ------------------------------------------------
+   */
+
+  const outbound =
+    flight?.outbound;
+
+  const returnFlight =
+    flight?.return;
+
+
+  /*
+   * ------------------------------------------------
+   * HOTEL NAME
+   * ------------------------------------------------
+   *
+   * Prefer booking.hotel.name.
+   * This allows the confirmation page to work
+   * with different hotels later.
+   */
+
+  const hotelName =
+    hotel?.name ||
+    booking?.hotelName ||
+    "Your selected hotel";
 
 
   return (
     <section className="booking-confirmation">
 
       <div className="confirmation-container">
+
 
         {/* SUCCESS */}
 
@@ -75,7 +180,7 @@ function BookingConfirmation({
 
         {/* TRAVELER */}
 
-          <div className="confirmation-card">
+        <div className="confirmation-card">
 
           <div className="confirmation-card-title">
 
@@ -91,22 +196,25 @@ function BookingConfirmation({
           <div className="traveler-confirmation">
 
             <strong>
-              {traveler.firstName}
-              {" "}
-              {traveler.lastName}
+              {traveler?.firstName}{" "}
+              {traveler?.lastName}
             </strong>
 
             <span>
+
               <Mail size={15} />
 
-              {traveler.email}
+              {traveler?.email}
+
             </span>
 
             <small>
+
               {travellers}{" "}
               {travellers === 1
                 ? "traveler"
                 : "travelers"}
+
             </small>
 
           </div>
@@ -116,62 +224,104 @@ function BookingConfirmation({
 
         {/* FLIGHTS */}
 
-        <div className="confirmation-card">
+        {(outbound || returnFlight) && (
 
-          <div className="confirmation-card-title">
+          <div className="confirmation-card">
 
-            <Plane size={20} />
+            <div className="confirmation-card-title">
 
-            <h3>
-              Flights
-            </h3>
+              <Plane size={20} />
 
-          </div>
-
-
-          <div className="confirmation-flight-grid">
-
-            <div>
-
-              <span>
-                Oct 12, 2026
-              </span>
-
-              <strong>
-                Washington → Los Angeles
-              </strong>
-
-              <small>
-                DCA → LAX
-              </small>
+              <h3>
+                Flights
+              </h3>
 
             </div>
 
 
-            <div>
+            <div className="confirmation-flight-grid">
 
-              <span>
-                Oct 15, 2026
-              </span>
 
-              <strong>
-                Los Angeles → Washington
-              </strong>
+              {/* OUTBOUND */}
 
-              <small>
-                LAX → DCA
-              </small>
+              {outbound && (
+
+                <div>
+
+                  <span>
+                    {startDate
+                      ? formatShortDate(startDate)
+                      : ""}
+                  </span>
+
+
+                  <strong>
+
+                    {outbound.from?.city}
+                    {" → "}
+                    {outbound.to?.city}
+
+                  </strong>
+
+
+                  <small>
+
+                    {outbound.from?.airport}
+                    {" → "}
+                    {outbound.to?.airport}
+
+                  </small>
+
+                </div>
+
+              )}
+
+
+              {/* RETURN */}
+
+              {returnFlight && (
+
+                <div>
+
+                  <span>
+                    {endDate
+                      ? formatShortDate(endDate)
+                      : ""}
+                  </span>
+
+
+                  <strong>
+
+                    {returnFlight.from?.city}
+                    {" → "}
+                    {returnFlight.to?.city}
+
+                  </strong>
+
+
+                  <small>
+
+                    {returnFlight.from?.airport}
+                    {" → "}
+                    {returnFlight.to?.airport}
+
+                  </small>
+
+                </div>
+
+              )}
 
             </div>
 
           </div>
 
-        </div>
+        )}
 
 
         {/* HOTEL */}
 
         {room && (
+
           <div className="confirmation-card">
 
             <div className="confirmation-card-title">
@@ -188,14 +338,15 @@ function BookingConfirmation({
             <div className="confirmation-hotel">
 
               <img
-                src={room.images[0]}
+                src={room.images?.[0]}
                 alt={room.name}
               />
+
 
               <div>
 
                 <strong>
-                  The Westin Los Angeles Airport
+                  {hotelName}
                 </strong>
 
                 <span>
@@ -203,7 +354,16 @@ function BookingConfirmation({
                 </span>
 
                 <small>
-                  Oct 12 – Oct 15 · 3 nights
+
+                  {dateRange}
+
+                  {" · "}
+
+                  {nights}{" "}
+                  {nights === 1
+                    ? "night"
+                    : "nights"}
+
                 </small>
 
               </div>
@@ -211,12 +371,14 @@ function BookingConfirmation({
             </div>
 
           </div>
+
         )}
 
 
         {/* CAR RENTAL */}
 
         {car && (
+
           <div className="confirmation-card">
 
             <div className="confirmation-card-title">
@@ -233,8 +395,11 @@ function BookingConfirmation({
             <div className="confirmation-hotel">
 
               <div className="confirmation-car-icon">
+
                 <Car size={28} />
+
               </div>
+
 
               <div>
 
@@ -243,11 +408,24 @@ function BookingConfirmation({
                 </strong>
 
                 <span>
-                  {car.type} · {car.seats} seats
+
+                  {car.type}
+                  {" · "}
+                  {car.seats} seats
+
                 </span>
 
                 <small>
-                  Oct 12 – Oct 15 · 3 days
+
+                  {dateRange}
+
+                  {" · "}
+
+                  {days}{" "}
+                  {days === 1
+                    ? "day"
+                    : "days"}
+
                 </small>
 
               </div>
@@ -255,74 +433,166 @@ function BookingConfirmation({
             </div>
 
           </div>
+
+        )}
+
+
+        {/* ACTIVITIES */}
+
+        {activities.length > 0 && (
+
+          <div className="confirmation-card">
+
+            <div className="confirmation-card-title">
+
+              <Ticket size={20} />
+
+              <h3>
+                Activities
+              </h3>
+
+            </div>
+
+
+            <div className="confirmation-activities">
+
+              {activities.map(
+                (activity) => (
+
+                  <div
+                    className="confirmation-activity-item"
+                    key={activity.id}
+                  >
+
+                    <Ticket size={17} />
+
+                    <div>
+
+                      <strong>
+                        {activity.name}
+                      </strong>
+
+                      <span>
+
+                        {activity.location}
+                        {" · "}
+                        {activity.duration}
+
+                      </span>
+
+                    </div>
+
+
+                    <strong>
+
+                      $
+                      {activity.pricePerPerson *
+                        travellers}
+
+                    </strong>
+
+                  </div>
+
+                )
+              )}
+
+            </div>
+
+          </div>
+
+        )}
+
+
+        {/* PACKAGE */}
+
+        {pkg && (
+
+          <div className="confirmation-card">
+
+            <div className="confirmation-card-title">
+
+              <Sparkles size={20} />
+
+              <h3>
+                Package
+              </h3>
+
+            </div>
+
+
+            <div className="confirmation-package">
+
+              <Sparkles size={20} />
+
+              <div>
+
+                <strong>
+                  {pkg.name}
+                </strong>
+
+                <span>
+                  Flight + hotel bundled
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
         )}
 
 
         {/* ITINERARY */}
 
-        <div className="confirmation-card">
+        {itinerary.length > 0 && (
 
-          <div className="confirmation-card-title">
+          <div className="confirmation-card">
 
-            <CalendarDays size={20} />
+            <div className="confirmation-card-title">
 
-            <h3>
-              Trip overview
-            </h3>
+              <CalendarDays size={20} />
 
-          </div>
-
-
-          <div className="confirmation-itinerary">
-
-            <div>
-
-              <span>Oct 12</span>
-
-              <strong>
-                Fly to Los Angeles and check in
-              </strong>
+              <h3>
+                Trip overview
+              </h3>
 
             </div>
 
-            <div>
 
-              <span>Oct 13</span>
+            <div className="confirmation-itinerary">
 
-              <strong>
-                Explore Los Angeles
-              </strong>
+              {itinerary.map(
+                (day) => (
 
-            </div>
+                  <div
+                    key={day.id}
+                  >
 
-            <div>
+                    <span>
+                      {day.date}
+                    </span>
 
-              <span>Oct 14</span>
+                    <strong>
+                      {day.title}
+                    </strong>
 
-              <strong>
-                Enjoy your free day
-              </strong>
+                  </div>
 
-            </div>
-
-            <div>
-
-              <span>Oct 15</span>
-
-              <strong>
-                Check out and return to Washington
-              </strong>
+                )
+              )}
 
             </div>
 
           </div>
 
-        </div>
+        )}
 
 
         {/* PRICE */}
 
         <div className="confirmation-total">
+
 
           <div>
 
@@ -338,6 +608,7 @@ function BookingConfirmation({
 
 
           {room && (
+
             <div>
 
               <span>
@@ -349,10 +620,12 @@ function BookingConfirmation({
               </strong>
 
             </div>
+
           )}
 
 
           {car && (
+
             <div>
 
               <span>
@@ -364,6 +637,41 @@ function BookingConfirmation({
               </strong>
 
             </div>
+
+          )}
+
+
+          {activities.length > 0 && (
+
+            <div>
+
+              <span>
+                Activities
+              </span>
+
+              <strong>
+                ${activitiesTotal}
+              </strong>
+
+            </div>
+
+          )}
+
+
+          {pkg && (
+
+            <div>
+
+              <span>
+                Package
+              </span>
+
+              <strong>
+                ${packageTotal}
+              </strong>
+
+            </div>
+
           )}
 
 
@@ -382,6 +690,8 @@ function BookingConfirmation({
         </div>
 
 
+        {/* BACK HOME */}
+
         <button
           className="confirmation-home-button"
           onClick={onReturnHome}
@@ -392,6 +702,7 @@ function BookingConfirmation({
           Back to Havenway Travel
 
         </button>
+
 
       </div>
 
