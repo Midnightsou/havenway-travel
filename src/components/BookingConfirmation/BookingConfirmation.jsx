@@ -9,6 +9,7 @@ import {
   ArrowLeft,
   Ticket,
   Sparkles,
+  Receipt,
 } from "lucide-react";
 
 import { formatShortDate } from "../../utils/dates";
@@ -139,6 +140,36 @@ function BookingConfirmation({
     <section className="booking-confirmation">
 
       <div className="confirmation-container">
+
+        {/* WATERMARK */}
+        <div className="receipt-watermark" aria-hidden="true">
+          havenways-travels
+        </div>
+
+        {/* RECEIPT HEADER */}
+        <div className="receipt-header">
+
+          <div className="receipt-logo">
+
+            <Receipt size={28} />
+
+            <span>
+              Havenway Travels
+            </span>
+
+          </div>
+
+          <h2>
+            Official Receipt
+          </h2>
+
+          <p>
+            Booking Confirmation
+          </p>
+
+          <div className="receipt-divider" />
+
+        </div>
 
 
         {/* SUCCESS */}
@@ -686,6 +717,24 @@ function BookingConfirmation({
             </strong>
 
           </div>
+
+        </div>
+
+
+        {/* RECEIPT FOOTER */}
+
+        <div className="receipt-footer">
+
+          <div className="receipt-divider" />
+
+          <p>
+            Thank you for booking with Havenway Travels
+          </p>
+
+          <small>
+            This is an official receipt issued by Havenway Travels.
+            Please keep it for your records.
+          </small>
 
         </div>
 

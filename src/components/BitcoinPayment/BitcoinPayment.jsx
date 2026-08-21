@@ -65,14 +65,13 @@ function BitcoinPayment({
       0
   );
 
-  const expectedBtc =
-    booking?.btcAmount || 0;
-
   const travellerCount =
     booking?.travellers ?? 1;
 
   const btcAmount =
-    btcPrice && usdTotal ? usdTotal / btcPrice : 0;
+    btcPrice && usdTotal
+      ? usdTotal / btcPrice
+      : 0;
 
   const formattedBtcAmount =
     Number.isFinite(btcAmount)
@@ -120,7 +119,7 @@ function BitcoinPayment({
   }, []);
 
   const checkForPayment = async () => {
-    if (!BTC_ADDRESS || !expectedBtc) {
+    if (!btcAmount || !paymentStartedAt) {
       return;
     }
 
@@ -129,57 +128,46 @@ function BitcoinPayment({
       setPaymentError("");
 
       const response = await fetch(
-        `https://mempool.space/api/address/${BTC_ADDRESS}/txs`
+        `http://localhost:5000/api/check-payment?amount=${btcAmount}&paymentStartedAt=${paymentStartedAt}`
       );
 
       if (!response.ok) {
         throw new Error(
-          "Unable to check blockchain"
+          "Unable to check Bitcoin payment"
         );
       }
 
-      const transactions = await response.json();
-      const expectedSats =
-        Math.round(expectedBtc * 100000000);
+      const data = await response.json();
 
-      const matchingTransaction =
-        transactions.find((transaction) => {
-          const outputToOurAddress =
-            transaction?.vout?.find(
-              (output) =>
-                output?.scriptpubkey_address ===
-                BTC_ADDRESS
-            );
+      console.log("Bitcoin payment status:", data);
 
-          if (!outputToOurAddress) {
-            return false;
-          }
-
-          const tolerance = 100;
-
-          return (
-            outputToOurAddress.value >=
-            expectedSats - tolerance
-          );
-        });
-
-      if (matchingTransaction) {
+      if (
+        data.success &&
+        data.paymentFound &&
+        data.confirmed
+      ) {
         setPaymentDetected(true);
+
         setTransactionId(
-          matchingTransaction.txid ||
-            "UNKNOWN"
+          data.txid || "UNKNOWN"
         );
-      } else {
-        setPaymentDetected(false);
+
+        return;
       }
+
+      setPaymentDetected(false);
+
     } catch (error) {
+
       console.error(
-        "Blockchain payment check failed:",
+        "Bitcoin payment check failed:",
         error
       );
+
       setPaymentError(
         "Unable to check the Bitcoin network. Retrying..."
       );
+
     } finally {
       setCheckingPayment(false);
     }
@@ -199,7 +187,7 @@ function BitcoinPayment({
       };
     }
 
-    if (!BTC_ADDRESS || !expectedBtc) {
+    if (!btcAmount || !paymentStartedAt) {
       return;
     }
 
@@ -213,7 +201,32 @@ function BitcoinPayment({
     return () => {
       clearInterval(interval);
     };
-  }, [expectedBtc]);
+
+  }, [
+    btcAmount,
+    paymentStartedAt,
+  ]);
+
+  useEffect(() => {
+
+    if (!paymentDetected) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+
+      onPaymentComplete();
+
+    }, 1500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+
+  }, [
+    paymentDetected,
+    onPaymentComplete,
+  ]);
 
   useEffect(() => {
     if (!paymentStartedAt) {
@@ -624,7 +637,7 @@ function BitcoinPayment({
             onClick={handleContinue}
           >
             {paymentDetected
-              ? "Continue to confirmation"
+              ? "Payment confirmed"
               : secondsRemaining <= 0
                 ? "Payment window expired"
                 : "Waiting for payment"}
