@@ -306,11 +306,8 @@
   height: 210px;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  gap: 8px;
 
   border: 8px solid #ffffff;
 
@@ -318,29 +315,18 @@
 
   border-radius: 12px;
 
-  background:
-    repeating-linear-gradient(
-      45deg,
-      #0f172a 0,
-      #0f172a 3px,
-      #ffffff 3px,
-      #ffffff 7px
-    );
-
-  color: #f5b335;
-}
-
-.bitcoin-qr span {
-  padding: 3px 7px;
-
-  border-radius: 5px;
-
   background: #ffffff;
 
-  color: #0f172a;
+  overflow: hidden;
+}
 
-  font-size: 11px;
-  font-weight: 800;
+.bitcoin-qr-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
 }
 
 .bitcoin-qr-label {
@@ -749,6 +735,11 @@
   .bitcoin-qr {
     width: 180px;
     height: 180px;
+  }
+
+  .bitcoin-qr-image {
+    width: 100%;
+    height: 100%;
   }
 
   .bitcoin-address {

@@ -21,7 +21,7 @@ const BTC_ADDRESS =
 
 const PAYMENT_WINDOW = 20 * 60;
 const POLL_INTERVAL = 15000;
-const DEV_PAYMENT_SIMULATOR = true;
+const DEV_PAYMENT_SIMULATOR = false;
 
 
 function BitcoinPayment({
@@ -453,9 +453,11 @@ function BitcoinPayment({
 
             <div className="bitcoin-qr">
 
-              <span>
-                QR
-              </span>
+              <img
+                src="/images/hotel/btc qr code.png"
+                alt="Bitcoin payment QR code"
+                className="bitcoin-qr-image"
+              />
 
             </div>
 
