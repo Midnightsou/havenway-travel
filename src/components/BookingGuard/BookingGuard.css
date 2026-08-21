@@ -1,0 +1,194 @@
+.booking-guard-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 27, 45, 0.58);
+
+  backdrop-filter: blur(5px);
+
+  z-index: 9999;
+}
+
+
+.booking-guard {
+  position: relative;
+
+  width: min(100%, 440px);
+
+  padding: 36px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 24px 70px rgba(15, 27, 45, 0.25);
+
+  text-align: center;
+
+  animation:
+    bookingGuardEnter
+    0.25s ease;
+}
+
+
+@keyframes bookingGuardEnter {
+
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+}
+
+
+.booking-guard-close {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f1f5f9;
+
+  color: #475569;
+
+  cursor: pointer;
+}
+
+
+.booking-guard-close:hover {
+  background: #e2e8f0;
+}
+
+
+.booking-guard-icon {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 20px;
+
+  border-radius: 18px;
+
+  background: rgba(245, 179, 53, 0.14);
+
+  color: #d88f00;
+}
+
+
+.booking-guard h2 {
+  margin: 0 0 12px;
+
+  color: #0f1b2d;
+
+  font-size: 24px;
+}
+
+
+.booking-guard p {
+  max-width: 350px;
+
+  margin: 0 auto;
+
+  color: #64748b;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+.booking-guard-actions {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+
+  margin-top: 28px;
+}
+
+
+.booking-guard-primary,
+.booking-guard-secondary {
+  width: 100%;
+
+  min-height: 48px;
+
+  border-radius: 10px;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.booking-guard-primary {
+  border: none;
+
+  background: #f5b335;
+
+  color: #0f1b2d;
+}
+
+
+.booking-guard-primary:hover {
+  transform: translateY(-1px);
+
+  background: #e6a426;
+}
+
+
+.booking-guard-secondary {
+  border: 1px solid #dbe2ea;
+
+  background: #ffffff;
+
+  color: #334155;
+}
+
+
+.booking-guard-secondary:hover {
+  background: #f8fafc;
+}
+
+
+@media (max-width: 520px) {
+
+  .booking-guard {
+    padding: 30px 22px;
+    border-radius: 16px;
+  }
+
+  .booking-guard h2 {
+    font-size: 21px;
+  }
+
+}

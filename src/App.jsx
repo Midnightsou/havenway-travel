@@ -12,6 +12,7 @@ import TravelPage from "./pages/TravelPage";
 import BookingPage from "./pages/BookingPage";
 import BitcoinPaymentPage from "./pages/BitcoinPaymentPage";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
+import BookingGuard from "./components/BookingGuard/BookingGuard";
 
 import { getTripDuration } from "./utils/dates";
 
@@ -108,6 +109,9 @@ function AppRoutes() {
     useState(
       storedTrip?.paymentBooking ?? null
     );
+
+  const [bookingGuard, setBookingGuard] =
+    useState(null);
 
   const [paymentStartedAt, setPaymentStartedAt] =
     useState(
@@ -273,7 +277,104 @@ function AppRoutes() {
 
   const handleContinueBooking = () => {
 
-    if (!selectedRoom && !selectedCar) return;
+    // Room is required
+
+    if (!selectedRoom) {
+
+      setBookingGuard("room");
+
+      return;
+
+    }
+
+
+    // Flight is required
+
+    if (!selectedFlight) {
+
+      setBookingGuard("flight");
+
+      return;
+
+    }
+
+
+    // Car is optional
+
+    if (!selectedCar) {
+
+      setBookingGuard("car");
+
+      return;
+
+    }
+
+
+    // Everything required is selected
+
+    navigate("/booking");
+
+  };
+
+
+  const handleGuardChoose = () => {
+
+    const guardType =
+      bookingGuard;
+
+    setBookingGuard(null);
+
+
+    if (guardType === "room") {
+
+      navigate("/stays");
+
+    }
+
+
+    if (guardType === "flight") {
+
+      navigate("/flights");
+
+    }
+
+
+    if (guardType === "car") {
+
+      navigate("/cars");
+
+    }
+
+
+    setTimeout(() => {
+
+      const sectionId =
+        guardType === "room"
+          ? "rooms"
+          : guardType === "flight"
+            ? "flights"
+            : "cars";
+
+      const section =
+        document.getElementById(sectionId);
+
+      if (section) {
+
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+
+      }
+
+    }, 150);
+
+  };
+
+
+  const handleContinueWithoutCar = () => {
+
+    setBookingGuard(null);
 
     navigate("/booking");
 
@@ -557,7 +658,9 @@ function AppRoutes() {
 
 
   return (
-    <Routes>
+    <>
+
+      <Routes>
 
       <Route
         path="/"
@@ -639,7 +742,26 @@ function AppRoutes() {
         }
       />
 
-    </Routes>
+      </Routes>
+
+      {bookingGuard && (
+
+        <BookingGuard
+          type={bookingGuard}
+          onClose={() =>
+            setBookingGuard(null)
+          }
+          onChoose={
+            handleGuardChoose
+          }
+          onContinueWithoutCar={
+            handleContinueWithoutCar
+          }
+        />
+
+      )}
+
+    </>
   );
 
 }
