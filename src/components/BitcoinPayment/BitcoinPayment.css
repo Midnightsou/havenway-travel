@@ -251,6 +251,46 @@
 
 
 /* =========================
+   BTC CONVERSION
+========================= */
+
+.btc-conversion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 20px 0 8px;
+  padding: 18px;
+  border: 1px solid rgba(245, 179, 53, 0.25);
+  border-radius: 14px;
+  background: rgba(245, 179, 53, 0.06);
+}
+
+.btc-conversion span {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.btc-conversion strong {
+  color: #f5b335;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.btc-conversion small {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.btc-price-error {
+  display: block;
+  margin-top: 12px;
+  color: #f87171;
+}
+
+
+/* =========================
    QR
 ========================= */
 
@@ -398,10 +438,10 @@
 
 
 /* =========================
-   TIMER
+   PAYMENT COUNTDOWN
 ========================= */
 
-.bitcoin-timer {
+.payment-countdown {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -416,7 +456,7 @@
   background: #f8fafc;
 }
 
-.bitcoin-timer.expired {
+.payment-countdown.expired {
   border-color: #fecaca;
 
   background: #fef2f2;
@@ -424,23 +464,67 @@
   color: #b91c1c;
 }
 
-.bitcoin-timer svg {
+.payment-countdown svg {
   flex-shrink: 0;
 }
 
-.bitcoin-timer > div {
+.payment-countdown > div {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.bitcoin-timer strong {
+.payment-countdown strong {
   color: #334155;
   font-size: 13px;
 }
 
-.bitcoin-timer span {
+.payment-countdown span {
   font-size: 12px;
+}
+
+
+/* =========================
+   PAYMENT EXPIRED
+========================= */
+
+.payment-expired {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  padding: 14px;
+
+  margin-bottom: 22px;
+
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+
+  background: #fef2f2;
+
+  color: #b91c1c;
+}
+
+.payment-expired svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.payment-expired > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.payment-expired strong {
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.payment-expired span {
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 

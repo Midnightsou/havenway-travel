@@ -1,10 +1,24 @@
+function toDate(value) {
+  if (value instanceof Date) {
+    return value;
+  }
+
+  if (typeof value === "string" || typeof value === "number") {
+    const parsed = new Date(value);
+    return isNaN(parsed.getTime()) ? null : parsed;
+  }
+
+  return null;
+}
+
 export function startOfDay(date) {
-  if (!date) return null;
+  const parsed = toDate(date);
+  if (!parsed) return null;
 
   return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
+    parsed.getFullYear(),
+    parsed.getMonth(),
+    parsed.getDate()
   );
 }
 
@@ -27,9 +41,10 @@ export function getTripDuration(startDate, endDate) {
 }
 
 export function formatDate(date) {
-  if (!date) return "";
+  const parsed = toDate(date);
+  if (!parsed) return "";
 
-  return date.toLocaleDateString("en-US", {
+  return parsed.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -37,9 +52,10 @@ export function formatDate(date) {
 }
 
 export function formatShortDate(date) {
-  if (!date) return "";
+  const parsed = toDate(date);
+  if (!parsed) return "";
 
-  return date.toLocaleDateString("en-US", {
+  return parsed.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
   });

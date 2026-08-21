@@ -8,21 +8,27 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-import { useEffect, useMemo, useState } from "react";
+import {
+  useState,
+  useEffect,
+} from "react";
 
 import "./BitcoinPayment.css";
 
 
-const BTC_PAYMENT_ADDRESS =
-  "YOUR_BTC_ADDRESS_HERE";
+const BTC_ADDRESS =
+  "bc1qnr8l9grr2y3k062qqrykcpeeusy90rnm9e47tn";
 
-const QUOTE_DURATION_SECONDS = 20 * 60;
+const PAYMENT_WINDOW = 20 * 60;
+const POLL_INTERVAL = 15000;
+const DEV_PAYMENT_SIMULATOR = true;
 
 
 function BitcoinPayment({
   booking,
+  paymentStartedAt,
   onBack,
-  onPaymentComplete,
+  onPaymentComplete,  
 }) {
 
   const [btcPrice, setBtcPrice] =
@@ -37,16 +43,21 @@ function BitcoinPayment({
   const [copied, setCopied] =
     useState(false);
 
-  const [expiresAt, setExpiresAt] =
-    useState(null);
+  const [paymentDetected, setPaymentDetected] =
+    useState(false);
 
-  const [secondsLeft, setSecondsLeft] =
-    useState(QUOTE_DURATION_SECONDS);
+  const [checkingPayment, setCheckingPayment] =
+    useState(false);
 
+  const [paymentError, setPaymentError] =
+    useState("");
 
-  /*
-   * Booking total
-   */
+  const [secondsRemaining, setSecondsRemaining] =
+    useState(PAYMENT_WINDOW);
+
+  const [transactionId, setTransactionId] =
+    useState("");
+
 
   const usdTotal = Number(
     booking?.totals?.tripTotal ??
@@ -54,20 +65,27 @@ function BitcoinPayment({
       0
   );
 
+  const expectedBtc =
+    booking?.btcAmount || 0;
 
-  /*
-   * Fetch BTC/USD price
-   */
+  const travellerCount =
+    booking?.travellers ?? 1;
+
+  const btcAmount =
+    btcPrice && usdTotal ? usdTotal / btcPrice : 0;
+
+  const formattedBtcAmount =
+    Number.isFinite(btcAmount)
+      ? btcAmount.toFixed(8)
+      : "0.00000000";
 
   const fetchBitcoinPrice = async () => {
-
     try {
-
       setPriceLoading(true);
       setPriceError(false);
 
       const response = await fetch(
-        "https://mempool.space/api/v1/prices"
+        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
       );
 
       if (!response.ok) {
@@ -77,124 +95,163 @@ function BitcoinPayment({
       }
 
       const data = await response.json();
+      const price = data?.bitcoin?.usd;
 
-      const price = Number(data.USD);
-
-      if (!Number.isFinite(price) || price <= 0) {
+      if (!price) {
         throw new Error(
-          "Invalid Bitcoin price"
+          "Bitcoin price unavailable"
         );
       }
 
       setBtcPrice(price);
-
-      /*
-       * Start a fresh payment quote.
-       */
-
-      const expiry =
-        Date.now() +
-        QUOTE_DURATION_SECONDS * 1000;
-
-      setExpiresAt(expiry);
-
-      setSecondsLeft(
-        QUOTE_DURATION_SECONDS
-      );
-
     } catch (error) {
-
       console.error(
-        "Bitcoin price fetch failed:",
+        "Bitcoin price error:",
         error
       );
-
       setPriceError(true);
-
     } finally {
-
       setPriceLoading(false);
-
     }
-
   };
 
-
   useEffect(() => {
-
     fetchBitcoinPrice();
-
   }, []);
 
-
-  /*
-   * Countdown
-   */
-
-  useEffect(() => {
-
-    if (!expiresAt) return;
-
-    const timer = setInterval(() => {
-
-      const remaining = Math.max(
-        0,
-        Math.ceil(
-          (expiresAt - Date.now()) / 1000
-        )
-      );
-
-      setSecondsLeft(remaining);
-
-      if (remaining === 0) {
-        clearInterval(timer);
-      }
-
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-
-  }, [expiresAt]);
-
-
-  /*
-   * BTC amount
-   */
-
-  const btcAmount = useMemo(() => {
-
-    if (!btcPrice || !usdTotal) {
-      return null;
+  const checkForPayment = async () => {
+    if (!BTC_ADDRESS || !expectedBtc) {
+      return;
     }
 
-    return usdTotal / btcPrice;
+    try {
+      setCheckingPayment(true);
+      setPaymentError("");
 
-  }, [usdTotal, btcPrice]);
+      const response = await fetch(
+        `https://mempool.space/api/address/${BTC_ADDRESS}/txs`
+      );
 
+      if (!response.ok) {
+        throw new Error(
+          "Unable to check blockchain"
+        );
+      }
 
-  /*
-   * Display amount.
-   *
-   * Bitcoin supports 8 decimal places.
-   */
+      const transactions = await response.json();
+      const expectedSats =
+        Math.round(expectedBtc * 100000000);
 
-  const formattedBtcAmount =
-    btcAmount !== null
-      ? btcAmount.toFixed(8)
-      : "—";
+      const matchingTransaction =
+        transactions.find((transaction) => {
+          const outputToOurAddress =
+            transaction?.vout?.find(
+              (output) =>
+                output?.scriptpubkey_address ===
+                BTC_ADDRESS
+            );
 
+          if (!outputToOurAddress) {
+            return false;
+          }
 
-  /*
-   * Countdown formatting
-   */
+          const tolerance = 100;
+
+          return (
+            outputToOurAddress.value >=
+            expectedSats - tolerance
+          );
+        });
+
+      if (matchingTransaction) {
+        setPaymentDetected(true);
+        setTransactionId(
+          matchingTransaction.txid ||
+            "UNKNOWN"
+        );
+      } else {
+        setPaymentDetected(false);
+      }
+    } catch (error) {
+      console.error(
+        "Blockchain payment check failed:",
+        error
+      );
+      setPaymentError(
+        "Unable to check the Bitcoin network. Retrying..."
+      );
+    } finally {
+      setCheckingPayment(false);
+    }
+  };
+
+  useEffect(() => {
+    if (DEV_PAYMENT_SIMULATOR) {
+      const simulator = setTimeout(() => {
+        setPaymentDetected(true);
+        setTransactionId(
+          "DEV-TEST-TRANSACTION"
+        );
+      }, 8000);
+
+      return () => {
+        clearTimeout(simulator);
+      };
+    }
+
+    if (!BTC_ADDRESS || !expectedBtc) {
+      return;
+    }
+
+    checkForPayment();
+
+    const interval = setInterval(
+      checkForPayment,
+      POLL_INTERVAL
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [expectedBtc]);
+
+  useEffect(() => {
+    if (!paymentStartedAt) {
+      return;
+    }
+
+    const updateTimer = () => {
+      const elapsed =
+        Math.floor(
+          (Date.now() - paymentStartedAt) / 1000
+        );
+
+      const remaining =
+        Math.max(
+          PAYMENT_WINDOW - elapsed,
+          0
+        );
+
+      setSecondsRemaining(remaining);
+    };
+
+    updateTimer();
+
+    const interval = setInterval(
+      updateTimer,
+      1000
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [paymentStartedAt]);
 
   const minutes =
-    Math.floor(secondsLeft / 60);
+    Math.floor(secondsRemaining / 60);
 
   const seconds =
-    secondsLeft % 60;
+    secondsRemaining % 60;
 
   const formattedTime =
     `${String(minutes).padStart(2, "0")}:${String(
@@ -202,16 +259,10 @@ function BitcoinPayment({
     ).padStart(2, "0")}`;
 
 
-  /*
-   * Copy BTC address
-   */
-
   const copyAddress = async () => {
-
     try {
-
       await navigator.clipboard.writeText(
-        BTC_PAYMENT_ADDRESS
+        BTC_ADDRESS
       );
 
       setCopied(true);
@@ -219,26 +270,21 @@ function BitcoinPayment({
       setTimeout(() => {
         setCopied(false);
       }, 2000);
-
     } catch (error) {
-
       console.error(
         "Failed to copy Bitcoin address:",
         error
       );
-
     }
-
   };
 
+  const handleContinue = () => {
+    if (!paymentDetected) {
+      return;
+    }
 
-  /*
-   * Quote expired
-   */
-
-  const quoteExpired =
-    secondsLeft <= 0;
-
+    onPaymentComplete();
+  };
 
   return (
     <section className="bitcoin-payment">
@@ -289,12 +335,49 @@ function BitcoinPayment({
           <div className="bitcoin-total">
 
             <span>
-              Trip total
+              Total trip price
             </span>
 
             <strong>
               ${usdTotal.toFixed(2)}
             </strong>
+
+            {priceLoading && (
+              <small>
+                Calculating Bitcoin amount...
+              </small>
+            )}
+
+            {priceError && (
+              <small className="btc-price-error">
+                Unable to fetch the current Bitcoin price. Please try again.
+              </small>
+            )}
+
+            {!priceLoading &&
+              !priceError &&
+              btcPrice && (
+                <div className="btc-conversion">
+                  <span>
+                    Amount to send
+                  </span>
+
+                  <strong>
+                    {formattedBtcAmount} BTC
+                  </strong>
+
+                  <small>
+                    1 BTC ≈ ${btcPrice.toLocaleString("en-US", { maximumFractionDigits: 2 })}
+                  </small>
+                </div>
+              )}
+
+            <small>
+              {travellerCount}{" "}
+              {travellerCount === 1
+                ? "traveler"
+                : "travelers"}
+            </small>
 
           </div>
 
@@ -395,7 +478,7 @@ function BitcoinPayment({
             <div className="bitcoin-address">
 
               <code>
-                {BTC_PAYMENT_ADDRESS}
+                {BTC_ADDRESS}
               </code>
 
               <button
@@ -425,10 +508,8 @@ function BitcoinPayment({
           {/* PAYMENT WINDOW */}
 
           <div
-            className={`bitcoin-timer ${
-              quoteExpired
-                ? "expired"
-                : ""
+            className={`payment-countdown ${
+              secondsRemaining <= 0 ? "expired" : ""
             }`}
           >
 
@@ -437,20 +518,33 @@ function BitcoinPayment({
             <div>
 
               <strong>
-                {quoteExpired
-                  ? "Payment quote expired"
-                  : "Payment amount locked"}
+                Payment window
               </strong>
 
               <span>
-                {quoteExpired
-                  ? "Refresh to get a new Bitcoin amount."
-                  : `Quote expires in ${formattedTime}`}
+                {formattedTime} remaining
               </span>
 
             </div>
 
           </div>
+
+          {secondsRemaining <= 0 && (
+            <div className="payment-expired">
+              <Clock size={19} />
+
+              <div>
+                <strong>
+                  Payment window expired
+                </strong>
+
+                <span>
+                  This payment session has expired.
+                  Please start a new payment.
+                </span>
+              </div>
+            </div>
+          )}
 
 
           {/* WARNING */}
@@ -470,61 +564,69 @@ function BitcoinPayment({
           </div>
 
 
-          {/* STATUS */}
+          {/* PAYMENT STATUS */}
 
           <div className="bitcoin-status">
-
             <div className="status-icon">
               <Clock size={18} />
             </div>
 
             <div>
-
-              <strong>
-                Waiting for payment
-              </strong>
-
-              <span>
-                Your payment will be verified
-                on the Bitcoin network.
-              </span>
-
+              {paymentDetected ? (
+                <>
+                  <strong>Payment detected</strong>
+                  <span>
+                    Bitcoin payment detected on-chain. You can now complete your booking.
+                  </span>
+                </>
+              ) : secondsRemaining <= 0 ? (
+                <>
+                  <strong>Payment window expired</strong>
+                  <span>
+                    Please start a new payment session.
+                  </span>
+                </>
+              ) : (
+                <>
+                  <strong>Waiting for Bitcoin payment</strong>
+                  <span>
+                    Checking the blockchain automatically · {checkingPayment ? "Checking..." : "Waiting for transaction"}
+                  </span>
+                </>
+              )}
             </div>
-
           </div>
 
-
-          {/* REFRESH */}
-
-          {quoteExpired && (
-
-            <button
-              className="bitcoin-refresh-button"
-              onClick={fetchBitcoinPrice}
-            >
-              <RefreshCw size={17} />
-              Get new payment amount
-            </button>
-
+          {transactionId && (
+            <div className="bitcoin-transaction">
+              <span>Transaction</span>
+              <code>{transactionId}</code>
+            </div>
           )}
 
-
-          {/* PAID */}
-
-          {!quoteExpired && !priceError && (
-
-            <button
-              className="bitcoin-paid-button"
-              disabled={
-                priceLoading ||
-                !btcAmount
-              }
-              onClick={onPaymentComplete}
-            >
-              I've sent the Bitcoin
-            </button>
-
+          {paymentError && (
+            <div className="bitcoin-error payment-error">
+              <span>{paymentError}</span>
+            </div>
           )}
+
+          <button
+            className="bitcoin-paid-button"
+            disabled={
+              !paymentDetected ||
+              priceLoading ||
+              !btcAmount ||
+              !btcPrice ||
+              secondsRemaining <= 0
+            }
+            onClick={handleContinue}
+          >
+            {paymentDetected
+              ? "Continue to confirmation"
+              : secondsRemaining <= 0
+                ? "Payment window expired"
+                : "Waiting for payment"}
+          </button>
 
 
           {/* SECURITY */}

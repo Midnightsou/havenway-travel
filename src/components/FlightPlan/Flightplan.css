@@ -379,3 +379,162 @@
 .flight-total-price {
   font-size: 28px;
 }
+/* =========================
+   FLIGHT SELECTION
+========================= */
+
+.flight-card {
+  position: relative;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.flight-card:hover {
+  transform: translateY(-2px);
+}
+
+.flight-card-selected {
+  border-color: #f5b335;
+  box-shadow:
+    0 0 0 2px rgba(245, 179, 53, 0.18);
+}
+
+.flight-selected-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  background: rgba(245, 179, 53, 0.12);
+
+  color: #f5b335;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.flight-plan-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  margin-bottom: 28px;
+}
+
+.flight-option {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 18px 20px;
+
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: inherit;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.flight-option:hover {
+  border-color: #f5b335;
+}
+
+.flight-option > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.flight-option > div:last-child {
+  align-items: flex-end;
+}
+
+.flight-option strong {
+  font-size: 17px;
+}
+
+.flight-option span {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.flight-option-selected {
+  border-color: #f5b335;
+  box-shadow:
+    0 0 0 2px rgba(245, 179, 53, 0.18);
+
+  background: rgba(245, 179, 53, 0.06);
+}
+
+.flight-option-selected > div:last-child span {
+  color: #f5b335;
+  font-weight: 700;
+}
+
+.flight-select-button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  margin-top: 20px;
+  padding: 12px 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: #cbd5e1;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.flight-select-button:hover {
+  border-color: rgba(245, 179, 53, 0.4);
+  color: #f5b335;
+}
+
+.flight-select-button-selected {
+  background: rgba(245, 179, 53, 0.12);
+  border-color: #f5b335;
+  color: #f5b335;
+}

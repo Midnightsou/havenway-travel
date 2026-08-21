@@ -24,6 +24,8 @@ function TravelContent({
   days,
   selectedRoom,
   onSelectRoom,
+  selectedFlight,
+  onSelectFlight,
   selectedCar,
   onSelectCar,
   selectedActivities,
@@ -76,6 +78,8 @@ function TravelContent({
         travellers={travellers}
         startDate={startDate}
         endDate={endDate}
+        selectedFlight={selectedFlight}
+        onSelectFlight={onSelectFlight}
       />
     );
   }

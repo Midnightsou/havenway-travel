@@ -84,6 +84,18 @@ function SearchBar({
   setStartDate,
   setEndDate,
 }) {
+  /*
+   * Normalize dates that may have been
+   * restored from sessionStorage as strings.
+   */
+  const normalizedStartDate = startDate
+    ? new Date(startDate)
+    : null;
+
+  const normalizedEndDate = endDate
+    ? new Date(endDate)
+    : null;
+
   const [calendarOpen, setCalendarOpen] =
     useState(false);
 
@@ -162,11 +174,11 @@ function SearchBar({
   const handleCalendarOpen = () => {
     setCalendarOpen((previous) => !previous);
 
-    if (startDate) {
+    if (normalizedStartDate) {
       setCurrentMonth(
         new Date(
-          startDate.getFullYear(),
-          startDate.getMonth(),
+          normalizedStartDate.getFullYear(),
+          normalizedStartDate.getMonth(),
           1
         )
       );
@@ -185,7 +197,7 @@ function SearchBar({
      * First selection:
      * choose departure/check-in.
      */
-    if (!startDate || !selectingReturn) {
+    if (!normalizedStartDate || !selectingReturn) {
       setStartDate(date);
       setEndDate(null);
       setSelectingReturn(true);
@@ -200,7 +212,7 @@ function SearchBar({
      *
      * Treat it as a new departure.
      */
-    if (date < startDate) {
+    if (date < normalizedStartDate) {
       setStartDate(date);
       setEndDate(null);
       setSelectingReturn(true);
@@ -265,14 +277,14 @@ function SearchBar({
    * inside the selected range.
    */
   const isInRange = (date) => {
-    if (!startDate) {
+    if (!normalizedStartDate) {
       return false;
     }
 
-    if (endDate) {
+    if (normalizedEndDate) {
       return (
-        date > startDate &&
-        date < endDate
+        date > normalizedStartDate &&
+        date < normalizedEndDate
       );
     }
 
@@ -285,14 +297,14 @@ function SearchBar({
       hoverDate
     ) {
       const rangeStart =
-        hoverDate < startDate
+        hoverDate < normalizedStartDate
           ? hoverDate
-          : startDate;
+          : normalizedStartDate;
 
       const rangeEnd =
-        hoverDate > startDate
+        hoverDate > normalizedStartDate
           ? hoverDate
-          : startDate;
+          : normalizedStartDate;
 
       return (
         date > rangeStart &&
@@ -305,8 +317,8 @@ function SearchBar({
 
   const nights =
     differenceInDays(
-      startDate,
-      endDate
+      normalizedStartDate,
+      normalizedEndDate
     );
 
   const days =
@@ -366,15 +378,15 @@ function SearchBar({
                 </span>
 
                 <strong>
-                  {startDate && endDate
+                  {normalizedStartDate && normalizedEndDate
                     ? `${formatDate(
-                        startDate
+                        normalizedStartDate
                       )} – ${formatDate(
-                        endDate
+                        normalizedEndDate
                       )}`
-                    : startDate
+                    : normalizedStartDate
                     ? `${formatDate(
-                        startDate
+                        normalizedStartDate
                       )} – Select return`
                     : "Select dates"}
                 </strong>
@@ -401,15 +413,15 @@ function SearchBar({
                     </span>
 
                     <strong>
-                      {startDate
-                        ? endDate
+                      {normalizedStartDate
+                        ? normalizedEndDate
                           ? `${formatDate(
-                              startDate
+                              normalizedStartDate
                             )} – ${formatDate(
-                              endDate
+                              normalizedEndDate
                             )}`
                           : `${formatDate(
-                              startDate
+                              normalizedStartDate
                             )} – Select return`
                         : "Select your travel dates"}
                     </strong>
@@ -487,13 +499,13 @@ function SearchBar({
                       const isStart =
                         sameDate(
                           date,
-                          startDate
+                          normalizedStartDate
                         );
 
                       const isEnd =
                         sameDate(
                           date,
-                          endDate
+                          normalizedEndDate
                         );
 
                       const isToday =
@@ -566,8 +578,8 @@ function SearchBar({
 
                 {/* TRIP DURATION */}
 
-                {startDate &&
-                  endDate && (
+                {normalizedStartDate &&
+                  normalizedEndDate && (
                     <div className="date-picker-summary">
 
                       <span>

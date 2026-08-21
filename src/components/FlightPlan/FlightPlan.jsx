@@ -1,9 +1,12 @@
+import { useState } from "react";
+
 import {
   Plane,
   ArrowRight,
   Clock,
   Briefcase,
   CircleCheck,
+  Check,
 } from "lucide-react";
 
 import flights from "../../data/flight";
@@ -13,13 +16,42 @@ import { formatDate } from "../../utils/dates";
 import "./Flightplan.css";
 
 
-function FlightCard({ flight, date }) {
+function FlightCard({
+  flight,
+  date,
+  selected,
+  onSelect,
+}) {
+
   return (
-    <article className="flight-card">
+    <article
+      className={`flight-card ${
+        selected
+          ? "flight-card-selected"
+          : ""
+      }`}
+      onClick={onSelect}
+    >
+
+      {/* SELECTED BADGE */}
+
+      {selected && (
+        <div className="flight-selected-badge">
+
+          <Check size={15} />
+
+          Selected
+
+        </div>
+      )}
+
+
+      {/* TOP */}
 
       <div className="flight-card-top">
 
         <div>
+
           <span className="flight-type">
             {flight.type}
           </span>
@@ -27,22 +59,29 @@ function FlightCard({ flight, date }) {
           <h3>
             {date}
           </h3>
+
         </div>
 
         <div className="flight-price">
-          <span>Flight</span>
+
+          <span>
+            Flight
+          </span>
 
           <strong>
             ${flight.price}
           </strong>
+
         </div>
 
       </div>
 
 
+      {/* ROUTE */}
+
       <div className="flight-route">
 
-        {/* Departure */}
+        {/* DEPARTURE */}
 
         <div className="airport departure">
 
@@ -61,30 +100,38 @@ function FlightCard({ flight, date }) {
         </div>
 
 
-        {/* Flight line */}
+        {/* PATH */}
 
         <div className="flight-path">
 
           <div className="flight-duration">
+
             <Clock size={16} />
 
             <span>
               {flight.duration}
             </span>
+
           </div>
 
+
           <div className="route-line">
+
             <div className="line" />
 
             <div className="plane-icon">
+
               <Plane size={22} />
+
             </div>
 
             <ArrowRight
               className="route-arrow"
               size={18}
             />
+
           </div>
+
 
           <span className="stops">
             {flight.stops}
@@ -93,7 +140,7 @@ function FlightCard({ flight, date }) {
         </div>
 
 
-        {/* Arrival */}
+        {/* ARRIVAL */}
 
         <div className="airport arrival">
 
@@ -123,15 +170,20 @@ function FlightCard({ flight, date }) {
       <div className="flight-divider" />
 
 
+      {/* DETAILS */}
+
       <div className="flight-details">
 
         <div className="airline-info">
 
           <div className="airline-logo">
+
             <Plane size={20} />
+
           </div>
 
           <div>
+
             <strong>
               {flight.airline}
             </strong>
@@ -139,6 +191,7 @@ function FlightCard({ flight, date }) {
             <span>
               {flight.flightNumber}
             </span>
+
           </div>
 
         </div>
@@ -147,19 +200,23 @@ function FlightCard({ flight, date }) {
         <div className="flight-meta">
 
           <div>
+
             <Briefcase size={18} />
 
             <span>
               {flight.cabin}
             </span>
+
           </div>
 
           <div>
+
             <CircleCheck size={18} />
 
             <span>
               {flight.baggage}
             </span>
+
           </div>
 
         </div>
@@ -167,25 +224,65 @@ function FlightCard({ flight, date }) {
       </div>
 
 
+      {/* AIRPORT DETAILS */}
+
       <div className="airport-details">
 
         <div>
-          <span>Departure</span>
+
+          <span>
+            Departure
+          </span>
 
           <strong>
             {flight.from.airportName}
           </strong>
+
         </div>
 
         <div>
-          <span>Arrival</span>
+
+          <span>
+            Arrival
+          </span>
 
           <strong>
             {flight.to.airportName}
           </strong>
+
         </div>
 
       </div>
+
+
+      {/* SELECT BUTTON */}
+
+      <button
+        type="button"
+        className={`flight-select-button ${
+          selected
+            ? "flight-select-button-selected"
+            : ""
+        }`}
+        onClick={(event) => {
+
+          event.stopPropagation();
+
+          onSelect();
+
+        }}
+      >
+
+        {selected ? (
+          <>
+            <Check size={17} />
+            Selected
+          </>
+        ) : (
+          "Select flight"
+        )}
+
+      </button>
 
     </article>
   );
@@ -196,16 +293,32 @@ function FlightPlan({
   travellers = 1,
   startDate,
   endDate,
+  selectedFlight,
+  onSelectFlight,
 }) {
 
-  const flightTotal =
-    (flights.outbound.price +
-      flights.return.price) *
-    travellers;
+  const flightOptions = Object.entries(
+    flights
+  );
 
-  const dateRange = startDate && endDate
-    ? `${formatDate(startDate)} – ${formatDate(endDate)}`
-    : "";
+
+  const selectedPlan =
+    flights[selectedFlight] || null;
+
+
+  const flightTotal = selectedPlan
+    ? (
+        selectedPlan.outbound.price +
+        selectedPlan.return.price
+      ) * travellers
+    : 0;
+
+
+  const dateRange =
+    startDate && endDate
+      ? `${formatDate(startDate)} – ${formatDate(endDate)}`
+      : "";
+
 
   return (
     <section
@@ -215,72 +328,166 @@ function FlightPlan({
 
       <div className="container">
 
+        {/* HEADING */}
+
         <div className="flight-section-heading">
 
           <div>
+
             <span className="section-eyebrow">
               Your journey
             </span>
 
             <h2>
-              Flight details
+              Choose your flight
             </h2>
 
             <p>
-              Washington to Los Angeles ·
+              Washington to Los Angeles ·{" "}
               {dateRange}
             </p>
+
           </div>
 
+
           <div className="trip-badge">
+
             <Plane size={18} />
 
             Round trip
+
           </div>
 
         </div>
 
 
-        <div className="flight-cards">
+        {/* FLIGHT PLAN OPTIONS */}
 
-          <FlightCard
-            flight={flights.outbound}
-            date={startDate ? formatDate(startDate) : ""}
-          />
+        <div className="flight-plan-options">
 
-          <FlightCard
-            flight={flights.return}
-            date={endDate ? formatDate(endDate) : ""}
-          />
+          {flightOptions.map(([id, plan]) => {
+
+            const total =
+              (plan.outbound.price +
+                plan.return.price) *
+              travellers;
+
+            const isSelected =
+              selectedFlight === id;
+
+            return (
+              <button
+                key={id}
+                type="button"
+                className={`flight-option ${
+                  isSelected
+                    ? "flight-option-selected"
+                    : ""
+                }`}
+                onClick={() =>
+                  onSelectFlight(id)
+                }
+              >
+
+                <div>
+
+                  <strong>
+                    {plan.name}
+                  </strong>
+
+                  <span>
+                    {plan.outbound.cabin}
+                  </span>
+
+                </div>
+
+                <div>
+
+                  <strong>
+                    ${total}
+                  </strong>
+
+                  {isSelected && (
+                    <span>
+                      Selected
+                    </span>
+                  )}
+
+                </div>
+
+              </button>
+            );
+
+          })}
 
         </div>
 
 
-        <div className="flight-total">
+        {/* FLIGHT CARDS */}
 
-          <div>
-            <strong>
-              Total flight cost
+        {selectedPlan && (
+          <div className="flight-cards">
+
+            <FlightCard
+              flight={selectedPlan.outbound}
+              date={
+                startDate
+                  ? formatDate(startDate)
+                  : ""
+              }
+            />
+
+            <FlightCard
+              flight={selectedPlan.return}
+              date={
+                endDate
+                  ? formatDate(endDate)
+                  : ""
+              }
+            />
+
+          </div>
+        )}
+
+
+        {/* TOTAL */}
+
+        {selectedPlan && (
+
+          <div className="flight-total">
+
+            <div>
+
+              <strong>
+                Total flight cost
+              </strong>
+
+              <span>
+                {selectedPlan.name} round-trip
+                for {travellers}{" "}
+                {travellers === 1
+                  ? "traveler"
+                  : "travelers"}
+              </span>
+
+            </div>
+
+
+            <strong className="flight-total-price">
+
+              ${flightTotal}
+
             </strong>
 
-            <span>
-              Round-trip flight for {travellers}{" "}
-              {travellers === 1
-                ? "traveler"
-                : "travelers"}
-            </span>
           </div>
 
-          <strong className="flight-total-price">
-            ${flightTotal}
-          </strong>
-
-        </div>
+        )}
 
       </div>
 
     </section>
   );
 }
+
 
 export default FlightPlan;
