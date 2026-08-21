@@ -19,6 +19,7 @@ import flights from "../../data/flight";
 import cars from "../../data/cars";
 import activities from "../../data/activities";
 import packages from "../../data/packages";
+import hotels from "../../data/hotel";
 
 import { formatShortDate } from "../../utils/dates";
 
@@ -42,9 +43,11 @@ function BookingModal({ trip, onClose, onConfirm }) {
     nights = 0,
     days = 0,
     roomId = null,
+    flightId = null,
     carId = null,
     activityIds = [],
     packageId = null,
+    selectedHotel = null,
   } = trip;
 
   const [traveler, setTraveler] = useState({
@@ -56,6 +59,10 @@ function BookingModal({ trip, onClose, onConfirm }) {
 
   const room = roomId
     ? rooms.find((item) => item.id === roomId)
+    : null;
+
+  const hotel = selectedHotel
+    ? hotels.find((item) => item.id === selectedHotel)
     : null;
 
   const car = carId
@@ -72,7 +79,14 @@ function BookingModal({ trip, onClose, onConfirm }) {
 
   const rentalDays = days;
 
-  const flightTotal = calculateFlightTotal(travellers);
+  const flightPlan = flightId
+    ? flights[flightId]
+    : flights.economy;
+
+  const flightTotal = calculateFlightTotal(
+    flightId,
+    travellers
+  );
   const hotelTotal = calculateHotelTotal(roomId, nights);
   const carTotal = calculateCarTotal(carId, rentalDays);
   const activitiesTotal = calculateActivitiesTotal(activityIds, travellers);
@@ -154,16 +168,16 @@ function BookingModal({ trip, onClose, onConfirm }) {
               <div className="booking-flight">
                 <div>
                   <span>{startDate ? formatShortDate(startDate) : ""} · Departure</span>
-                  <strong>{flights.outbound.from.airport} → {flights.outbound.to.airport}</strong>
-                  <small>{flights.outbound.from.time} – {flights.outbound.to.time}</small>
+                  <strong>{flightPlan.outbound.from.airport} → {flightPlan.outbound.to.airport}</strong>
+                  <small>{flightPlan.outbound.from.time} – {flightPlan.outbound.to.time}</small>
                 </div>
               </div>
 
               <div className="booking-flight">
                 <div>
                   <span>{endDate ? formatShortDate(endDate) : ""} · Return</span>
-                  <strong>{flights.return.from.airport} → {flights.return.to.airport}</strong>
-                  <small>{flights.return.from.time} – {flights.return.to.time}</small>
+                  <strong>{flightPlan.return.from.airport} → {flightPlan.return.to.airport}</strong>
+                  <small>{flightPlan.return.from.time} – {flightPlan.return.to.time}</small>
                 </div>
               </div>
             </section>
@@ -182,7 +196,7 @@ function BookingModal({ trip, onClose, onConfirm }) {
                     <img src={room.images[0]} alt={room.name} />
                   </div>
                   <div>
-                    <strong>The Westin Los Angeles Airport</strong>
+                    <strong>{hotel?.name || "Your selected hotel"}</strong>
                     <span>{room.name}</span>
                     <small>{room.beds} · {room.guests}</small>
                   </div>

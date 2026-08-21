@@ -22,6 +22,8 @@ function TravelContent({
   endDate,
   nights,
   days,
+  hotels,
+  selectedHotel,
   selectedRoom,
   onSelectRoom,
   selectedFlight,
@@ -35,12 +37,19 @@ function TravelContent({
   onContinue,
 }) {
 
+  const activeHotel =
+    selectedHotel
+      ? hotels?.find(
+          (hotel) => hotel.id === selectedHotel
+        )
+      : undefined;
+
   if (activeTab === "Stays") {
     return (
       <>
-        <HotelHero />
+        <HotelHero hotel={activeHotel} />
 
-        <HotelOverview />
+        <HotelOverview hotel={activeHotel} />
 
         <HotelRooms
           selectedRoom={selectedRoom}
@@ -53,13 +62,16 @@ function TravelContent({
         <Itinerary
           startDate={startDate}
           endDate={endDate}
+          selectedFlight={selectedFlight}
         />
 
         <TripSummary
           selectedRoom={selectedRoom}
           selectedCar={selectedCar}
+          selectedFlight={selectedFlight}
           selectedActivities={selectedActivities}
           selectedPackage={selectedPackage}
+          selectedHotel={selectedHotel}
           onContinue={onContinue}
           travellers={travellers}
           startDate={startDate}
@@ -100,8 +112,10 @@ function TravelContent({
         <TripSummary
           selectedRoom={selectedRoom}
           selectedCar={selectedCar}
+          selectedFlight={selectedFlight}
           selectedActivities={selectedActivities}
           selectedPackage={selectedPackage}
+          selectedHotel={selectedHotel}
           onContinue={onContinue}
           travellers={travellers}
           startDate={startDate}
@@ -122,6 +136,7 @@ function TravelContent({
         endDate={endDate}
         nights={nights}
         selectedPackage={selectedPackage}
+        selectedHotel={selectedHotel}
         onSelectPackage={onSelectPackage}
       />
     );

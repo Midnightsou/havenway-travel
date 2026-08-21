@@ -1,47 +1,163 @@
-const hotel = {
-  name: "The Westin Los Angeles Airport",
+const hotel = [
 
-  location: "5400 W Century Blvd, Los Angeles, CA",
+  {
+    id: "westin-los-angeles",
 
-  rating: 8.6,
-  ratingLabel: "Excellent",
-  reviewCount: 1248,
+    name: "The Westin Los Angeles Airport",
 
-  description:
-    "Hotel in Los Angeles with comfortable accommodations, convenient airport access, and easy connections to some of the city's most popular attractions.",
+    location:
+      "5400 W Century Blvd, Los Angeles, CA",
 
-  longDescription:
-    "Located near Los Angeles International Airport, this hotel offers a comfortable base for your trip to Los Angeles. Enjoy convenient access to the airport, spacious accommodations, dining options, and popular attractions across the city.",
+    rating: 8.6,
 
-  checkIn: "3:00 PM",
-  checkOut: "11:00 AM",
+    ratingLabel: "Excellent",
 
-  amenities: [
-    "Outdoor pool",
-    "Restaurant",
-    "Bar",
-    "Fitness center",
-    "Free WiFi",
-    "Airport shuttle",
-    "Parking available",
-    "24-hour front desk",
-  ],
+    reviewCount: 1248,
 
-  highlights: [
-    "Convenient location near Los Angeles International Airport",
-    "Outdoor pool and fitness center",
-    "On-site restaurant and bar",
-    "Easy access to popular Los Angeles attractions",
-  ],
+    description:
+      "Hotel in Los Angeles with comfortable accommodations, convenient airport access, and easy connections to some of the city's most popular attractions.",
+
+    longDescription:
+      "Located near Los Angeles International Airport, this hotel offers a comfortable base for your trip to Los Angeles. Enjoy convenient access to the airport, spacious accommodations, dining options, and popular attractions across the city.",
+
+    checkIn: "3:00 PM",
+
+    checkOut: "11:00 AM",
+
+    amenities: [
+      "Outdoor pool",
+      "Restaurant",
+      "Bar",
+      "Fitness center",
+      "Free WiFi",
+      "Airport shuttle",
+      "Parking available",
+      "24-hour front desk",
+    ],
+
+    highlights: [
+      "Convenient location near Los Angeles International Airport",
+      "Outdoor pool and fitness center",
+      "On-site restaurant and bar",
+      "Easy access to popular Los Angeles attractions",
+    ],
+
+    images: [
+      "/images/hotel/image 1.jpeg",
+      "/images/hotel/image 2.jpeg",
+      "/images/hotel/image 3.jpeg",
+      "/images/hotel/image 4.jpeg",
+      "/images/hotel/image 5.jpeg",
+    ],
+  },
 
 
-  images: [
-    "/images/hotel/image 1.jpeg",
-    "/images/hotel/image 2.jpeg",
-    "/images/hotel/image 3.jpeg",
-    "/images/hotel/image 4.jpeg",
-    "/images/hotel/image 5.jpeg",
-  ],
-};
+  {
+    id: "hyatt-regency-lax",
+
+    name:
+      "Hyatt Regency Los Angeles International Airport",
+
+    location:
+      "6225 W Century Blvd, Los Angeles, CA",
+
+    rating: 8.7,
+
+    ratingLabel: "Excellent",
+
+    reviewCount: 2184,
+
+    description:
+      "A modern Los Angeles airport hotel offering comfortable accommodations, convenient airport access, and easy connections to the city's major attractions.",
+
+    longDescription:
+      "Located close to Los Angeles International Airport, Hyatt Regency Los Angeles International Airport offers modern accommodations, convenient dining options, and easy access to the airport and surrounding Los Angeles attractions.",
+
+    checkIn: "3:00 PM",
+
+    checkOut: "11:00 AM",
+
+    amenities: [
+      "Outdoor pool",
+      "Restaurant",
+      "Bar",
+      "Fitness center",
+      "Free WiFi",
+      "Airport shuttle",
+      "Parking available",
+      "24-hour front desk",
+    ],
+
+    highlights: [
+      "Convenient location near Los Angeles International Airport",
+      "Modern rooms and comfortable accommodations",
+      "Outdoor pool and fitness facilities",
+      "Easy airport and city access",
+    ],
+
+    images: [
+      "/images/hotel/image 6.jpeg",
+      "/images/hotel/image 2.jpeg",
+      "/images/hotel/image 3.jpeg",
+      "/images/hotel/image 4.jpeg",
+      "/images/hotel/image 5.jpeg",
+    ],
+  },
+
+
+  {
+    id: "hilton-lax",
+
+    name:
+      "Hilton Los Angeles Airport",
+
+    location:
+      "5711 W Century Blvd, Los Angeles, CA",
+
+    rating: 8.3,
+
+    ratingLabel: "Very good",
+
+    reviewCount: 3156,
+
+    description:
+      "A comfortable Los Angeles airport hotel with spacious accommodations, dining options, and convenient access to LAX and the surrounding area.",
+
+    longDescription:
+      "Hilton Los Angeles Airport provides a convenient base for travelers visiting Los Angeles. The hotel offers comfortable accommodations, dining options, fitness facilities, and convenient access to Los Angeles International Airport.",
+
+    checkIn: "3:00 PM",
+
+    checkOut: "11:00 AM",
+
+    amenities: [
+      "Outdoor pool",
+      "Restaurant",
+      "Bar",
+      "Fitness center",
+      "Free WiFi",
+      "Airport shuttle",
+      "Parking available",
+      "24-hour front desk",
+    ],
+
+    highlights: [
+      "Close to Los Angeles International Airport",
+      "Comfortable rooms for travelers",
+      "On-site dining options",
+      "Pool and fitness facilities",
+    ],
+
+    images: [
+      "/images/hotel/image 7.jpeg",
+      "/images/hotel/image 3.jpeg",
+      "/images/hotel/image 1.jpeg",
+      "/images/hotel/image 4.jpeg",
+      "/images/hotel/image 5.jpeg",
+    ],
+  },
+
+];
+
 
 export default hotel;

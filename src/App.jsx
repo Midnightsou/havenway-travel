@@ -21,6 +21,8 @@ import {
   clearTrip,
 } from "./utils/tripStorage";
 
+import hotels from "./data/hotel";
+
 import rooms from "./data/rooms";
 import cars from "./data/cars";
 import flights from "./data/flight";
@@ -92,6 +94,11 @@ function AppRoutes() {
       storedTrip?.selectedPackage ?? null
     );
 
+  const [selectedHotel, setSelectedHotel] =
+    useState(
+      storedTrip?.selectedHotel ?? null
+    );
+
   const [booking, setBooking] =
     useState(
       storedTrip?.booking ?? null
@@ -126,6 +133,7 @@ function AppRoutes() {
       selectedCar,
       selectedActivities,
       selectedPackage,
+      selectedHotel,
       booking,
       paymentBooking,
       paymentStartedAt,
@@ -140,6 +148,7 @@ function AppRoutes() {
     selectedCar,
     selectedActivities,
     selectedPackage,
+    selectedHotel,
     booking,
     paymentBooking,
     paymentStartedAt,
@@ -172,6 +181,7 @@ function AppRoutes() {
     carId: selectedCar,
     activityIds: selectedActivities,
     packageId: selectedPackage,
+    selectedHotel,
   };
 
 
@@ -236,6 +246,22 @@ function AppRoutes() {
   };
 
 
+  const handleSelectHotel = (hotelId) => {
+
+    setSelectedHotel(hotelId);
+
+    navigate("/stays");
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 120);
+
+  };
+
+
   const handleTabChange = (tab) => {
 
     setActiveTab(tab);
@@ -283,6 +309,12 @@ function AppRoutes() {
         )
       : null;
 
+    const hotel = selectedHotel
+      ? hotels.find(
+          (item) => item.id === selectedHotel
+        )
+      : null;
+
 
     /*
      * Pricing
@@ -316,7 +348,8 @@ function AppRoutes() {
     const itinerary =
       generateItinerary(
         startDate,
-        endDate
+        endDate,
+        selectedFlightPlan
       );
 
 
@@ -356,10 +389,14 @@ function AppRoutes() {
 
       flight: selectedFlightPlan
         ? {
+            plan: selectedFlight,
+            name: selectedFlightPlan.name,
+
             outbound: {
               ...selectedFlightPlan.outbound,
               date: startDate,
             },
+
             return: {
               ...selectedFlightPlan.return,
               date: endDate,
@@ -367,9 +404,7 @@ function AppRoutes() {
           }
         : null,
 
-      hotel: {
-        name: "The Westin Los Angeles Airport",
-      },
+      hotel: hotel || null,
 
       room: room || null,
 
@@ -474,6 +509,8 @@ function AppRoutes() {
 
     setSelectedPackage(null);
 
+    setSelectedHotel(null);
+
     setStartDate(null);
 
     setEndDate(null);
@@ -512,6 +549,7 @@ function AppRoutes() {
     onSelectActivities: setSelectedActivities,
     selectedPackage,
     onSelectPackage: setSelectedPackage,
+    selectedHotel,
     onContinue: handleContinueBooking,
     onNavigate: handleNavigate,
     onGoHome: handleGoHome,
@@ -527,6 +565,9 @@ function AppRoutes() {
           <HomePage
             onNavigate={handleNavigate}
             onGoHome={handleGoHome}
+            hotels={hotels}
+            selectedHotel={selectedHotel}
+            onSelectHotel={handleSelectHotel}
           />
         }
       />
@@ -537,6 +578,8 @@ function AppRoutes() {
           <TravelPage
             activeTab="Stays"
             {...travelPageProps}
+            hotels={hotels}
+            selectedHotel={selectedHotel}
           />
         }
       />
@@ -547,6 +590,8 @@ function AppRoutes() {
           <TravelPage
             activeTab="Flights"
             {...travelPageProps}
+            hotels={hotels}
+            selectedHotel={selectedHotel}
           />
         }
       />

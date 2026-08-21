@@ -7,6 +7,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 
+import flights from "../../data/flight";
+
 import { generateItinerary } from "../../data/itinerary";
 
 import "./Itinerary.css";
@@ -83,6 +85,7 @@ function ItineraryEvent({ event }) {
 function Itinerary({
   startDate,
   endDate,
+  selectedFlight,
 }) {
 
   if (!startDate || !endDate) {
@@ -92,10 +95,17 @@ function Itinerary({
 
 
 
+  const selectedFlightPlan =
+    selectedFlight
+      ? flights[selectedFlight]
+      : null;
+
+
   const itinerary =
     generateItinerary(
       startDate,
-      endDate
+      endDate,
+      selectedFlightPlan
     );
 
 

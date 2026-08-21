@@ -8,6 +8,7 @@ import {
 
 import flights from "../../data/flight";
 import rooms from "../../data/rooms";
+import hotels from "../../data/hotel";
 
 import { formatShortDate } from "../../utils/dates";
 
@@ -20,17 +21,26 @@ function Packages({
   endDate,
   nights = 0,
   selectedPackage = null,
+  selectedHotel = null,
   onSelectPackage,
 }) {
 
   const room = rooms[0];
 
+  const hotel = selectedHotel
+    ? hotels.find(
+        (item) => item.id === selectedHotel
+      )
+    : null;
+
+  const flightPlan = flights.economy;
+
   const hotelTotal =
     room.pricePerNight * nights;
 
   const flightTotal =
-    (flights.outbound.price +
-      flights.return.price) *
+    (flightPlan.outbound.price +
+      flightPlan.return.price) *
     travellers;
 
   const packageTotal =
@@ -92,7 +102,7 @@ function Packages({
 
               <p>
                 Round-trip flight and {nights} nights at
-                The Westin Los Angeles Airport
+                {hotel?.name || "your selected hotel"}
               </p>
             </div>
 
@@ -148,15 +158,15 @@ function Packages({
 
                 <div>
                   <strong>
-                    {flights.outbound.from.airport}
+                    {flightPlan.outbound.from.airport}
                   </strong>
 
                   <span>
-                    {flights.outbound.from.city}
+                    {flightPlan.outbound.from.city}
                   </span>
 
                   <small>
-                    {flights.outbound.from.time}
+                    {flightPlan.outbound.from.time}
                   </small>
                 </div>
 
@@ -166,15 +176,15 @@ function Packages({
 
                 <div>
                   <strong>
-                    {flights.outbound.to.airport}
+                    {flightPlan.outbound.to.airport}
                   </strong>
 
                   <span>
-                    {flights.outbound.to.city}
+                    {flightPlan.outbound.to.city}
                   </span>
 
                   <small>
-                    {flights.outbound.to.time}
+                    {flightPlan.outbound.to.time}
                   </small>
                 </div>
 
@@ -212,7 +222,7 @@ function Packages({
                   </span>
 
                   <strong>
-                    The Westin Los Angeles Airport
+                    {hotel?.name || "Your selected hotel"}
                   </strong>
                 </div>
 

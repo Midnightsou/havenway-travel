@@ -15,6 +15,7 @@ import flights from "../../data/flight";
 import cars from "../../data/cars";
 import activities from "../../data/activities";
 import packages from "../../data/packages";
+import hotels from "../../data/hotel";
 
 import { formatShortDate } from "../../utils/dates";
 
@@ -34,6 +35,8 @@ function TripSummary({
   selectedCar,
   selectedActivities = [],
   selectedPackage = null,
+  selectedFlight = null,
+  selectedHotel = null,
   onContinue,
   travellers = 1,
   startDate,
@@ -46,14 +49,24 @@ function TripSummary({
     (item) => item.id === selectedRoom
   );
 
+  const hotel = selectedHotel
+    ? hotels.find(
+        (item) => item.id === selectedHotel
+      )
+    : null;
+
   const car = cars.find(
     (item) => item.id === selectedCar
   );
 
   const rentalDays = days;
 
+  const flightPlan = selectedFlight
+    ? flights[selectedFlight]
+    : null;
+
   const flightTotal =
-    calculateFlightTotal(travellers);
+    calculateFlightTotal(selectedFlight, travellers);
 
   const hotelTotal =
     calculateHotelTotal(selectedRoom, nights);
@@ -150,15 +163,15 @@ function TripSummary({
 
                 <div>
                   <strong>
-                    {flights.outbound.from.airport}
+                    {flightPlan?.outbound?.from?.airport}
                   </strong>
 
                   <span>
-                    {flights.outbound.from.city}
+                    {flightPlan?.outbound?.from?.city}
                   </span>
 
                   <small>
-                    {flights.outbound.from.time}
+                    {flightPlan?.outbound?.from?.time}
                   </small>
                 </div>
 
@@ -170,15 +183,15 @@ function TripSummary({
 
                 <div>
                   <strong>
-                    {flights.outbound.to.airport}
+                    {flightPlan?.outbound?.to?.airport}
                   </strong>
 
                   <span>
-                    {flights.outbound.to.city}
+                    {flightPlan?.outbound?.to?.city}
                   </span>
 
                   <small>
-                    {flights.outbound.to.time}
+                    {flightPlan?.outbound?.to?.time}
                   </small>
                 </div>
 
@@ -194,15 +207,15 @@ function TripSummary({
 
                 <div>
                   <strong>
-                    {flights.return.from.airport}
+                    {flightPlan?.return?.from?.airport}
                   </strong>
 
                   <span>
-                    {flights.return.from.city}
+                    {flightPlan?.return?.from?.city}
                   </span>
 
                   <small>
-                    {flights.return.from.time}
+                    {flightPlan?.return?.from?.time}
                   </small>
                 </div>
 
@@ -214,15 +227,15 @@ function TripSummary({
 
                 <div>
                   <strong>
-                    {flights.return.to.airport}
+                    {flightPlan?.return?.to?.airport}
                   </strong>
 
                   <span>
-                    {flights.return.to.city}
+                    {flightPlan?.return?.to?.city}
                   </span>
 
                   <small>
-                    {flights.return.to.time}
+                    {flightPlan?.return?.to?.time}
                   </small>
                 </div>
 
@@ -263,7 +276,7 @@ function TripSummary({
                   </span>
 
                   <strong>
-                    The Westin Los Angeles Airport
+                    {hotel?.name || "Your selected hotel"}
                   </strong>
                 </div>
 

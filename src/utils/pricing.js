@@ -7,10 +7,25 @@ import packages from "../data/packages";
 /**
  * Calculate the flight total for the trip.
  * Flight price is per traveler.
+ *
+ * @param {string|null} flightId - The selected flight plan key
+ *   (e.g. "economy", "business", "first"). Defaults to
+ *   the economy plan when not provided.
+ * @param {number} [travellers=1] - Number of travelers
+ * @returns {number} Total flight cost
  */
-export function calculateFlightTotal(travellers = 1) {
+export function calculateFlightTotal(
+  flightId = null,
+  travellers = 1
+) {
+  const plan = flightId
+    ? flights[flightId]
+    : flights.economy;
+
+  if (!plan) return 0;
+
   return (
-    (flights.outbound.price + flights.return.price) *
+    (plan.outbound.price + plan.return.price) *
     travellers
   );
 }
@@ -92,12 +107,16 @@ export function calculateTotals(trip) {
     nights = 0,
     days = 0,
     roomId = null,
+    flightId = null,
     carId = null,
     activityIds = [],
     packageId = null,
   } = trip;
 
-  const flightTotal = calculateFlightTotal(travellers);
+  const flightTotal = calculateFlightTotal(
+    flightId,
+    travellers
+  );
   const hotelTotal = calculateHotelTotal(roomId, nights);
   const carTotal = calculateCarTotal(carId, days);
   const activitiesTotal = calculateActivitiesTotal(activityIds, travellers);
@@ -129,6 +148,7 @@ export function buildBooking(trip, traveler = null) {
     nights = 0,
     days = 0,
     roomId = null,
+    flightId = null,
     carId = null,
     activityIds = [],
     packageId = null,
@@ -150,6 +170,10 @@ export function buildBooking(trip, traveler = null) {
     ? packages.find((item) => item.id === packageId)
     : null;
 
+  const flightPlan = flightId
+    ? flights[flightId]
+    : null;
+
   const totals = calculateTotals(trip);
 
   return {
@@ -162,7 +186,14 @@ export function buildBooking(trip, traveler = null) {
     car,
     activities: selectedActivities,
     package: pkg,
-    flight: flights,
+    flight: flightPlan
+      ? {
+          plan: flightId,
+          name: flightPlan.name,
+          outbound: flightPlan.outbound,
+          return: flightPlan.return,
+        }
+      : null,
     totals,
     traveler,
   };

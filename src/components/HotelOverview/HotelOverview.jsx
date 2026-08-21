@@ -11,12 +11,14 @@ import {
   ConciergeBell,
 } from "lucide-react";
 
-import hotel from "../../data/hotel";
+import hotelData from "../../data/hotel";
 
 import "./HotelOverview.css";
 
 
-function HotelOverview() {
+function HotelOverview({ hotel }) {
+
+  const activeHotel = hotel ?? hotelData[0];
 
   const amenityIcons = {
     "Outdoor pool": Waves,
@@ -42,7 +44,7 @@ function HotelOverview() {
           <h2>About this property</h2>
 
           <p>
-            {hotel.longDescription}
+            {activeHotel.longDescription}
           </p>
 
         </div>
@@ -56,7 +58,7 @@ function HotelOverview() {
 
           <div className="amenities-grid">
 
-            {hotel.amenities.map((amenity) => {
+            {activeHotel.amenities.map((amenity) => {
 
               const Icon = amenityIcons[amenity];
 
@@ -86,7 +88,7 @@ function HotelOverview() {
 
           <div className="highlights-list">
 
-            {hotel.highlights.map((highlight) => (
+            {activeHotel.highlights.map((highlight) => (
               <div
                 className="overview-highlight"
                 key={highlight}
@@ -126,7 +128,7 @@ function HotelOverview() {
                 </span>
 
                 <strong>
-                  From {hotel.checkIn}
+                  From {activeHotel.checkIn}
                 </strong>
               </div>
 
@@ -145,7 +147,7 @@ function HotelOverview() {
                 </span>
 
                 <strong>
-                  Before {hotel.checkOut}
+                  Before {activeHotel.checkOut}
                 </strong>
               </div>
 

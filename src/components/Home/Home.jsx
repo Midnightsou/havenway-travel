@@ -1,15 +1,30 @@
 import "./Home.css";
 
-function Home({ onNavigate }) {
-  const handleViewStay = () => {
+function Home({
+  onNavigate,
+  hotels = [],
+  selectedHotel,
+  onSelectHotel,
+}) {
+
+  const handleViewStay = (hotelId) => {
+
+    if (onSelectHotel) {
+      onSelectHotel(hotelId);
+      return;
+    }
+
     onNavigate("Stays", "rooms");
   };
+
 
   return (
     <main className="home">
 
       {/* HERO */}
+
       <section className="home-hero">
+
         <div className="home-container">
 
           <div className="home-hero-content">
@@ -32,11 +47,14 @@ function Home({ onNavigate }) {
           </div>
 
         </div>
+
       </section>
 
 
       {/* STAYS */}
+
       <section className="home-stays">
+
         <div className="home-container">
 
           <div className="home-section-heading">
@@ -50,82 +68,118 @@ function Home({ onNavigate }) {
             </h2>
 
             <p>
-              A comfortable stay for your
+              Choose a comfortable stay for your
               Washington journey.
             </p>
 
           </div>
 
 
-          {/* HOTEL CARD */}
-          <article className="home-hotel-card">
+          {/* HOTEL CARDS */}
 
-            <div className="home-hotel-image">
+          <div className="home-hotels-grid">
 
-              <img
-                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=85"
-                alt="Luxury hotel room"
-              />
+            {hotels.map((hotel) => (
 
-            </div>
+              <article
+                key={hotel.id}
+                className={`home-hotel-card ${
+                  selectedHotel === hotel.id
+                    ? "home-hotel-card-selected"
+                    : ""
+                }`}
+              >
 
+                <div className="home-hotel-image">
 
-            <div className="home-hotel-content">
-
-              <div className="home-hotel-info">
-
-                <span className="home-hotel-location">
-                  Washington / Baltimore
-                </span>
-
-                <h3>
-                  BWI Airport Marriott
-                </h3>
-
-                <p>
-                  A convenient and comfortable stay
-                  near Baltimore/Washington International
-                  Airport.
-                </p>
-
-              </div>
-
-
-              <div className="home-hotel-bottom">
-
-                <div className="home-hotel-price">
-
-                  <span>
-                    Starting from
-                  </span>
-
-                  <strong>
-                    $800+
-                  </strong>
-
-                  <small>
-                    trip package
-                  </small>
+                  <img
+                    src={
+                      hotel.images?.[0] ||
+                      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=85"
+                    }
+                    alt={hotel.name}
+                  />
 
                 </div>
 
 
-                <button
-                  type="button"
-                  className="home-view-stay"
-                  onClick={handleViewStay}
-                >
-                  View Stay
-                  <span>→</span>
-                </button>
+                <div className="home-hotel-content">
 
-              </div>
+                  <div className="home-hotel-info">
 
-            </div>
+                    <span className="home-hotel-location">
+                      {hotel.location}
+                    </span>
 
-          </article>
+                    <h3>
+                      {hotel.name}
+                    </h3>
+
+                    <div className="home-hotel-rating">
+
+                      <strong>
+                        {hotel.rating}
+                      </strong>
+
+                      <span>
+                        {hotel.ratingLabel}
+                      </span>
+
+                      <small>
+                        ({hotel.reviewCount} reviews)
+                      </small>
+
+                    </div>
+
+                    <p>
+                      {hotel.description}
+                    </p>
+
+                  </div>
+
+
+                  <div className="home-hotel-bottom">
+
+                    <div className="home-hotel-price">
+
+                      <span>
+                        Starting from
+                      </span>
+
+                      <strong>
+                        View rooms
+                      </strong>
+
+                      <small>
+                        Select your room after choosing this hotel
+                      </small>
+
+                    </div>
+
+
+                    <button
+                      type="button"
+                      className="home-view-stay"
+                      onClick={() =>
+                        handleViewStay(hotel.id)
+                      }
+                    >
+                      View Stay
+                      <span>→</span>
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </article>
+
+            ))}
+
+          </div>
 
         </div>
+
       </section>
 
     </main>

@@ -7,14 +7,17 @@ import {
   Star,
 } from "lucide-react";
 
-import hotel from "../../data/hotel";
+import hotelData from "../../data/hotel";
 import HotelGallery from "../HotelGallery/HotelGallery";
 import hotelImages from "../../data/hotelImages";
 
 import "./HotelHero.css";
 
-function HotelHero() {
+function HotelHero({ hotel }) {
+
   const [galleryOpen, setGalleryOpen] = useState(false);
+
+  const activeHotel = hotel ?? hotelData[0];
 
   return (
     <>
@@ -30,8 +33,8 @@ function HotelHero() {
 
             <div className="gallery-main">
               <img
-                src={hotel.images[0]}
-                alt={hotel.name}
+                src={activeHotel.images[0]}
+                alt={activeHotel.name}
               />
 
               <button
@@ -47,30 +50,30 @@ function HotelHero() {
 
               <div className="gallery-image">
                 <img
-                  src={hotel.images[1]}
-                  alt={`${hotel.name} exterior`}
+                  src={activeHotel.images[1]}
+                  alt={`${activeHotel.name} exterior`}
                 />
               </div>
 
               <div className="gallery-image">
                 <img
-                  src={hotel.images[2]}
-                  alt={`${hotel.name} room`}
+                  src={activeHotel.images[2]}
+                  alt={`${activeHotel.name} room`}
                 />
               </div>
 
               <div className="gallery-image">
                 <img
-                  src={hotel.images[3]}
-                  alt={`${hotel.name} amenities`}
+                  src={activeHotel.images[3]}
+                  alt={`${activeHotel.name} amenities`}
                 />
               </div>
 
               <div className="gallery-image last-image">
 
                 <img
-                  src={hotel.images[4]}
-                  alt={`${hotel.name} hotel`}
+                  src={activeHotel.images[4]}
+                  alt={`${activeHotel.name} hotel`}
                 />
 
                 <button
@@ -114,19 +117,19 @@ function HotelHero() {
 
             <div className="hotel-main-info">
 
-              <h1>{hotel.name}</h1>
+              <h1>{activeHotel.name}</h1>
 
               <div className="hotel-rating">
 
                 <div className="rating-score">
-                  {hotel.rating}
+                  {activeHotel.rating}
                 </div>
 
                 <div className="rating-details">
-                  <strong>{hotel.ratingLabel}</strong>
+                  <strong>{activeHotel.ratingLabel}</strong>
 
                   <span>
-                    {hotel.reviewCount.toLocaleString()} reviews
+                    {activeHotel.reviewCount.toLocaleString()} reviews
                   </span>
                 </div>
 
@@ -137,13 +140,13 @@ function HotelHero() {
 
                 <MapPin size={19} />
 
-                <span>{hotel.location}</span>
+                <span>{activeHotel.location}</span>
 
               </div>
 
 
               <p className="hotel-description">
-                {hotel.description}
+                {activeHotel.description}
               </p>
 
             </div>

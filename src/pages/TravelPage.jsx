@@ -16,6 +16,8 @@ function TravelPage({
   setEndDate,
   nights,
   days,
+  hotels,
+  selectedHotel,
   selectedRoom,
   onSelectRoom,
   selectedFlight,
@@ -62,6 +64,8 @@ function TravelPage({
           endDate={endDate}
           nights={nights}
           days={days}
+          hotels={hotels}
+          selectedHotel={selectedHotel}
           selectedRoom={selectedRoom}
           onSelectRoom={onSelectRoom}
           selectedFlight={selectedFlight}

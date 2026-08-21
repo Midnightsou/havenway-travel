@@ -1,137 +1,153 @@
-import flights from "./flight";
-
-const itineraryTemplates = {
-  arrival: {
-    title: "Travel to Los Angeles",
-
-    events: [
-      {
-        id: "flight-out",
-        time: flights.outbound.from.time,
-        type: "flight",
-        title: "Depart Washington",
-        description:
-          "Depart Ronald Reagan Washington National Airport (DCA) for Los Angeles International Airport (LAX).",
-        details: `${flights.outbound.airline} · ${flights.outbound.flightNumber}`,
-      },
-
-      {
-        id: "arrival",
-        time: flights.outbound.to.time,
-        type: "arrival",
-        title: "Arrive in Los Angeles",
-        description:
-          "Arrive at Los Angeles International Airport (LAX).",
-        details: "Los Angeles, California",
-      },
-
-      {
-        id: "checkin",
-        time: "3:00 PM",
-        type: "hotel",
-        title: "Hotel check-in",
-        description:
-          "Check in to The Westin Los Angeles Airport and settle into your room.",
-        details:
-          "5400 W Century Blvd, Los Angeles",
-      },
-    ],
-  },
-
-  explore: {
-    title: "Explore Los Angeles",
-
-    events: [
-      {
-        id: "morning-la",
-        time: "Morning",
-        type: "activity",
-        title: "Explore Los Angeles",
-        description:
-          "Spend the day exploring the city and visiting attractions of your choice.",
-        details: "Los Angeles, California",
-      },
-
-      {
-        id: "evening-la",
-        time: "Evening",
-        type: "free",
-        title: "Free evening",
-        description:
-          "Relax, explore nearby restaurants, or enjoy the city at your own pace.",
-        details: "Free time",
-      },
-    ],
-  },
-
-  freeDay: {
-    title: "Free day in Los Angeles",
-
-    events: [
-      {
-        id: "free-day",
-        time: "All day",
-        type: "activity",
-        title: "Enjoy Los Angeles",
-        description:
-          "A full day available for sightseeing, shopping, entertainment, or relaxation.",
-        details: "Los Angeles",
-      },
-    ],
-  },
-
-  departure: {
-    title: "Return to Washington",
-
-    events: [
-      {
-        id: "checkout",
-        time: "11:00 AM",
-        type: "hotel",
-        title: "Hotel check-out",
-        description:
-          "Check out of The Westin Los Angeles Airport.",
-        details:
-          "Remember to collect all belongings",
-      },
-
-      {
-        id: "return-flight",
-        time: flights.return.from.time,
-        type: "flight",
-        title: "Depart Los Angeles",
-        description:
-          "Depart Los Angeles International Airport (LAX) for Washington.",
-        details: `${flights.return.airline} · ${flights.return.flightNumber}`,
-      },
-
-      {
-        id: "arrive-washington",
-        time: flights.return.to.time,
-        type: "arrival",
-        title: "Arrive in Washington",
-        description:
-          "Arrive at Ronald Reagan Washington National Airport (DCA).",
-        details: "Washington, DC",
-      },
-    ],
-  },
-};
-
-
 /*
  * Generate the itinerary from the
- * user's selected dates.
+ * user's selected dates and the
+ * selected flight plan.
  */
 
 export function generateItinerary(
   startDate,
-  endDate
+  endDate,
+  selectedFlightPlan
 ) {
 
   if (!startDate || !endDate) {
     return [];
   }
+
+
+  const outbound =
+    selectedFlightPlan?.outbound;
+
+  const returning =
+    selectedFlightPlan?.return;
+
+
+  const itineraryTemplates = {
+
+    arrival: {
+      title: "Travel to Los Angeles",
+
+      events: [
+        {
+          id: "flight-out",
+          time: outbound?.from?.time,
+          type: "flight",
+          title: "Depart Washington",
+          description: outbound
+            ? `Depart ${outbound.from.airportName} (${outbound.from.airport}) for ${outbound.to.airportName} (${outbound.to.airport}).`
+            : "Depart Washington for Los Angeles.",
+          details: outbound
+            ? `${outbound.airline} · ${outbound.flightNumber}`
+            : "Flight details",
+        },
+
+        {
+          id: "arrival",
+          time: outbound?.to?.time,
+          type: "arrival",
+          title: "Arrive in Los Angeles",
+          description: outbound
+            ? `Arrive at ${outbound.to.airportName} (${outbound.to.airport}).`
+            : "Arrive at Los Angeles International Airport (LAX).",
+          details: "Los Angeles, California",
+        },
+
+        {
+          id: "checkin",
+          time: "3:00 PM",
+          type: "hotel",
+          title: "Hotel check-in",
+          description:
+            "Check in to The Westin Los Angeles Airport and settle into your room.",
+          details:
+            "5400 W Century Blvd, Los Angeles",
+        },
+      ],
+    },
+
+    explore: {
+      title: "Explore Los Angeles",
+
+      events: [
+        {
+          id: "morning-la",
+          time: "Morning",
+          type: "activity",
+          title: "Explore Los Angeles",
+          description:
+            "Spend the day exploring the city and visiting attractions of your choice.",
+          details: "Los Angeles, California",
+        },
+
+        {
+          id: "evening-la",
+          time: "Evening",
+          type: "free",
+          title: "Free evening",
+          description:
+            "Relax, explore nearby restaurants, or enjoy the city at your own pace.",
+          details: "Free time",
+        },
+      ],
+    },
+
+    freeDay: {
+      title: "Free day in Los Angeles",
+
+      events: [
+        {
+          id: "free-day",
+          time: "All day",
+          type: "activity",
+          title: "Enjoy Los Angeles",
+          description:
+            "A full day available for sightseeing, shopping, entertainment, or relaxation.",
+          details: "Los Angeles",
+        },
+      ],
+    },
+
+    departure: {
+      title: "Return to Washington",
+
+      events: [
+        {
+          id: "checkout",
+          time: "11:00 AM",
+          type: "hotel",
+          title: "Hotel check-out",
+          description:
+            "Check out of The Westin Los Angeles Airport.",
+          details:
+            "Remember to collect all belongings",
+        },
+
+        {
+          id: "return-flight",
+          time: returning?.from?.time,
+          type: "flight",
+          title: "Depart Los Angeles",
+          description: returning
+            ? `Depart ${returning.from.airportName} (${returning.from.airport}) for ${returning.to.airportName} (${returning.to.airport}).`
+            : "Depart Los Angeles International Airport (LAX) for Washington.",
+          details: returning
+            ? `${returning.airline} · ${returning.flightNumber}`
+            : "Flight details",
+        },
+
+        {
+          id: "arrive-washington",
+          time: returning?.to?.time,
+          type: "arrival",
+          title: "Arrive in Washington",
+          description: returning
+            ? `Arrive at ${returning.to.airportName} (${returning.to.airport}).`
+            : "Arrive at Ronald Reagan Washington National Airport (DCA).",
+          details: "Washington, DC",
+        },
+      ],
+    },
+  };
 
 
   const start =
@@ -275,6 +291,3 @@ export function generateItinerary(
 
   return itineraryDays;
 }
-
-
-export default itineraryTemplates;
