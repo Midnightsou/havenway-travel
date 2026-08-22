@@ -34,7 +34,7 @@ import {
 import "./BookingModal.css";
 
 
-function BookingModal({ trip, onClose, onConfirm }) {
+function BookingModal({ trip, onClose, onConfirm, submitting = false }) {
 
   const {
     startDate,
@@ -106,6 +106,11 @@ function BookingModal({ trip, onClose, onConfirm }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (submitting) {
+      return;
+    }
+
     onConfirm({ traveler });
   };
 
@@ -311,8 +316,14 @@ function BookingModal({ trip, onClose, onConfirm }) {
                 <strong>${tripTotal}</strong>
               </div>
 
-              <button type="submit" className="confirm-booking-button">
-                Confirm booking
+              <button
+                type="submit"
+                className="confirm-booking-button"
+                disabled={submitting}
+              >
+                {submitting
+                  ? "Creating payment session…"
+                  : "Confirm booking"}
               </button>
 
               <div className="booking-security">

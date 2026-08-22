@@ -440,6 +440,16 @@
   background: var(--color-primary-dark);
 }
 
+.confirm-booking-button:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+}
+
+.confirm-booking-button:disabled:hover {
+  background: var(--color-primary);
+}
+
 
 .booking-security {
   display: flex;

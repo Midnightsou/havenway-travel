@@ -5,7 +5,6 @@ import {
   Clock,
   ShieldCheck,
   ArrowLeft,
-  RefreshCw,
 } from "lucide-react";
 
 import {
@@ -16,8 +15,8 @@ import {
 import "./BitcoinPayment.css";
 
 
-const BTC_ADDRESS =
-  "bc1qnr8l9grr2y3k062qqrykcpeeusy90rnm9e47tn";
+const API_BASE_URL =
+  "http://localhost:5000";
 
 const PAYMENT_WINDOW = 20 * 60;
 const POLL_INTERVAL = 15000;
@@ -26,19 +25,14 @@ const DEV_PAYMENT_SIMULATOR = false;
 
 function BitcoinPayment({
   booking,
+  bookingId,
+  btcAddress,
+  btcAmount,
+  btcPrice,
   paymentStartedAt,
   onBack,
-  onPaymentComplete,  
+  onPaymentComplete,
 }) {
-
-  const [btcPrice, setBtcPrice] =
-    useState(null);
-
-  const [priceLoading, setPriceLoading] =
-    useState(true);
-
-  const [priceError, setPriceError] =
-    useState(false);
 
   const [copied, setCopied] =
     useState(false);
@@ -68,58 +62,17 @@ function BitcoinPayment({
   const travellerCount =
     booking?.travellers ?? 1;
 
-  const btcAmount =
-    btcPrice && usdTotal
-      ? usdTotal / btcPrice
-      : 0;
+  const numericBtcAmount = Number(btcAmount);
 
   const formattedBtcAmount =
-    Number.isFinite(btcAmount)
-      ? btcAmount.toFixed(8)
+    Number.isFinite(numericBtcAmount)
+      ? numericBtcAmount.toFixed(8)
       : "0.00000000";
 
-  const fetchBitcoinPrice = async () => {
-    try {
-      setPriceLoading(true);
-      setPriceError(false);
-
-      const response = await fetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
-      );
-
-      if (!response.ok) {
-        throw new Error(
-          "Failed to fetch Bitcoin price"
-        );
-      }
-
-      const data = await response.json();
-      const price = data?.bitcoin?.usd;
-
-      if (!price) {
-        throw new Error(
-          "Bitcoin price unavailable"
-        );
-      }
-
-      setBtcPrice(price);
-    } catch (error) {
-      console.error(
-        "Bitcoin price error:",
-        error
-      );
-      setPriceError(true);
-    } finally {
-      setPriceLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchBitcoinPrice();
-  }, []);
+  const numericBtcPrice = Number(btcPrice);
 
   const checkForPayment = async () => {
-    if (!btcAmount || !paymentStartedAt) {
+    if (!bookingId) {
       return;
     }
 
@@ -128,7 +81,7 @@ function BitcoinPayment({
       setPaymentError("");
 
       const response = await fetch(
-        `http://localhost:5000/api/check-payment?amount=${btcAmount}&paymentStartedAt=${paymentStartedAt}`
+        `${API_BASE_URL}/api/check-payment?bookingId=${encodeURIComponent(bookingId)}`
       );
 
       if (!response.ok) {
@@ -149,7 +102,9 @@ function BitcoinPayment({
         setPaymentDetected(true);
 
         setTransactionId(
-          data.txid || "UNKNOWN"
+          data.transactionId ||
+            data.txid ||
+            "UNKNOWN"
         );
 
         return;
@@ -187,7 +142,7 @@ function BitcoinPayment({
       };
     }
 
-    if (!btcAmount || !paymentStartedAt) {
+    if (!bookingId) {
       return;
     }
 
@@ -202,31 +157,7 @@ function BitcoinPayment({
       clearInterval(interval);
     };
 
-  }, [
-    btcAmount,
-    paymentStartedAt,
-  ]);
-
-  useEffect(() => {
-
-    if (!paymentDetected) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-
-      onPaymentComplete();
-
-    }, 1500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-
-  }, [
-    paymentDetected,
-    onPaymentComplete,
-  ]);
+  }, [bookingId]);
 
   useEffect(() => {
     if (!paymentStartedAt) {
@@ -236,7 +167,9 @@ function BitcoinPayment({
     const updateTimer = () => {
       const elapsed =
         Math.floor(
-          (Date.now() - paymentStartedAt) / 1000
+          (Date.now() -
+            new Date(paymentStartedAt).getTime()) /
+            1000
         );
 
       const remaining =
@@ -275,7 +208,7 @@ function BitcoinPayment({
   const copyAddress = async () => {
     try {
       await navigator.clipboard.writeText(
-        BTC_ADDRESS
+        btcAddress
       );
 
       setCopied(true);
@@ -355,35 +288,21 @@ function BitcoinPayment({
               ${usdTotal.toFixed(2)}
             </strong>
 
-            {priceLoading && (
-              <small>
-                Calculating Bitcoin amount...
-              </small>
+            {numericBtcPrice > 0 && (
+              <div className="btc-conversion">
+                <span>
+                  Amount to send
+                </span>
+
+                <strong>
+                  {formattedBtcAmount} BTC
+                </strong>
+
+                <small>
+                  1 BTC ≈ ${numericBtcPrice.toLocaleString("en-US", { maximumFractionDigits: 2 })}
+                </small>
+              </div>
             )}
-
-            {priceError && (
-              <small className="btc-price-error">
-                Unable to fetch the current Bitcoin price. Please try again.
-              </small>
-            )}
-
-            {!priceLoading &&
-              !priceError &&
-              btcPrice && (
-                <div className="btc-conversion">
-                  <span>
-                    Amount to send
-                  </span>
-
-                  <strong>
-                    {formattedBtcAmount} BTC
-                  </strong>
-
-                  <small>
-                    1 BTC ≈ ${btcPrice.toLocaleString("en-US", { maximumFractionDigits: 2 })}
-                  </small>
-                </div>
-              )}
 
             <small>
               {travellerCount}{" "}
@@ -407,9 +326,7 @@ function BitcoinPayment({
             </span>
 
             <strong>
-              {priceLoading
-                ? "Calculating..."
-                : `${formattedBtcAmount} BTC`}
+              {formattedBtcAmount} BTC
             </strong>
 
           </div>
@@ -417,44 +334,22 @@ function BitcoinPayment({
 
           {/* RATE */}
 
-          {!priceLoading &&
-            btcPrice && (
-              <div className="bitcoin-rate">
-
-                <span>
-                  Current BTC rate
-                </span>
-
-                <strong>
-                  1 BTC = $
-                  {btcPrice.toLocaleString(
-                    "en-US",
-                    {
-                      maximumFractionDigits: 2,
-                    }
-                  )}
-                </strong>
-
-              </div>
-            )}
-
-
-          {/* ERROR */}
-
-          {priceError && (
-            <div className="bitcoin-error">
+          {numericBtcPrice > 0 && (
+            <div className="bitcoin-rate">
 
               <span>
-                We couldn't get the current
-                Bitcoin price.
+                Current BTC rate
               </span>
 
-              <button
-                onClick={fetchBitcoinPrice}
-              >
-                <RefreshCw size={15} />
-                Try again
-              </button>
+              <strong>
+                1 BTC = $
+                {numericBtcPrice.toLocaleString(
+                  "en-US",
+                  {
+                    maximumFractionDigits: 2,
+                  }
+                )}
+              </strong>
 
             </div>
           )}
@@ -493,7 +388,7 @@ function BitcoinPayment({
             <div className="bitcoin-address">
 
               <code>
-                {BTC_ADDRESS}
+                {btcAddress}
               </code>
 
               <button
@@ -589,9 +484,9 @@ function BitcoinPayment({
             <div>
               {paymentDetected ? (
                 <>
-                  <strong>Payment detected</strong>
+                  <strong>Payment confirmed</strong>
                   <span>
-                    Bitcoin payment detected on-chain. You can now complete your booking.
+                    Your Bitcoin payment is confirmed. You can now continue to your booking confirmation.
                   </span>
                 </>
               ) : secondsRemaining <= 0 ? (
@@ -612,6 +507,15 @@ function BitcoinPayment({
             </div>
           </div>
 
+          {paymentDetected && (
+            <button
+              className="bitcoin-paid-button"
+              onClick={handleContinue}
+            >
+              Continue to confirmation
+            </button>
+          )}
+
           {transactionId && (
             <div className="bitcoin-transaction">
               <span>Transaction</span>
@@ -624,25 +528,6 @@ function BitcoinPayment({
               <span>{paymentError}</span>
             </div>
           )}
-
-          <button
-            className="bitcoin-paid-button"
-            disabled={
-              !paymentDetected ||
-              priceLoading ||
-              !btcAmount ||
-              !btcPrice ||
-              secondsRemaining <= 0
-            }
-            onClick={handleContinue}
-          >
-            {paymentDetected
-              ? "Payment confirmed"
-              : secondsRemaining <= 0
-                ? "Payment window expired"
-                : "Waiting for payment"}
-          </button>
-
 
           {/* SECURITY */}
 

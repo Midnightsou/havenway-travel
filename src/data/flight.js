@@ -3,34 +3,6 @@ const flights = {
     name: "Economy",
     outbound: {
       type: "Nonstop",
-      price: 249,
-
-      from: {
-        time: "08:30",
-        airport: "DCA",
-        city: "Washington",
-        airportName:
-          "Ronald Reagan Washington National Airport",
-      },
-
-      to: {
-        time: "11:05",
-        airport: "LAX",
-        city: "Los Angeles",
-        airportName:
-          "Los Angeles International Airport",
-      },
-
-      duration: "5h 35m",
-      stops: "Nonstop",
-      airline: "Delta Air Lines",
-      flightNumber: "DL 1249",
-      cabin: "Economy",
-      baggage: "1 carry-on",
-    },
-
-    return: {
-      type: "Nonstop",
       price: 231,
 
       from: {
@@ -56,13 +28,10 @@ const flights = {
       cabin: "Economy",
       baggage: "1 carry-on",
     },
-  },
 
-  business: {
-    name: "Business",
-    outbound: {
+    return: {
       type: "Nonstop",
-      price: 749,
+      price: 249,
 
       from: {
         time: "08:30",
@@ -84,11 +53,14 @@ const flights = {
       stops: "Nonstop",
       airline: "Delta Air Lines",
       flightNumber: "DL 1249",
-      cabin: "Business",
-      baggage: "2 checked bags",
+      cabin: "Economy",
+      baggage: "1 carry-on",
     },
+  },
 
-    return: {
+  business: {
+    name: "Business",
+    outbound: {
       type: "Nonstop",
       price: 731,
 
@@ -115,13 +87,10 @@ const flights = {
       cabin: "Business",
       baggage: "2 checked bags",
     },
-  },
 
-  first: {
-    name: "First Class",
-    outbound: {
+    return: {
       type: "Nonstop",
-      price: 1299,
+      price: 749,
 
       from: {
         time: "08:30",
@@ -143,11 +112,14 @@ const flights = {
       stops: "Nonstop",
       airline: "Delta Air Lines",
       flightNumber: "DL 1249",
-      cabin: "First Class",
+      cabin: "Business",
       baggage: "2 checked bags",
     },
+  },
 
-    return: {
+  first: {
+    name: "First Class",
+    outbound: {
       type: "Nonstop",
       price: 1281,
 
@@ -171,6 +143,34 @@ const flights = {
       stops: "Nonstop",
       airline: "Delta Air Lines",
       flightNumber: "DL 1248",
+      cabin: "First Class",
+      baggage: "2 checked bags",
+    },
+
+    return: {
+      type: "Nonstop",
+      price: 1299,
+
+      from: {
+        time: "08:30",
+        airport: "DCA",
+        city: "Washington",
+        airportName:
+          "Ronald Reagan Washington National Airport",
+      },
+
+      to: {
+        time: "11:05",
+        airport: "LAX",
+        city: "Los Angeles",
+        airportName:
+          "Los Angeles International Airport",
+      },
+
+      duration: "5h 35m",
+      stops: "Nonstop",
+      airline: "Delta Air Lines",
+      flightNumber: "DL 1249",
       cabin: "First Class",
       baggage: "2 checked bags",
     },

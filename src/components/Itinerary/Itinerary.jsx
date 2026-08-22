@@ -145,7 +145,7 @@ function Itinerary({
             </h2>
 
             <p>
-              Washington → Los Angeles ·{" "}
+              Los Angeles → Washington ·{" "}
               {formattedStart} –{" "}
               {formattedEnd}
             </p>

@@ -25,17 +25,17 @@ export function generateItinerary(
   const itineraryTemplates = {
 
     arrival: {
-      title: "Travel to Los Angeles",
+      title: "Travel to Washington",
 
       events: [
         {
           id: "flight-out",
           time: outbound?.from?.time,
           type: "flight",
-          title: "Depart Washington",
+          title: "Depart Los Angeles",
           description: outbound
             ? `Depart ${outbound.from.airportName} (${outbound.from.airport}) for ${outbound.to.airportName} (${outbound.to.airport}).`
-            : "Depart Washington for Los Angeles.",
+            : "Depart Los Angeles International Airport (LAX) for Washington.",
           details: outbound
             ? `${outbound.airline} · ${outbound.flightNumber}`
             : "Flight details",
@@ -45,11 +45,11 @@ export function generateItinerary(
           id: "arrival",
           time: outbound?.to?.time,
           type: "arrival",
-          title: "Arrive in Los Angeles",
+          title: "Arrive in Washington",
           description: outbound
             ? `Arrive at ${outbound.to.airportName} (${outbound.to.airport}).`
-            : "Arrive at Los Angeles International Airport (LAX).",
-          details: "Los Angeles, California",
+            : "Arrive at Ronald Reagan Washington National Airport (DCA).",
+          details: "Washington, DC",
         },
 
         {
@@ -108,7 +108,7 @@ export function generateItinerary(
     },
 
     departure: {
-      title: "Return to Washington",
+      title: "Return to Los Angeles",
 
       events: [
         {
@@ -126,24 +126,24 @@ export function generateItinerary(
           id: "return-flight",
           time: returning?.from?.time,
           type: "flight",
-          title: "Depart Los Angeles",
+          title: "Depart Washington",
           description: returning
             ? `Depart ${returning.from.airportName} (${returning.from.airport}) for ${returning.to.airportName} (${returning.to.airport}).`
-            : "Depart Los Angeles International Airport (LAX) for Washington.",
+            : "Depart Ronald Reagan Washington National Airport (DCA) for Los Angeles.",
           details: returning
             ? `${returning.airline} · ${returning.flightNumber}`
             : "Flight details",
         },
 
         {
-          id: "arrive-washington",
+          id: "arrive-los-angeles",
           time: returning?.to?.time,
           type: "arrival",
-          title: "Arrive in Washington",
+          title: "Arrive in Los Angeles",
           description: returning
             ? `Arrive at ${returning.to.airportName} (${returning.to.airport}).`
-            : "Arrive at Ronald Reagan Washington National Airport (DCA).",
-          details: "Washington, DC",
+            : "Arrive at Los Angeles International Airport (LAX).",
+          details: "Los Angeles, California",
         },
       ],
     },

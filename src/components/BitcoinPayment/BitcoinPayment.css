@@ -283,12 +283,6 @@
   font-size: 12px;
 }
 
-.btc-price-error {
-  display: block;
-  margin-top: 12px;
-  color: #f87171;
-}
-
 
 /* =========================
    QR
@@ -647,27 +641,6 @@
   background: #f8fafc;
 }
 
-.bitcoin-paid-button {
-  margin-top: 20px;
-
-  width: 100%;
-
-  border: none;
-
-  background: #f5b335;
-
-  color: #0f172a;
-}
-
-.bitcoin-paid-button:hover {
-  transform: translateY(-1px);
-}
-
-.bitcoin-paid-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 .bitcoin-refresh-button {
   margin-top: 20px;
 
@@ -682,6 +655,55 @@
 
 .bitcoin-refresh-button:hover {
   transform: translateY(-1px);
+}
+
+.bitcoin-paid-button {
+  margin-top: 20px;
+
+  width: 100%;
+
+  border: none;
+
+  background: #16a34a;
+
+  color: #ffffff;
+}
+
+.bitcoin-paid-button:hover {
+  background: #15803d;
+
+  transform: translateY(-1px);
+}
+
+.bitcoin-paid-button:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================
+   SESSION MISSING
+========================= */
+
+.payment-session-missing {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 12px;
+
+  text-align: center;
+}
+
+.retry-session-button {
+  width: 100%;
+
+  margin-top: 12px;
 }
 
 
@@ -751,7 +773,6 @@
   }
 
   .bitcoin-back-button,
-  .bitcoin-paid-button,
   .bitcoin-refresh-button {
     width: 100%;
   }

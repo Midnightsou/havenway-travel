@@ -73,7 +73,7 @@ function Packages({
             </h2>
 
             <p>
-              Washington to Los Angeles ·
+              Los Angeles to Washington ·
               {dateRange}
             </p>
           </div>

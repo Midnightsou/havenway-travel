@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -34,6 +34,10 @@ import {
 
 import "./styles/global.css";
 import "./styles/responsive.css";
+
+
+const API_BASE_URL =
+  "http://localhost:5000";
 
 
 function App() {
@@ -110,13 +114,18 @@ function AppRoutes() {
       storedTrip?.paymentBooking ?? null
     );
 
+  const [paymentSession, setPaymentSession] =
+    useState(
+      storedTrip?.paymentSession ?? null
+    );
+
+  const [creatingPayment, setCreatingPayment] =
+    useState(false);
+
+  const creatingPaymentRef = useRef(false);
+
   const [bookingGuard, setBookingGuard] =
     useState(null);
-
-  const [paymentStartedAt, setPaymentStartedAt] =
-    useState(
-      storedTrip?.paymentStartedAt ?? null
-    );
 
   const { nights, days } =
     getTripDuration(startDate, endDate);
@@ -140,7 +149,7 @@ function AppRoutes() {
       selectedHotel,
       booking,
       paymentBooking,
-      paymentStartedAt,
+      paymentSession,
     });
 
   }, [
@@ -155,7 +164,7 @@ function AppRoutes() {
     selectedHotel,
     booking,
     paymentBooking,
-    paymentStartedAt,
+    paymentSession,
   ]);
 
 
@@ -388,7 +397,161 @@ function AppRoutes() {
   };
 
 
-  const handleConfirmBooking = (
+  /*
+   * Create the ONE Bitcoin payment session.
+   *
+   * This runs once, right when the user
+   * clicks "Pay". BitcoinPayment must never
+   * create another one — it only monitors
+   * the bookingId returned here.
+   */
+
+  const createPaymentSession = async (
+    bookingToPay
+  ) => {
+
+    if (creatingPaymentRef.current) {
+      return false;
+    }
+
+    creatingPaymentRef.current = true;
+
+    setCreatingPayment(true);
+
+    const payment =
+      bookingToPay ?? paymentBooking;
+
+    try {
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/create-payment`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            name: [
+              payment?.traveler?.firstName,
+              payment?.traveler?.lastName,
+            ]
+              .filter(Boolean)
+              .join(" "),
+
+            email:
+              payment?.traveler?.email || "",
+
+            phone:
+              payment?.traveler?.phone || "",
+
+            travellers:
+              payment?.travellers ?? 1,
+
+            startDate:
+              payment?.startDate ?? null,
+
+            endDate:
+              payment?.endDate ?? null,
+
+            nights:
+              payment?.nights ?? 0,
+
+            days:
+              payment?.days ?? 0,
+
+            selectedHotel:
+              payment?.hotel?.id ?? null,
+
+            selectedRoom:
+              payment?.room?.id ?? null,
+
+            selectedFlight:
+              payment?.flight?.plan ?? null,
+
+            selectedCar:
+              payment?.car?.id ?? null,
+
+            selectedActivities:
+              payment?.selectedActivities ??
+              selectedActivities,
+
+            selectedPackage:
+              payment?.selectedPackage ??
+              selectedPackage,
+
+            usdTotal:
+              payment?.totals?.tripTotal ??
+              payment?.totals?.total ??
+              0,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.error ||
+            "Failed to create payment session"
+        );
+      }
+
+      /*
+       * This is the ONE payment session.
+       * BitcoinPayment only receives these
+       * values — it never creates its own.
+       */
+
+      setPaymentSession({
+        bookingId: data.bookingId,
+
+        btcAddress: data.btcAddress,
+
+        btcAmount: Number(data.expectedBtc),
+
+        btcPrice: Number(data.btcPrice),
+
+        paymentStartedAt:
+          data.paymentStartedAt,
+      });
+
+      console.log(
+        "Payment session created:",
+        data
+      );
+
+      return true;
+
+    } catch (error) {
+
+      console.error(
+        "Payment session creation failed:",
+        error
+      );
+
+      setPaymentSession(null);
+
+      alert(
+        "Unable to start Bitcoin payment. Please try again."
+      );
+
+      return false;
+
+    } finally {
+
+      creatingPaymentRef.current = false;
+
+      setCreatingPayment(false);
+
+    }
+
+  };
+
+
+  const handleConfirmBooking = async (
     bookingData
   ) => {
 
@@ -478,6 +641,9 @@ function AppRoutes() {
         email:
           bookingData?.traveler?.email ||
           "",
+        phone:
+          bookingData?.traveler?.phone ||
+          "",
       },
 
       travellers,
@@ -532,9 +698,14 @@ function AppRoutes() {
 
     setPaymentBooking(completeBooking);
 
-    setPaymentStartedAt(
-      Date.now()
-    );
+    const paymentReady =
+      await createPaymentSession(
+        completeBooking
+      );
+
+    if (!paymentReady) {
+      return;
+    }
 
     navigate("/payment");
 
@@ -560,7 +731,7 @@ function AppRoutes() {
 
     setPaymentBooking(null);
 
-    setPaymentStartedAt(null);
+    setPaymentSession(null);
 
     navigate("/confirmation");
 
@@ -576,9 +747,9 @@ function AppRoutes() {
 
   const handleBackToBooking = () => {
 
-    setPaymentBooking(null);
+    setPaymentSession(null);
 
-    setPaymentStartedAt(null);
+    setPaymentBooking(null);
 
     navigate("/booking");
 
@@ -599,6 +770,8 @@ function AppRoutes() {
     setBooking(null);
 
     setPaymentBooking(null);
+
+    setPaymentSession(null);
 
     setSelectedRoom(null);
 
@@ -716,6 +889,7 @@ function AppRoutes() {
             trip={trip}
             onClose={handleCloseBooking}
             onConfirm={handleConfirmBooking}
+            submitting={creatingPayment}
           />
         }
       />
@@ -725,7 +899,11 @@ function AppRoutes() {
         element={
           <BitcoinPaymentPage
             booking={paymentBooking}
-            paymentStartedAt={paymentStartedAt}
+            paymentSession={paymentSession}
+            creatingPayment={creatingPayment}
+            onRetryCreate={() =>
+              createPaymentSession()
+            }
             onBack={handleBackToBooking}
             onPaymentComplete={handlePaymentComplete}
           />
