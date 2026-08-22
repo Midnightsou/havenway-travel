@@ -16,7 +16,7 @@ import "./BitcoinPayment.css";
 
 
 const API_BASE_URL =
-  "http://localhost:5000";
+  "https://server-snowy-rho-84.vercel.app";
 
 const PAYMENT_WINDOW = 20 * 60;
 const POLL_INTERVAL = 15000;

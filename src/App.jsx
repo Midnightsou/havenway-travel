@@ -37,7 +37,7 @@ import "./styles/responsive.css";
 
 
 const API_BASE_URL =
-  "http://localhost:5000";
+  "https://server-snowy-rho-84.vercel.app";
 
 /*
  * Bump this whenever the meaning of a
