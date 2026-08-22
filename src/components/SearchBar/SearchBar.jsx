@@ -348,7 +348,7 @@ function SearchBar({
               </span>
 
               <strong>
-                Los Angeles, California
+                Los Angeles, California to washington, D.C.
               </strong>
 
             </div>
