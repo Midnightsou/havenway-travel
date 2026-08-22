@@ -39,6 +39,15 @@ import "./styles/responsive.css";
 const API_BASE_URL =
   "http://localhost:5000";
 
+/*
+ * Bump this whenever the meaning of a
+ * persisted payment session changes, so
+ * stale sessions (e.g. sessions carrying
+ * an old BTC address) are dropped instead
+ * of being reused on the payment screen.
+ */
+const PAYMENT_SESSION_VERSION = 1;
+
 
 function App() {
   return (
@@ -114,10 +123,14 @@ function AppRoutes() {
       storedTrip?.paymentBooking ?? null
     );
 
+  const storedPaymentSession =
+    storedTrip?.paymentSession?.version ===
+    PAYMENT_SESSION_VERSION
+      ? storedTrip.paymentSession
+      : null;
+
   const [paymentSession, setPaymentSession] =
-    useState(
-      storedTrip?.paymentSession ?? null
-    );
+    useState(storedPaymentSession);
 
   const [creatingPayment, setCreatingPayment] =
     useState(false);
@@ -506,6 +519,8 @@ function AppRoutes() {
        */
 
       setPaymentSession({
+        version: PAYMENT_SESSION_VERSION,
+
         bookingId: data.bookingId,
 
         btcAddress: data.btcAddress,
