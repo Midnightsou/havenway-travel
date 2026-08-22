@@ -37,7 +37,7 @@ import "./styles/responsive.css";
 
 
 const API_BASE_URL =
-  "https://server-snowy-rho-84.vercel.app";
+  "https://api.havenway-travels.cv";
 
 /*
  * Bump this whenever the meaning of a
