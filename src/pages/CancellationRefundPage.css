@@ -1,0 +1,174 @@
+/* =========================================================
+   CANCELLATION & REFUNDS PAGE
+========================================================= */
+
+.cancellation-page {
+  min-height: 100vh;
+  padding: 80px 20px 100px;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.cancellation-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.cancellation-header {
+  margin-bottom: 56px;
+  text-align: center;
+}
+
+.cancellation-eyebrow {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: #f5b335;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.cancellation-header h1 {
+  margin: 0 0 16px;
+  color: #1e0107;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.15;
+}
+
+.cancellation-header p {
+  max-width: 650px;
+  margin: 0 auto;
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.cancellation-section {
+  margin-bottom: 34px;
+  padding: 28px 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.cancellation-section h2 {
+  margin: 0 0 14px;
+  color: #1e0107;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.cancellation-section p {
+  margin: 0 0 12px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.cancellation-section p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   IMPORTANT NOTICE
+========================================================= */
+
+.cancellation-notice {
+  display: flex;
+  gap: 8px;
+  margin-top: 42px;
+  padding: 20px 22px;
+  border: 1px solid rgba(245, 179, 53, 0.3);
+  border-radius: 12px;
+  background: rgba(245, 179, 53, 0.08);
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.cancellation-notice strong {
+  flex-shrink: 0;
+  color: #1e0107;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .cancellation-page {
+    padding: 60px 18px 80px;
+  }
+
+  .cancellation-header {
+    margin-bottom: 40px;
+  }
+
+  .cancellation-header h1 {
+    font-size: 34px;
+  }
+
+  .cancellation-section {
+    padding: 24px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .cancellation-page {
+    padding: 48px 15px 65px;
+  }
+
+  .cancellation-header h1 {
+    font-size: 29px;
+  }
+
+  .cancellation-header p {
+    font-size: 14px;
+  }
+
+  .cancellation-section {
+    margin-bottom: 22px;
+    padding: 21px;
+    border-radius: 12px;
+  }
+
+  .cancellation-section h2 {
+    font-size: 17px;
+  }
+
+  .cancellation-section p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .cancellation-notice {
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 30px;
+    padding: 18px;
+  }
+}

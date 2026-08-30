@@ -13,6 +13,12 @@ import BookingPage from "./pages/BookingPage";
 import BitcoinPaymentPage from "./pages/BitcoinPaymentPage";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import BookingGuard from "./components/BookingGuard/BookingGuard";
+import AboutPage from "./pages/AboutPage";
+import ReviewsPage from "./pages/ReviewsPage";
+import BookingInformationPage from "./pages/BookingInformationPage";
+import CancellationRefundPage from "./pages/CancellationRefundPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
 
 import { getTripDuration } from "./utils/dates";
 
@@ -39,13 +45,7 @@ import "./styles/responsive.css";
 const API_BASE_URL =
   "https://api.havenway-travels.cv";
 
-/*
- * Bump this whenever the meaning of a
- * persisted payment session changes, so
- * stale sessions (e.g. sessions carrying
- * an old BTC address) are dropped instead
- * of being reused on the payment screen.
- */
+
 const PAYMENT_SESSION_VERSION = 1;
 
 
@@ -62,6 +62,30 @@ function AppRoutes() {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleLegalNavigate = (path) => {
+    const allowedLegalRoutes = [
+      "/about",
+      "/reviews",
+      "/booking-information",
+      "/cancellation-refunds",
+      "/privacy-policy",
+      "/terms-of-service",
+    ];
+
+    if (!allowedLegalRoutes.includes(path)) {
+      return;
+    }
+
+    navigate(path);
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 120);
+  };
 
   const storedTrip = getStoredTrip();
 
@@ -842,6 +866,7 @@ function AppRoutes() {
     onContinue: handleContinueBooking,
     onNavigate: handleNavigate,
     onGoHome: handleGoHome,
+    onLegalNavigate: handleLegalNavigate,
   };
 
 
@@ -856,11 +881,42 @@ function AppRoutes() {
           <HomePage
             onNavigate={handleNavigate}
             onGoHome={handleGoHome}
+            onLegalNavigate={handleLegalNavigate}
             hotels={hotels}
             selectedHotel={selectedHotel}
             onSelectHotel={handleSelectHotel}
           />
         }
+      />
+
+      <Route
+        path="/about"
+        element={<AboutPage />}
+      />
+
+      <Route
+        path="/reviews"
+        element={<ReviewsPage />}
+      />
+
+      <Route
+        path="/booking-information"
+        element={<BookingInformationPage />}
+      />
+
+      <Route
+        path="/cancellation-refunds"
+        element={<CancellationRefundPage />}
+      />
+
+      <Route
+        path="/privacy-policy"
+        element={<PrivacyPolicyPage />}
+      />
+
+      <Route
+        path="/terms-of-service"
+        element={<TermsOfServicePage />}
       />
 
       <Route

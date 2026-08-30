@@ -1,8 +1,4 @@
 import {
-  Plane,
-  Hotel,
-  Map,
-  CircleHelp,
   ChevronUp,
   Mail,
   Phone,
@@ -11,9 +7,7 @@ import {
 
 import "./Footer.css";
 
-function Footer({
-  onNavigate,
-}) {
+function Footer({ onNavigate, onLegalNavigate }) {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -21,10 +15,7 @@ function Footer({
     });
   };
 
-  const handleNavClick = (
-    tab,
-    section
-  ) => {
+  const handleNavClick = (tab, section) => {
     if (onNavigate) {
       onNavigate(tab, section);
     }
@@ -32,15 +23,15 @@ function Footer({
 
   return (
     <footer className="footer">
-
       <div className="container">
 
         {/* TOP */}
 
         <div className="footer-top">
 
-          <div className="footer-intro">
+          {/* COMPANY */}
 
+          <div className="footer-intro">
             <span className="footer-name">
               Havenway Travel
             </span>
@@ -50,14 +41,12 @@ function Footer({
               Flights, accommodation, and itinerary
               details for your journey.
             </p>
-
           </div>
 
 
           {/* TRAVEL */}
 
           <div className="footer-column">
-
             <h3>Travel</h3>
 
             <button
@@ -83,14 +72,12 @@ function Footer({
             >
               Itinerary
             </button>
-
           </div>
 
 
           {/* TRIP */}
 
           <div className="footer-column">
-
             <h3>Your trip</h3>
 
             <button
@@ -116,22 +103,59 @@ function Footer({
             >
               Trip itinerary
             </button>
-
           </div>
 
 
-          {/* HELP */}
+          {/* INFORMATION */}
 
-          <div className="footer-column">
-
-            <h3>Help</h3>
+          <div className="footer-legal-links">
 
             <button
               onClick={() =>
-                handleNavClick("Stays", "summary")
+                onLegalNavigate?.("/about")
               }
             >
-              Booking information
+              About Us
+            </button>
+
+            <button
+              onClick={() =>
+                onLegalNavigate?.("/reviews")
+              }
+            >
+              Reviews
+            </button>
+
+            <button
+              onClick={() =>
+                onLegalNavigate?.("/booking-information")
+              }
+            >
+              Booking Information
+            </button>
+
+            <button
+              onClick={() =>
+                onLegalNavigate?.("/cancellation-refunds")
+              }
+            >
+              Cancellation & Refunds
+            </button>
+
+            <button
+              onClick={() =>
+                onLegalNavigate?.("/privacy-policy")
+              }
+            >
+              Privacy Policy
+            </button>
+
+            <button
+              onClick={() =>
+                onLegalNavigate?.("/terms-of-service")
+              }
+            >
+              Terms of Service
             </button>
 
           </div>
@@ -140,15 +164,13 @@ function Footer({
           {/* CONTACT */}
 
           <div className="footer-column footer-contact">
-
             <h3>Contact</h3>
 
             <div className="footer-contact-address">
-
               <MapPin size={16} />
 
               <span>
-                Havenway Travel Agency
+                Havenway Travel
                 <br />
                 3050 Post Oak Blvd, Unit 510
                 <br />
@@ -156,7 +178,6 @@ function Footer({
                 <br />
                 United States
               </span>
-
             </div>
 
             <a
@@ -168,23 +189,19 @@ function Footer({
             </a>
 
             <a
-  className="footer-contact-link"
-  href="https://wa.me/+15876632982"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <Phone size={16} />
-  +1 587 663 2982
-</a>
-
+              className="footer-contact-link"
+              href="https://wa.me/15876632982"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Phone size={16} />
+              +1 587 663 2982
+            </a>
           </div>
 
         </div>
 
 
-        {/* TRAVEL FEATURES */}
-
-     
         {/* BOTTOM */}
 
         <div className="footer-bottom">
@@ -205,9 +222,9 @@ function Footer({
         </div>
 
       </div>
-
     </footer>
   );
 }
 
 export default Footer;
+

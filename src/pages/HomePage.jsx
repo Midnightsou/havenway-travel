@@ -6,6 +6,7 @@ import MobileNav from "../components/MobileNav/MobileNav";
 function HomePage({
   onNavigate,
   onGoHome,
+  onLegalNavigate,
   hotels,
   selectedHotel,
   onSelectHotel,
@@ -25,7 +26,10 @@ function HomePage({
         onSelectHotel={onSelectHotel}
       />
 
-      <Footer onNavigate={onNavigate} />
+      <Footer
+        onNavigate={onNavigate}
+        onLegalNavigate={onLegalNavigate}
+      />
 
       <MobileNav
         activeTab="Home"

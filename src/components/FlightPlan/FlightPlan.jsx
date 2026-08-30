@@ -65,7 +65,7 @@ function FlightCard({
         <div className="flight-price">
 
           <span>
-            Flight
+            Flight 
           </span>
 
           <strong>
@@ -339,7 +339,7 @@ function FlightPlan({
             </span>
 
             <h2>
-              Choose your flight
+              Choose your flight (non-refundable)
             </h2>
 
             <p>

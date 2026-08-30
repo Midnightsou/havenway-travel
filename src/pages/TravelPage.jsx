@@ -31,6 +31,7 @@ function TravelPage({
   onContinue,
   onNavigate,
   onGoHome,
+  onLegalNavigate,
 }) {
   return (
     <>
@@ -80,7 +81,10 @@ function TravelPage({
         />
       </main>
 
-      <Footer onNavigate={onNavigate} />
+      <Footer
+        onNavigate={onNavigate}
+        onLegalNavigate={onLegalNavigate}
+      />
 
       <MobileNav
         activeTab={activeTab}
