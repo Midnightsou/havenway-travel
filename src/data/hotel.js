@@ -157,6 +157,58 @@ const hotel = [
     ],
   },
 
+
+  {
+    id: "baltimore-airport-marriott",
+
+    name: "Baltimore Airport Marriott",
+
+    location:
+      "1743 W Nursery Rd, Linthicum Heights, MD",
+
+    rating: 8.5,
+
+    ratingLabel: "Excellent",
+
+    reviewCount: 1680,
+
+    description:
+      "A comfortable airport hotel near Baltimore with convenient access to Baltimore/Washington International Thurgood Marshall Airport and the surrounding area.",
+
+    longDescription:
+      "Baltimore Airport Marriott offers comfortable accommodations and convenient access to Baltimore/Washington International Thurgood Marshall Airport. The hotel provides a practical base for travelers visiting Baltimore, Washington, D.C., and the surrounding Maryland area.",
+
+    checkIn: "3:00 PM",
+
+    checkOut: "11:00 AM",
+
+    amenities: [
+      "Outdoor pool",
+      "Restaurant",
+      "Bar",
+      "Fitness center",
+      "Free WiFi",
+      "Airport shuttle",
+      "Parking available",
+      "24-hour front desk",
+    ],
+
+    highlights: [
+      "Convenient access to Baltimore/Washington International Airport",
+      "Comfortable rooms and suites",
+      "Airport shuttle service",
+      "Easy access to Baltimore and surrounding attractions",
+    ],
+
+    images: [
+      "/images/hotel/bwi 2 .jpeg",
+      "/images/hotel/bwi 1.jpeg",
+      "/images/hotel/bwi 3.jpeg",
+      "/images/hotel/bwi deluxe 5.jpeg",
+      "/images/hotel/bwi qween.jpeg",
+    ],
+  },
+
 ];
 
 

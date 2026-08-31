@@ -14,6 +14,7 @@ import { formatShortDate } from "../../utils/dates";
 import "./HotelRooms.css";
 
 function HotelRooms({
+  hotel,
   selectedRoom,
   onSelectRoom,
   startDate,
@@ -21,8 +22,21 @@ function HotelRooms({
   nights = 0,
 }) {
   const calculateTotal = (room) => {
+
+    // Never assume a room exists. A stale
+    // selectedRoom from another hotel could
+    // slip through, so return 0 instead of
+    // crashing.
+    if (!room) {
+      return 0;
+    }
+
     return room.pricePerNight * nights;
   };
+
+  const hotelRooms = rooms.filter(
+    (room) => room.hotelId === hotel?.id
+  );
 
   return (
     <section
@@ -52,7 +66,7 @@ function HotelRooms({
 
         <div className="room-list">
 
-          {rooms.map((room) => {
+          {hotelRooms.map((room) => {
 
             const total = calculateTotal(room);
 
@@ -173,10 +187,19 @@ function HotelRooms({
 
         {selectedRoom && (() => {
 
-          const room = rooms.find(
+          const room = hotelRooms.find(
             (item) =>
-              item.id === selectedRoom
+              item.id === selectedRoom &&
+              item.hotelId === hotel?.id
           );
+
+          // The selected room may belong to a
+          // different hotel. Never assume it
+          // exists here — if it doesn't, don't
+          // render a summary for it.
+          if (!room) {
+            return null;
+          }
 
           const total =
             calculateTotal(room);

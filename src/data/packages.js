@@ -5,7 +5,7 @@ const packages = [
     type: "Havenway Package",
     description:
       "Round-trip flight and hotel at The Westin Los Angeles Airport",
-    roomId: 1,
+    roomId: "la-deluxe-king",
     discount: 0.15,
   },
 ];

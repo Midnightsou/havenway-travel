@@ -220,6 +220,29 @@ function AppRoutes() {
   }, [location.pathname]);
 
 
+  /*
+   * If a selected room no longer belongs to the
+   * current hotel, clear it. This protects against
+   * switching hotels, page refreshes, stale session
+   * storage, and any manually-invalid state.
+   */
+  useEffect(() => {
+
+    if (!selectedHotel || !selectedRoom) {
+      return;
+    }
+
+    const room = rooms.find(
+      (item) => item.id === selectedRoom
+    );
+
+    if (!room || room.hotelId !== selectedHotel) {
+      setSelectedRoom(null);
+    }
+
+  }, [selectedHotel, selectedRoom]);
+
+
   const trip = {
     startDate,
     endDate,
@@ -298,7 +321,12 @@ function AppRoutes() {
 
   const handleSelectHotel = (hotelId) => {
 
+    // Change the hotel.
     setSelectedHotel(hotelId);
+
+    // The previously selected room may belong
+    // to the old hotel, so clear it.
+    setSelectedRoom(null);
 
     navigate("/stays");
 

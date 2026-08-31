@@ -52,6 +52,7 @@ function TravelContent({
         <HotelOverview hotel={activeHotel} />
 
         <HotelRooms
+          hotel={activeHotel}
           selectedRoom={selectedRoom}
           onSelectRoom={onSelectRoom}
           startDate={startDate}
