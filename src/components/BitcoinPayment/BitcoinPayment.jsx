@@ -20,7 +20,7 @@ const API_BASE_URL =
 
 const PAYMENT_WINDOW = 20 * 60;
 const POLL_INTERVAL = 15000;
-const DEV_PAYMENT_SIMULATOR = true;
+const DEV_PAYMENT_SIMULATOR = false;
 
 
 function BitcoinPayment({
