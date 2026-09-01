@@ -20,12 +20,13 @@ const API_BASE_URL =
 
 const PAYMENT_WINDOW = 20 * 60;
 const POLL_INTERVAL = 15000;
-const DEV_PAYMENT_SIMULATOR = false;
+const DEV_PAYMENT_SIMULATOR = true;
 
 
 function BitcoinPayment({
   booking,
   bookingId,
+  paymentToken,
   btcAddress,
   btcAmount,
   btcPrice,
@@ -35,6 +36,9 @@ function BitcoinPayment({
 }) {
 
   const [copied, setCopied] =
+    useState(false);
+
+  const [linkCopied, setLinkCopied] =
     useState(false);
 
   const [paymentDetected, setPaymentDetected] =
@@ -219,6 +223,33 @@ function BitcoinPayment({
     } catch (error) {
       console.error(
         "Failed to copy Bitcoin address:",
+        error
+      );
+    }
+  };
+
+  const paymentLink = paymentToken
+    ? `${window.location.origin}/pay/${paymentToken}`
+    : null;
+
+  const copyPaymentLink = async () => {
+    if (!paymentLink) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(
+        paymentLink
+      );
+
+      setLinkCopied(true);
+
+      setTimeout(() => {
+        setLinkCopied(false);
+      }, 2000);
+    } catch (error) {
+      console.error(
+        "Failed to copy payment link:",
         error
       );
     }
@@ -413,6 +444,48 @@ function BitcoinPayment({
             )}
 
           </div>
+
+
+          {/* SHARE PAYMENT LINK */}
+
+          {paymentLink && (
+
+            <div className="bitcoin-share-section">
+
+              <span>
+                Share payment link
+              </span>
+
+              <div className="bitcoin-share">
+
+                <code>
+                  {paymentLink}
+                </code>
+
+                <button
+                  onClick={copyPaymentLink}
+                  aria-label="Copy payment link"
+                >
+
+                  {linkCopied ? (
+                    <Check size={18} />
+                  ) : (
+                    <Copy size={18} />
+                  )}
+
+                </button>
+
+              </div>
+
+              {linkCopied && (
+                <small className="copy-success">
+                  Link copied
+                </small>
+              )}
+
+            </div>
+
+          )}
 
 
           {/* PAYMENT WINDOW */}

@@ -12,6 +12,7 @@ import {
   ArrowLeft,
   Ticket,
   Sparkles,
+  Copy,
 } from "lucide-react";
 
 import rooms from "../../data/rooms";
@@ -34,7 +35,15 @@ import {
 import "./BookingModal.css";
 
 
-function BookingModal({ trip, onClose, onConfirm, submitting = false }) {
+function BookingModal({
+  trip,
+  onClose,
+  onConfirm,
+  submitting = false,
+  paymentLink = null,
+  bookingReference = "",
+  onContinueToPayment,
+}) {
 
   const {
     startDate,
@@ -56,6 +65,15 @@ function BookingModal({ trip, onClose, onConfirm, submitting = false }) {
     email: "",
     phone: "",
   });
+
+  /*
+   * A payment link means a payment session
+   * exists. It does NOT mean the booking is
+   * confirmed.
+   */
+
+  const hasPaymentSession =
+    Boolean(paymentLink);
 
   const room = roomId
     ? rooms.find((item) => item.id === roomId)
@@ -111,7 +129,9 @@ function BookingModal({ trip, onClose, onConfirm, submitting = false }) {
       return;
     }
 
-    onConfirm({ traveler });
+    if (onConfirm) {
+      onConfirm({ traveler });
+    }
   };
 
   return (
@@ -160,6 +180,74 @@ function BookingModal({ trip, onClose, onConfirm, submitting = false }) {
                 </label>
               </div>
             </section>
+
+            {hasPaymentSession && paymentLink && (
+              <section className="payment-link-card">
+
+                <div className="payment-link-header">
+
+                  <div className="payment-link-icon">
+                    <Copy size={20} />
+                  </div>
+
+                  <div>
+                    <span className="payment-link-eyebrow">
+                      SHARE PAYMENT
+                    </span>
+
+                    <h3>
+                      Let someone else pay
+                    </h3>
+
+                    <p>
+                      Send this payment link to another
+                      person. They will see this exact
+                      itinerary and can update the
+                      traveler name, email and phone
+                      before paying.
+                    </p>
+                  </div>
+
+                </div>
+
+                <div className="payment-link-box">
+
+                  <span>
+                    {paymentLink}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(
+                          paymentLink
+                        );
+
+                        alert(
+                          "Payment link copied!"
+                        );
+                      } catch (error) {
+                        console.error(
+                          "Failed to copy payment link:",
+                          error
+                        );
+                      }
+                    }}
+                  >
+                    <Copy size={17} />
+                    Copy Payment Link
+                  </button>
+
+                </div>
+
+                <small className="payment-link-note">
+                  This link remains active until the
+                  booking has been paid.
+                </small>
+
+              </section>
+            )}
 
             <section className="booking-section">
               <div className="booking-section-title">
@@ -316,15 +404,25 @@ function BookingModal({ trip, onClose, onConfirm, submitting = false }) {
                 <strong>${tripTotal}</strong>
               </div>
 
-              <button
-                type="submit"
-                className="confirm-booking-button"
-                disabled={submitting}
-              >
-                {submitting
-                  ? "Creating payment session…"
-                  : "Confirm booking"}
-              </button>
+              {hasPaymentSession ? (
+                <button
+                  type="button"
+                  className="confirm-booking-button"
+                  onClick={onContinueToPayment}
+                >
+                  Continue to payment
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="confirm-booking-button"
+                  disabled={submitting}
+                >
+                  {submitting
+                    ? "Preparing payment link…"
+                    : "Continue"}
+                </button>
+              )}
 
               <div className="booking-security">
                 <ShieldCheck size={17} />

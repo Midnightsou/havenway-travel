@@ -5,6 +5,9 @@ function BookingPage({
   onClose,
   onConfirm,
   submitting = false,
+  paymentLink = null,
+  bookingReference = "",
+  onContinueToPayment,
 }) {
   return (
     <BookingModal
@@ -12,6 +15,11 @@ function BookingPage({
       onClose={onClose}
       onConfirm={onConfirm}
       submitting={submitting}
+      paymentLink={paymentLink}
+      bookingReference={bookingReference}
+      onContinueToPayment={
+        onContinueToPayment
+      }
     />
   );
 }

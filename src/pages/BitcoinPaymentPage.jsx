@@ -80,6 +80,7 @@ function BitcoinPaymentPage({
     <BitcoinPayment
       booking={booking}
       bookingId={paymentSession.bookingId}
+      paymentToken={paymentSession.paymentToken}
       btcAddress={paymentSession.btcAddress}
       btcAmount={paymentSession.btcAmount}
       btcPrice={paymentSession.btcPrice}

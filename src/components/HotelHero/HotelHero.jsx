@@ -41,7 +41,7 @@ function HotelHero({ hotel }) {
                 className="see-more-photos-mobile"
                 onClick={() => setGalleryOpen(true)}
               >
-                See all {hotelImages.length} photos
+                See all  photos
               </button>
             </div>
 

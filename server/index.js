@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 const dns = require("dns");
 
 dns.setDefaultResultOrder("ipv4first");
@@ -252,6 +254,8 @@ app.get("/api/check-payment", async (req, res) => {
           payment_status: "confirmed",
           booking_status: "confirmed",
 
+          payment_link_used: true,
+
           transaction_id:
             matchingPayment.txid,
 
@@ -416,6 +420,9 @@ app.post("/api/create-payment", async (req, res) => {
     const paymentStartedAt =
       new Date().toISOString();
 
+    const paymentToken =
+      crypto.randomBytes(32).toString("hex");
+
     /*
       Create booking record in Supabase.
     */
@@ -454,6 +461,21 @@ app.post("/api/create-payment", async (req, res) => {
 
         payment_started_at:
           paymentStartedAt,
+
+        payment_token:
+          paymentToken,
+
+        payment_link_used:
+          false,
+
+        payer_name:
+          name,
+
+        payer_email:
+          email,
+
+        payer_phone:
+          phone,
       })
       .select()
       .single();
@@ -466,6 +488,8 @@ app.post("/api/create-payment", async (req, res) => {
       success: true,
 
       bookingId: data.id,
+
+      paymentToken,
 
       btcAddress:
         BTC_RECEIVING_ADDRESS,
@@ -491,6 +515,397 @@ app.post("/api/create-payment", async (req, res) => {
     });
   }
 });
+// Get a shared booking/payment link
+app.get("/api/payment-link/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    if (!token) {
+      return res.status(400).json({
+        success: false,
+        error: "Payment token is required",
+      });
+    }
+
+    let booking = null;
+
+    /*
+     * First try the value as a database booking ID.
+     *
+     * This supports links like:
+     *
+     * /pay/02f55014-9202-4766-be6e-fa76c4705531
+     */
+
+    const { data: bookingById, error: idError } =
+      await supabase
+        .from("bookings")
+        .select("*")
+        .eq("id", token)
+        .maybeSingle();
+
+    if (idError) {
+      console.error(
+        "Booking ID lookup failed:",
+        idError.message
+      );
+    }
+
+    if (bookingById) {
+      booking = bookingById;
+    }
+
+
+    /*
+     * If no booking was found by ID,
+     * try the secret payment token.
+     *
+     * This supports older links such as:
+     *
+     * /pay/<paymentToken>
+     */
+
+    if (!booking) {
+      const {
+        data: bookingByToken,
+        error: tokenError,
+      } = await supabase
+        .from("bookings")
+        .select("*")
+        .eq("payment_token", token)
+        .maybeSingle();
+
+      if (tokenError) {
+        console.error(
+          "Payment token lookup failed:",
+          tokenError.message
+        );
+      }
+
+      if (bookingByToken) {
+        booking = bookingByToken;
+      }
+    }
+
+
+    /*
+     * Nothing matched.
+     */
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        error: "Payment link not found",
+      });
+    }
+
+
+    /*
+     * Once payment has been completed,
+     * the shared payment link cannot be reused.
+     */
+
+    if (
+      booking.payment_link_used ||
+      booking.payment_status === "confirmed"
+    ) {
+      return res.status(410).json({
+        success: false,
+        error:
+          "This payment link has already been used",
+        expired: true,
+      });
+    }
+
+
+    /*
+     * Return only the information the
+     * shared payment page needs.
+     */
+
+    return res.json({
+      success: true,
+
+      booking: {
+        id: booking.id,
+
+        travellers:
+          booking.travellers,
+
+        startDate:
+          booking.start_date,
+
+        endDate:
+          booking.end_date,
+
+        nights:
+          booking.nights,
+
+        days:
+          booking.days,
+
+        selectedHotel:
+          booking.selected_hotel,
+
+        selectedRoom:
+          booking.selected_room,
+
+        selectedFlight:
+          booking.selected_flight,
+
+        selectedCar:
+          booking.selected_car,
+
+        selectedActivities:
+          booking.selected_activities,
+
+        selectedPackage:
+          booking.selected_package,
+
+        usdTotal:
+          Number(booking.usd_total),
+
+        expectedBtc:
+          Number(booking.expected_btc),
+
+        btcAddress:
+          booking.btc_address,
+
+        paymentStatus:
+          booking.payment_status,
+
+        traveler: {
+          name:
+            booking.name || "",
+
+          email:
+            booking.email || "",
+
+          phone:
+            booking.phone || "",
+        },
+      },
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Payment link lookup failed:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      error:
+        "Failed to load payment link",
+    });
+  }
+});
+
+// Update traveler/payer information on a shared booking
+app.patch("/api/payment-link/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+    } = req.body;
+
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !phone
+    ) {
+      return res.status(400).json({
+        success: false,
+        error:
+          "First name, last name, email and phone are required",
+      });
+    }
+
+    const { data: booking, error: findError } =
+      await supabase
+        .from("bookings")
+        .select("id, payment_status, payment_link_used")
+        .or(
+          `payment_token.eq.${token},id.eq.${token}`
+        )
+        .single();
+
+    if (findError || !booking) {
+      return res.status(404).json({
+        success: false,
+        error: "Payment link not found",
+      });
+    }
+
+    if (
+      booking.payment_link_used ||
+      booking.payment_status === "confirmed"
+    ) {
+      return res.status(410).json({
+        success: false,
+        error: "This payment link has already been used",
+        expired: true,
+      });
+    }
+
+    const fullName =
+      `${firstName} ${lastName}`.trim();
+
+    const { error: updateError } =
+      await supabase
+        .from("bookings")
+        .update({
+          name: fullName,
+          email,
+          phone,
+
+          payer_name: fullName,
+          payer_email: email,
+          payer_phone: phone,
+
+          updated_at:
+            new Date().toISOString(),
+        })
+        .eq("id", booking.id);
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    return res.json({
+      success: true,
+      message:
+        "Booking information updated successfully",
+    });
+  } catch (error) {
+    console.error(
+      "Payment link update failed:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      error:
+        "Failed to update booking information",
+    });
+  }
+});
+
+// Get the existing Bitcoin payment session for a booking
+app.get("/api/payment-session/:bookingId", async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+
+    if (!bookingId) {
+      return res.status(400).json({
+        success: false,
+        error: "Booking ID is required",
+      });
+    }
+
+    const { data: booking, error } =
+      await supabase
+        .from("bookings")
+        .select(`
+          id,
+          payment_token,
+          btc_address,
+          expected_btc,
+          usd_total,
+          payment_started_at,
+          payment_status,
+          booking_status
+        `)
+        .eq("id", bookingId)
+        .maybeSingle();
+
+    if (error) {
+      console.error(
+        "Payment session lookup failed:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        error: "Failed to load payment session",
+      });
+    }
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        error: "Booking not found",
+      });
+    }
+
+    if (
+      booking.payment_status === "confirmed" ||
+      booking.booking_status === "confirmed"
+    ) {
+      return res.status(410).json({
+        success: false,
+        error: "This booking has already been paid",
+        paid: true,
+      });
+    }
+
+    if (
+      !booking.expected_btc ||
+      !booking.btc_address ||
+      !booking.payment_token
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: "Payment session is incomplete",
+      });
+    }
+
+    return res.json({
+      success: true,
+
+      paymentSession: {
+        bookingId: booking.id,
+
+        paymentToken:
+          booking.payment_token,
+
+        btcAddress:
+          booking.btc_address,
+
+        btcAmount:
+          Number(booking.expected_btc),
+
+        usdTotal:
+          Number(booking.usd_total),
+
+        paymentStartedAt:
+          booking.payment_started_at,
+
+        paymentStatus:
+          booking.payment_status,
+      },
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Payment session error:",
+      error.message
+    );
+
+    return res.status(500).json({
+      success: false,
+      error: "Failed to load payment session",
+    });
+  }
+});
+
 app.listen(PORT, () => {
 
   console.log(

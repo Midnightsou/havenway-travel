@@ -10,8 +10,8 @@ import {
 import HomePage from "./pages/HomePage";
 import TravelPage from "./pages/TravelPage";
 import BookingPage from "./pages/BookingPage";
-import BitcoinPaymentPage from "./pages/BitcoinPaymentPage";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
+import BitcoinPaymentPage from "./pages/BitcoinPaymentPage";
 import BookingGuard from "./components/BookingGuard/BookingGuard";
 import AboutPage from "./pages/AboutPage";
 import ReviewsPage from "./pages/ReviewsPage";
@@ -19,6 +19,8 @@ import BookingInformationPage from "./pages/BookingInformationPage";
 import CancellationRefundPage from "./pages/CancellationRefundPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
+import SharedPaymentPage from "./pages/SharedPaymentPage";
+import SharedBitcoinPaymentPage from "./pages/SharedBitcoinPaymentPage";
 
 import { getTripDuration } from "./utils/dates";
 
@@ -33,6 +35,7 @@ import hotels from "./data/hotel";
 import rooms from "./data/rooms";
 import cars from "./data/cars";
 import flights from "./data/flight";
+import activities from "./data/activities";
 
 import {
   generateItinerary,
@@ -462,6 +465,28 @@ function AppRoutes() {
   };
 
 
+  const handleContinueToPayment = () => {
+
+    if (!paymentBooking || !paymentSession) {
+
+      alert(
+        "Please create the payment session first."
+      );
+
+      return;
+    }
+
+    navigate("/payment");
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 120);
+  };
+
+
   /*
    * Create the ONE Bitcoin payment session.
    *
@@ -575,6 +600,9 @@ function AppRoutes() {
 
         bookingId: data.bookingId,
 
+        paymentToken:
+          data.paymentToken,
+
         btcAddress: data.btcAddress,
 
         btcAmount: Number(data.expectedBtc),
@@ -671,10 +699,28 @@ function AppRoutes() {
       ? car.pricePerDay * days
       : 0;
 
+    const activitiesTotal =
+      selectedActivities.reduce((total, activityId) => {
+        const activity = activities.find(
+          (item) => item.id === activityId
+        );
+
+        if (!activity) return total;
+
+        return (
+          total +
+          activity.pricePerPerson * travellers
+        );
+      }, 0);
+
+    const packageTotal = 0;
+
     const total =
       flightTotal +
       hotelTotal +
-      carTotal;
+      carTotal +
+      activitiesTotal +
+      packageTotal;
 
     const itinerary =
       generateItinerary(
@@ -738,11 +784,15 @@ function AppRoutes() {
           }
         : null,
 
-      hotel: hotel || null,
+      hotel,
 
-      room: room || null,
+      room,
 
-      car: car || null,
+      car,
+
+      selectedActivities,
+
+      selectedPackage,
 
       itinerary,
 
@@ -750,8 +800,8 @@ function AppRoutes() {
         flightTotal,
         hotelTotal,
         carTotal,
-        activitiesTotal: 0,
-        packageTotal: 0,
+        activitiesTotal,
+        packageTotal,
         tripTotal: total,
       },
 
@@ -774,31 +824,78 @@ function AppRoutes() {
       return;
     }
 
-    navigate("/payment");
-
-    setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }, 120);
-
+    /*
+     * IMPORTANT:
+     *
+     * Do NOT navigate to /payment here.
+     *
+     * The BookingModal needs to remain open
+     * so User 1 can copy the payment link
+     * OR continue to payment.
+     */
   };
 
 
   const handlePaymentComplete = () => {
 
-    if (!paymentBooking) return;
+    if (!paymentBooking) {
+      console.error(
+        "Payment completed but paymentBooking is missing."
+      );
+
+      return;
+    }
+
+    if (!paymentSession?.bookingId) {
+      console.error(
+        "Payment completed but paymentSession.bookingId is missing."
+      );
+
+      alert(
+        "Payment was completed, but we could not generate the payment link."
+      );
+
+      return;
+    }
+
+    /*
+     * The shared payment link uses the real
+     * Supabase booking ID.
+     *
+     * This is NOT the customer-facing
+     * HW-XXXXXX booking reference.
+     */
+
+    const paymentLink =
+      `${window.location.origin}/pay/${paymentSession.bookingId}`;
+
 
     const completedBooking = {
       ...paymentBooking,
+
+      paymentLink,
+
+      paymentBookingId:
+        paymentSession.bookingId,
     };
+
+
+    console.log(
+      "Shared payment link:",
+      paymentLink
+    );
+
 
     setBooking(completedBooking);
 
     setPaymentBooking(null);
 
     setPaymentSession(null);
+
+
+    /*
+     * Show the paid BookingModal.
+     */
 
     navigate("/confirmation");
 
@@ -808,7 +905,6 @@ function AppRoutes() {
         behavior: "smooth",
       });
     }, 120);
-
   };
 
 
@@ -989,6 +1085,18 @@ function AppRoutes() {
             onClose={handleCloseBooking}
             onConfirm={handleConfirmBooking}
             submitting={creatingPayment}
+            paymentLink={
+              paymentSession?.bookingId
+                ? `${window.location.origin}/pay/${paymentSession.bookingId}`
+                : null
+            }
+            bookingReference={
+              paymentBooking?.bookingReference ||
+              ""
+            }
+            onContinueToPayment={
+              handleContinueToPayment
+            }
           />
         }
       />
@@ -1006,6 +1114,20 @@ function AppRoutes() {
             onBack={handleBackToBooking}
             onPaymentComplete={handlePaymentComplete}
           />
+        }
+      />
+
+      <Route
+        path="/pay/:bookingId"
+        element={
+          <SharedPaymentPage />
+        }
+      />
+
+      <Route
+        path="/pay/:bookingId/payment"
+        element={
+          <SharedBitcoinPaymentPage />
         }
       />
 
