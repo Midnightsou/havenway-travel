@@ -820,24 +820,12 @@ app.get("/api/payment-session/:bookingId", async (req, res) => {
           usd_total,
           payment_started_at,
           payment_status,
-          booking_status
+          payment_link_used
         `)
         .eq("id", bookingId)
-        .maybeSingle();
+        .single();
 
-    if (error) {
-      console.error(
-        "Payment session lookup failed:",
-        error.message
-      );
-
-      return res.status(500).json({
-        success: false,
-        error: "Failed to load payment session",
-      });
-    }
-
-    if (!booking) {
+    if (error || !booking) {
       return res.status(404).json({
         success: false,
         error: "Booking not found",
@@ -845,24 +833,37 @@ app.get("/api/payment-session/:bookingId", async (req, res) => {
     }
 
     if (
-      booking.payment_status === "confirmed" ||
-      booking.booking_status === "confirmed"
+      booking.payment_link_used ||
+      booking.payment_status === "confirmed"
     ) {
       return res.status(410).json({
         success: false,
-        error: "This booking has already been paid",
-        paid: true,
+        error: "This payment session has already been used",
+        expired: true,
+      });
+    }
+
+    if (!booking.payment_token) {
+      return res.status(400).json({
+        success: false,
+        error: "Payment session is missing a payment token",
+      });
+    }
+
+    if (!booking.btc_address) {
+      return res.status(400).json({
+        success: false,
+        error: "Bitcoin address is missing",
       });
     }
 
     if (
-      !booking.expected_btc ||
-      !booking.btc_address ||
-      !booking.payment_token
+      !Number.isFinite(Number(booking.expected_btc)) ||
+      Number(booking.expected_btc) <= 0
     ) {
       return res.status(400).json({
         success: false,
-        error: "Payment session is incomplete",
+        error: "Invalid Bitcoin payment amount",
       });
     }
 
@@ -881,9 +882,6 @@ app.get("/api/payment-session/:bookingId", async (req, res) => {
         btcAmount:
           Number(booking.expected_btc),
 
-        usdTotal:
-          Number(booking.usd_total),
-
         paymentStartedAt:
           booking.payment_started_at,
 
@@ -895,13 +893,14 @@ app.get("/api/payment-session/:bookingId", async (req, res) => {
   } catch (error) {
 
     console.error(
-      "Payment session error:",
+      "Payment session lookup failed:",
       error.message
     );
 
     return res.status(500).json({
       success: false,
-      error: "Failed to load payment session",
+      error:
+        "Failed to load payment session",
     });
   }
 });

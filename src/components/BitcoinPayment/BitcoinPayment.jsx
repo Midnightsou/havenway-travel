@@ -60,6 +60,7 @@ function BitcoinPayment({
   const usdTotal = Number(
     booking?.totals?.tripTotal ??
       booking?.totals?.total ??
+      booking?.usdTotal ??
       0
   );
 
