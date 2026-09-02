@@ -12,6 +12,8 @@ require("dotenv").config();
 
 const supabase = require("./supabase");
 
+const sharedTripsRouter = require("./routes/sharedTrips");
+
 const app = express();
 
 const PORT = process.env.PORT || 5000;
@@ -334,6 +336,12 @@ app.get("/api/check-payment", async (req, res) => {
     });
   }
 });
+
+// Shared itineraries
+app.use(
+  "/api/shared-trips",
+  sharedTripsRouter
+);
 
 // Create a Bitcoin payment session
 app.post("/api/create-payment", async (req, res) => {

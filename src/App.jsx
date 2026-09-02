@@ -21,6 +21,7 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import SharedPaymentPage from "./pages/SharedPaymentPage";
 import SharedBitcoinPaymentPage from "./pages/SharedBitcoinPaymentPage";
+import SharedTripPage from "./pages/SharedTripPage";
 
 import { getTripDuration } from "./utils/dates";
 
@@ -166,6 +167,15 @@ function AppRoutes() {
 
   const [bookingGuard, setBookingGuard] =
     useState(null);
+
+  const [creatingSharedTrip, setCreatingSharedTrip] =
+    useState(false);
+
+  const [sharedTripLink, setSharedTripLink] =
+    useState(null);
+
+  const [sharedTripCopied, setSharedTripCopied] =
+    useState(false);
 
   const { nights, days } =
     getTripDuration(startDate, endDate);
@@ -477,6 +487,166 @@ function AppRoutes() {
     }
 
     navigate("/payment");
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 120);
+  };
+
+
+  const handleShareItinerary = async () => {
+    if (creatingSharedTrip) {
+      return;
+    }
+
+    setCreatingSharedTrip(true);
+    setSharedTripCopied(false);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/shared-trips`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            travellers,
+            startDate,
+            endDate,
+            nights,
+            days,
+
+            roomId: selectedRoom,
+            flightId: selectedFlight,
+            carId: selectedCar,
+
+            activityIds:
+              selectedActivities,
+
+            packageId:
+              selectedPackage,
+
+            selectedHotel,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.error ||
+            "Failed to create shared itinerary"
+        );
+      }
+
+      const link =
+        `${window.location.origin}/trip/${data.shareToken}`;
+
+      setSharedTripLink(link);
+
+      try {
+        await navigator.clipboard.writeText(link);
+
+        setSharedTripCopied(true);
+
+        setTimeout(() => {
+          setSharedTripCopied(false);
+        }, 2500);
+      } catch (clipboardError) {
+        console.error(
+          "Failed to copy shared itinerary link:",
+          clipboardError
+        );
+      }
+
+      return link;
+
+    } catch (error) {
+      console.error(
+        "Share itinerary failed:",
+        error
+      );
+
+      alert(
+        "Unable to create the shared itinerary. Please try again."
+      );
+
+      return null;
+
+    } finally {
+      setCreatingSharedTrip(false);
+    }
+  };
+
+
+  const handleContinueWithSharedTrip = (sharedTrip) => {
+    if (!sharedTrip) {
+      return;
+    }
+
+    /*
+     * Restore the shared itinerary into
+     * Havenway's existing trip state.
+     */
+
+    setTravellers(
+      sharedTrip.travellers ?? 1
+    );
+
+    setStartDate(
+      sharedTrip.startDate ?? null
+    );
+
+    setEndDate(
+      sharedTrip.endDate ?? null
+    );
+
+    setSelectedHotel(
+      sharedTrip.selectedHotel ?? null
+    );
+
+    setSelectedRoom(
+      sharedTrip.roomId ?? null
+    );
+
+    setSelectedFlight(
+      sharedTrip.flightId ?? null
+    );
+
+    setSelectedCar(
+      sharedTrip.carId ?? null
+    );
+
+    setSelectedActivities(
+      Array.isArray(sharedTrip.activityIds)
+        ? sharedTrip.activityIds
+        : []
+    );
+
+    setSelectedPackage(
+      sharedTrip.packageId ?? null
+    );
+
+    /*
+     * A shared itinerary is a fresh trip.
+     * It should not inherit another user's
+     * booking/payment session.
+     */
+
+    setBooking(null);
+    setPaymentBooking(null);
+    setPaymentSession(null);
+
+    setSharedTripLink(null);
+
+    navigate("/booking");
 
     setTimeout(() => {
       window.scrollTo({
@@ -1097,6 +1267,18 @@ function AppRoutes() {
             onContinueToPayment={
               handleContinueToPayment
             }
+            onShareItinerary={
+              handleShareItinerary
+            }
+            creatingSharedTrip={
+              creatingSharedTrip
+            }
+            sharedTripLink={
+              sharedTripLink
+            }
+            sharedTripCopied={
+              sharedTripCopied
+            }
           />
         }
       />
@@ -1128,6 +1310,17 @@ function AppRoutes() {
         path="/pay/:bookingId/payment"
         element={
           <SharedBitcoinPaymentPage />
+        }
+      />
+
+      <Route
+        path="/trip/:token"
+        element={
+          <SharedTripPage
+            onContinueWithTrip={
+              handleContinueWithSharedTrip
+            }
+          />
         }
       />
 

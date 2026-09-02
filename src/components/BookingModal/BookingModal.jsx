@@ -43,6 +43,11 @@ function BookingModal({
   paymentLink = null,
   bookingReference = "",
   onContinueToPayment,
+
+  onShareItinerary,
+  creatingSharedTrip = false,
+  sharedTripLink = null,
+  sharedTripCopied = false,
 }) {
 
   const {
@@ -100,6 +105,9 @@ function BookingModal({
   const flightPlan = flightId
     ? flights[flightId]
     : flights.economy;
+
+  const hasFlightPlan =
+    Boolean(flightPlan?.outbound && flightPlan?.return);
 
   const flightTotal = calculateFlightTotal(
     flightId,
@@ -249,31 +257,120 @@ function BookingModal({
               </section>
             )}
 
-            <section className="booking-section">
-              <div className="booking-section-title">
-                <Plane size={21} />
-                <div>
-                  <h3>Flight details</h3>
-                  <p>Round-trip flight · {travellers} {travellers === 1 ? "traveler" : "travelers"}</p>
+            <section className="share-itinerary-card">
+
+              <div className="share-itinerary-header">
+
+                <div className="share-itinerary-icon">
+                  <Sparkles size={20} />
                 </div>
+
+                <div>
+                  <span className="share-itinerary-eyebrow">
+                    SHARE ITINERARY
+                  </span>
+
+                  <h3>
+                    Share this trip
+                  </h3>
+
+                  <p>
+                    Send this itinerary to someone so they can
+                    review the exact trip and continue booking it
+                    themselves.
+                  </p>
+                </div>
+
               </div>
 
-              <div className="booking-flight">
-                <div>
-                  <span>{startDate ? formatShortDate(startDate) : ""} · Departure</span>
-                  <strong>{flightPlan.outbound.from.airport} → {flightPlan.outbound.to.airport}</strong>
-                  <small>{flightPlan.outbound.from.time} – {flightPlan.outbound.to.time}</small>
-                </div>
-              </div>
+              {sharedTripLink ? (
 
-              <div className="booking-flight">
-                <div>
-                  <span>{endDate ? formatShortDate(endDate) : ""} · Return</span>
-                  <strong>{flightPlan.return.from.airport} → {flightPlan.return.to.airport}</strong>
-                  <small>{flightPlan.return.from.time} – {flightPlan.return.to.time}</small>
+                <div className="share-itinerary-result">
+
+                  <div className="share-itinerary-link">
+                    <span>
+                      {sharedTripLink}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(
+                          sharedTripLink
+                        );
+
+                        alert(
+                          "Itinerary link copied!"
+                        );
+                      } catch (error) {
+                        console.error(
+                          "Failed to copy itinerary link:",
+                          error
+                        );
+                      }
+                    }}
+                  >
+                    <Copy size={17} />
+
+                    {sharedTripCopied
+                      ? "Copied!"
+                      : "Copy Itinerary Link"}
+                  </button>
+
                 </div>
-              </div>
+
+              ) : (
+
+                <button
+                  type="button"
+                  className="share-itinerary-button"
+                  onClick={onShareItinerary}
+                  disabled={creatingSharedTrip}
+                >
+                  <Sparkles size={17} />
+
+                  {creatingSharedTrip
+                    ? "Creating itinerary link…"
+                    : "Create Shareable Itinerary"}
+                </button>
+
+              )}
+
+              <small className="share-itinerary-note">
+                The shared itinerary expires after 30 days.
+              </small>
+
             </section>
+
+            {hasFlightPlan && (
+              <section className="booking-section">
+                <div className="booking-section-title">
+                  <Plane size={21} />
+                  <div>
+                    <h3>Flight details</h3>
+                    <p>Round-trip flight · {travellers} {travellers === 1 ? "traveler" : "travelers"}</p>
+                  </div>
+                </div>
+
+                <div className="booking-flight">
+                  <div>
+                    <span>{startDate ? formatShortDate(startDate) : ""} · Departure</span>
+                    <strong>{flightPlan.outbound.from.airport} → {flightPlan.outbound.to.airport}</strong>
+                    <small>{flightPlan.outbound.from.time} – {flightPlan.outbound.to.time}</small>
+                  </div>
+                </div>
+
+                <div className="booking-flight">
+                  <div>
+                    <span>{endDate ? formatShortDate(endDate) : ""} · Return</span>
+                    <strong>{flightPlan.return.from.airport} → {flightPlan.return.to.airport}</strong>
+                    <small>{flightPlan.return.from.time} – {flightPlan.return.to.time}</small>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {room && (
               <section className="booking-section">

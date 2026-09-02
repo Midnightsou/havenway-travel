@@ -8,6 +8,10 @@ function BookingPage({
   paymentLink = null,
   bookingReference = "",
   onContinueToPayment,
+  onShareItinerary,
+  creatingSharedTrip = false,
+  sharedTripLink = null,
+  sharedTripCopied = false,
 }) {
   return (
     <BookingModal
@@ -17,9 +21,11 @@ function BookingPage({
       submitting={submitting}
       paymentLink={paymentLink}
       bookingReference={bookingReference}
-      onContinueToPayment={
-        onContinueToPayment
-      }
+      onContinueToPayment={onContinueToPayment}
+      onShareItinerary={onShareItinerary}
+      creatingSharedTrip={creatingSharedTrip}
+      sharedTripLink={sharedTripLink}
+      sharedTripCopied={sharedTripCopied}
     />
   );
 }

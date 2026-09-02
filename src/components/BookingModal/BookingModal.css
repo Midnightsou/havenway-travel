@@ -696,6 +696,143 @@
 }
 
 
+/* =========================================
+   SHARED ITINERARY
+========================================= */
+
+.share-itinerary-card {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #e1e6ed;
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+.share-itinerary-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.share-itinerary-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  background: #ffffff;
+  border: 1px solid #e1e6ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-itinerary-header > div:last-child {
+  min-width: 0;
+}
+
+.share-itinerary-eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  color: #7b8493;
+}
+
+.share-itinerary-header h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #172033;
+}
+
+.share-itinerary-header p {
+  margin: 6px 0 0;
+  color: #737d8d;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.share-itinerary-button {
+  width: 100%;
+  min-height: 45px;
+  margin-top: 17px;
+  border: 1px solid #d7dde5;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #172033;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.share-itinerary-button:hover:not(:disabled) {
+  background: #f1f4f7;
+  border-color: #cbd2dc;
+  transform: translateY(-1px);
+}
+
+.share-itinerary-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.share-itinerary-result {
+  margin-top: 17px;
+}
+
+.share-itinerary-link {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid #dce2e9;
+  background: #ffffff;
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.share-itinerary-link span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #697386;
+  font-size: 12px;
+}
+
+.share-itinerary-result > button {
+  width: 100%;
+  min-height: 43px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 9px;
+  background: #172033;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.share-itinerary-note {
+  display: block;
+  margin-top: 10px;
+  color: #8992a0;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+
 /* DONE BUTTON */
 
 .booking-done-button {
