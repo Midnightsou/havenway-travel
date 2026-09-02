@@ -1,546 +1,1497 @@
+/* =====================================================
+   HAVENWAY TRAVELS
+   BOOKING CONFIRMATION
+===================================================== */
+
 .booking-confirmation {
   min-height: 100vh;
-
-  padding: 70px 20px;
-
-  background: #f7f8fa;
+  padding: 42px 20px 70px;
+  background:
+    linear-gradient(
+      180deg,
+      #f4f7fb 0%,
+      #f8fafc 45%,
+      #eef3f8 100%
+    );
+  color: #172033;
 }
 
 
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
 .confirmation-container {
   position: relative;
-
-  width: min(760px, 100%);
-
+  width: min(980px, 100%);
   margin: 0 auto;
-
-  padding: 30px 30px 40px;
-
+  overflow: hidden;
   background: #ffffff;
+  border: 1px solid #e1e7ef;
+  border-radius: 18px;
+  box-shadow:
+    0 18px 50px rgba(15, 23, 42, 0.08);
+}
 
-  border: 1px solid #dedede;
-  border-radius: 4px;
 
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+/* =====================================================
+   TOP BAR
+===================================================== */
 
+.confirmation-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 25px 34px;
+  border-bottom: 1px solid #e7ebf0;
+  background: #ffffff;
+}
+
+
+.confirmation-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  border-radius: 12px;
+  background: #172f4d;
+  color: #ffffff;
+}
+
+
+.confirmation-brand strong {
+  display: block;
+  color: #16283f;
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: -0.2px;
+}
+
+
+.confirmation-brand span {
+  display: block;
+  margin-top: 2px;
+  color: #7a8797;
+  font-size: 12px;
+}
+
+
+.confirmation-document {
+  text-align: right;
+}
+
+
+.confirmation-document span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  color: #46566a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.confirmation-document small {
+  display: block;
+  margin-top: 4px;
+  color: #8a95a4;
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.confirmation-hero {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 42px 44px;
+  background:
+    linear-gradient(
+      135deg,
+      #f0f7f3 0%,
+      #f8fbfa 55%,
+      #ffffff 100%
+    );
+  border-bottom: 1px solid #e4ebe7;
+}
+
+
+.success-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #e1f4e8;
+  color: #16834a;
+}
+
+
+.success-content {
+  flex: 1;
+}
+
+
+.success-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: #16834a;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+
+.success-content h1 {
+  margin: 0;
+  color: #13263e;
+  font-size: clamp(27px, 4vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -1.2px;
+}
+
+
+.success-content p {
+  max-width: 650px;
+  margin: 10px 0 0;
+  color: #667487;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+
+.hero-actions {
+  flex: 0 0 auto;
+}
+
+
+.print-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 17px;
+  border: 1px solid #d8e0e8;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #33445a;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+
+.print-button:hover {
+  border-color: #b9c6d4;
+  background: #f8fafc;
+}
+
+
+/* =====================================================
+   BOOKING META
+===================================================== */
+
+.booking-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #e5e9ef;
+}
+
+
+.booking-meta-item {
+  padding: 20px 25px;
+  border-right: 1px solid #e5e9ef;
+}
+
+
+.booking-meta-item:last-child {
+  border-right: 0;
+}
+
+
+.booking-meta-item span {
+  display: block;
+  margin-bottom: 7px;
+  color: #8a95a4;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+
+.booking-meta-item strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #25364b;
+  font-size: 14px;
+}
+
+
+.payment-confirmed {
+  color: #16834a !important;
+}
+
+
+/* =====================================================
+   GENERAL SECTIONS
+===================================================== */
+
+.confirmation-section {
+  padding: 32px 44px 0;
+}
+
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+
+.section-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  background: #edf3f8;
+  color: #315778;
+}
+
+
+.section-heading span,
+.section-eyebrow {
+  display: block;
+  margin-bottom: 3px;
+  color: #8994a3;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+
+.section-heading h2 {
+  margin: 0;
+  color: #1b2d44;
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+
+/* =====================================================
+   TRIP SUMMARY
+===================================================== */
+
+.trip-summary-card {
+  margin: 32px 44px 0;
+  padding: 25px;
+  border: 1px solid #dfe7ee;
+  border-radius: 13px;
+  background: #fbfcfd;
+}
+
+
+.trip-summary-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e4e9ee;
+}
+
+
+.trip-summary-heading h2 {
+  margin: 4px 0 0;
+  color: #142b45;
+  font-size: 24px;
+  letter-spacing: -0.6px;
+}
+
+
+.trip-summary-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #eaf1f7;
+  color: #345b7d;
+}
+
+
+.trip-summary-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 20px;
+}
+
+
+.trip-summary-details > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #688095;
+}
+
+
+.trip-summary-details svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+
+.trip-summary-details span {
+  display: block;
+  margin-bottom: 4px;
+  color: #8a95a3;
+  font-size: 11px;
+}
+
+
+.trip-summary-details strong {
+  display: block;
+  color: #30445b;
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   TRAVELER
+===================================================== */
+
+.traveler-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 19px;
+  border: 1px solid #e1e7ed;
+  border-radius: 11px;
+  background: #ffffff;
+}
+
+
+.traveler-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #e8eef4;
+  color: #284765;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+
+.traveler-main {
+  min-width: 0;
+  flex: 1;
+}
+
+
+.traveler-main > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #25374c;
+  font-size: 14px;
+}
+
+
+.traveler-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+
+.traveler-contact span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #758293;
+  font-size: 12px;
+}
+
+
+.traveler-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #66778a;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   FLIGHTS
+===================================================== */
+
+.flight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.flight-card {
+  padding: 22px;
+  border: 1px solid #dfe6ed;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+
+.flight-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+
+.flight-direction {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 5px;
+  background: #edf3f8;
+  color: #385a76;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.7px;
+}
+
+
+.flight-date {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #7b8796;
+  font-size: 11px;
+}
+
+
+.flight-route {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  gap: 18px;
+}
+
+
+.airport strong {
+  display: block;
+  color: #172b42;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -0.7px;
+}
+
+
+.airport span {
+  display: block;
+  margin-top: 7px;
+  color: #7d8998;
+  font-size: 12px;
+}
+
+
+.airport-arrival {
+  text-align: right;
+}
+
+
+.flight-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.flight-line > div {
+  width: 100%;
+  height: 1px;
+  background: #ccd6df;
+}
+
+
+.flight-line span {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #d6dfe7;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #45647f;
+}
+
+
+.flight-route-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid #edf0f3;
+  color: #788596;
+  font-size: 11px;
+}
+
+
+.flight-route-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+
+/* =====================================================
+   HOTEL
+===================================================== */
+
+.hotel-confirmation-card {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  overflow: hidden;
+  min-height: 180px;
+  border: 1px solid #dfe6ed;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+
+.hotel-image-wrapper {
+  height: 100%;
+  min-height: 180px;
+}
+
+
+.hotel-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+
+.hotel-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  background: #edf2f6;
+  color: #718194;
+}
+
+
+.hotel-confirmation-info {
+  padding: 22px 25px;
+}
+
+
+.hotel-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 7px;
+  color: #7f8c9a;
+  font-size: 11px;
+}
+
+
+.hotel-confirmation-info h3 {
+  margin: 0 0 7px;
+  color: #1c3047;
+  font-size: 20px;
+  letter-spacing: -0.4px;
+}
+
+
+.hotel-room-name {
+  display: block;
+  color: #52667a;
+  font-size: 13px;
+}
+
+
+.hotel-details-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+
+.hotel-details-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #748294;
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   ADDITIONAL SERVICES
+===================================================== */
+
+.additional-service-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 19px;
+  border: 1px solid #dfe6ed;
+  border-radius: 11px;
+  background: #ffffff;
+}
+
+
+.service-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  background: #edf3f8;
+  color: #385b78;
+}
+
+
+.service-content {
+  min-width: 0;
+}
+
+
+.service-content strong {
+  display: block;
+  color: #26394f;
+  font-size: 14px;
+}
+
+
+.service-content span {
+  display: block;
+  margin-top: 4px;
+  color: #718093;
+  font-size: 12px;
+}
+
+
+.service-content small {
+  display: block;
+  margin-top: 5px;
+  color: #8b96a4;
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   ACTIVITIES
+===================================================== */
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dfe6ed;
+  border-radius: 11px;
   overflow: hidden;
 }
 
 
-/* WATERMARK */
-
-.receipt-watermark {
-  position: absolute;
-
-  top: 50%;
-  left: 50%;
-
-  transform: translate(-50%, -50%) rotate(-30deg);
-
-  z-index: 1;
-
-  color: rgba(220, 38, 38, 0.12);
-
-  font-size: 72px;
-  font-weight: 900;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  white-space: nowrap;
-
-  pointer-events: none;
-
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-
-/* RECEIPT HEADER */
-
-.receipt-header {
-  text-align: center;
-
-  margin-bottom: 30px;
-}
-
-.receipt-logo {
+.activity-item {
   display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e9edf1;
+}
 
+
+.activity-item:last-child {
+  border-bottom: 0;
+}
+
+
+.activity-icon {
+  display: flex;
   align-items: center;
   justify-content: center;
-
-  gap: 10px;
-
-  margin-bottom: 16px;
-
-  color: var(--color-primary);
-
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.receipt-header h2 {
-  margin: 0 0 6px;
-
-  font-size: 30px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
-.receipt-header p {
-  margin: 0;
-
-  color: var(--color-text-secondary);
-
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.receipt-divider {
-  height: 1px;
-
-  margin: 24px 0;
-
-  background: repeating-linear-gradient(
-    to right,
-    #c0c0c0 0,
-    #c0c0c0 6px,
-    transparent 6px,
-    transparent 12px
-  );
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: #edf3f8;
+  color: #385b78;
 }
 
 
-/* SUCCESS */
-
-.confirmation-success {
-  position: relative;
-
-  z-index: 2;
-
-  text-align: center;
-
-  margin-bottom: 30px;
+.activity-content {
+  min-width: 0;
+  flex: 1;
 }
 
-.confirmation-success svg {
-  color: var(--color-success);
 
-  margin-bottom: 14px;
-}
-
-.confirmation-success span {
+.activity-content strong {
   display: block;
+  color: #293b50;
+  font-size: 13px;
+}
 
-  color: var(--color-success);
 
-  font-size: 14px;
+.activity-content span {
+  display: block;
+  margin-top: 4px;
+  color: #7c8998;
+  font-size: 11px;
+}
+
+
+.activity-price {
+  color: #263a51;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   ITINERARY
+===================================================== */
+
+.itinerary-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #dfe6ed;
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+
+.itinerary-item {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 18px;
+  border-bottom: 1px solid #e9edf1;
+}
+
+
+.itinerary-item:last-child {
+  border-bottom: 0;
+}
+
+
+.itinerary-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #edf3f8;
+  color: #385b78;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+.itinerary-item span {
+  display: block;
+  margin-bottom: 3px;
+  color: #8994a2;
+  font-size: 10px;
+}
+
+
+.itinerary-item strong {
+  display: block;
+  color: #34485d;
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   PAYMENT
+===================================================== */
+
+.payment-section {
+  margin: 36px 44px 0;
+  padding: 27px;
+  border: 1px solid #dce5ec;
+  border-radius: 13px;
+  background: #f9fbfc;
+}
+
+
+.payment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+
+.payment-header h2 {
+  margin: 3px 0 0;
+  color: #1b2e45;
+  font-size: 21px;
+}
+
+
+.payment-method {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border: 1px solid #dce4ea;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #53667a;
+  font-size: 11px;
   font-weight: 700;
 }
 
-.confirmation-success h1 {
-  margin: 10px 0;
 
-  font-size: 34px;
+.price-breakdown {
+  margin-top: 22px;
+  padding-bottom: 17px;
+  border-bottom: 1px solid #dfe6ec;
 }
 
-.confirmation-success p {
-  max-width: 560px;
 
-  margin: auto;
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 7px 0;
+}
 
-  color: var(--color-text-secondary);
 
+.price-row span {
+  color: #718092;
+  font-size: 13px;
+}
+
+
+.price-row strong {
+  color: #3c4e61;
+  font-size: 13px;
+}
+
+
+.total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0 4px;
+}
+
+
+.total-row span {
+  display: block;
+  color: #24374d;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+
+.total-row small {
+  display: block;
+  margin-top: 4px;
+  color: #8a95a3;
+  font-size: 10px;
+}
+
+
+.total-row > strong {
+  color: #152d48;
+  font-size: 27px;
+  letter-spacing: -0.7px;
+}
+
+
+.payment-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 17px;
+  padding: 13px;
+  border-radius: 8px;
+  background: #edf8f1;
+  color: #16834a;
+}
+
+
+.payment-status > svg {
+  flex: 0 0 auto;
+}
+
+
+.payment-status strong {
+  display: block;
+  font-size: 12px;
+}
+
+
+.payment-status span {
+  display: block;
+  margin-top: 2px;
+  color: #668574;
+  font-size: 10px;
+}
+
+
+/* =====================================================
+   IMPORTANT INFORMATION
+===================================================== */
+
+.important-information {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin: 28px 44px 0;
+  padding: 18px;
+  border: 1px solid #e0e7ed;
+  border-radius: 10px;
+  background: #fafcfd;
+}
+
+
+.important-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  background: #edf3f8;
+  color: #42627c;
+}
+
+
+.important-information h3 {
+  margin: 0 0 7px;
+  color: #304358;
+  font-size: 13px;
+}
+
+
+.important-information p {
+  margin: 4px 0;
+  color: #738192;
+  font-size: 11px;
   line-height: 1.6;
 }
 
 
-/* REFERENCE */
+/* =====================================================
+   FOOTER
+===================================================== */
 
-.booking-reference {
-  position: relative;
-
-  z-index: 2;
-
-  display: flex;
-
-  flex-direction: column;
-  align-items: center;
-
-  gap: 6px;
-
-  margin-bottom: 24px;
-  padding: 20px;
-
-  background: #ffffff;
-
-  border: 1px dashed #c0c0c0;
-  border-radius: 4px;
-}
-
-.booking-reference span {
-  color: var(--color-text-secondary);
-
-  font-size: 13px;
-}
-
-.booking-reference strong {
-  font-size: 24px;
-
-  letter-spacing: 1px;
+.confirmation-footer {
+  margin: 40px 44px 0;
+  padding-top: 27px;
+  border-top: 1px solid #e3e8ed;
+  text-align: center;
 }
 
 
-/* CARD */
-
-.confirmation-card {
-  position: relative;
-
-  z-index: 2;
-
-  padding: 24px;
-
-  margin-bottom: 18px;
-
-  background: #ffffff;
-
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-}
-
-
-.confirmation-card-title {
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  margin-bottom: 20px;
-
-  padding-bottom: 12px;
-
-  border-bottom: 1px dashed #e0e0e0;
-}
-
-.confirmation-card-title h3 {
-  margin: 0;
-
-  font-size: 18px;
-}
-
-
-/* TRAVELER */
-
-.traveler-confirmation {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 8px;
-}
-
-.traveler-confirmation span {
-  display: flex;
-
-  align-items: center;
-
-  gap: 7px;
-
-  color: var(--color-text-secondary);
-
-  font-size: 14px;
-}
-
-.traveler-confirmation small {
-  color: var(--color-text-secondary);
-
-  font-size: 13px;
-}
-
-
-/* FLIGHTS */
-
-.confirmation-flight-grid {
-  display: grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap: 16px;
-}
-
-.confirmation-flight-grid > div {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 6px;
-
-  padding: 18px;
-
-  background: #f7f8fa;
-
-  border-radius: 4px;
-}
-
-.confirmation-flight-grid span,
-.confirmation-flight-grid small {
-  color: var(--color-text-secondary);
-
-  font-size: 13px;
-}
-
-
-/* HOTEL */
-
-.confirmation-hotel {
-  display: flex;
-
-  align-items: center;
-
-  gap: 16px;
-}
-
-.confirmation-hotel img {
-  width: 120px;
-  height: 90px;
-
-  object-fit: cover;
-
-  border-radius: 4px;
-}
-
-.confirmation-car-icon {
+.footer-brand {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 120px;
-  height: 90px;
-
-  flex-shrink: 0;
-
-  border-radius: 4px;
-
-  background: #e7f2eb;
-
-  color: #2d6a3f;
-}
-
-.confirmation-hotel > div {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 6px;
-}
-
-.confirmation-hotel span,
-.confirmation-hotel small {
-  color: var(--color-text-secondary);
-
-  font-size: 13px;
+  gap: 8px;
 }
 
 
-/* ACTIVITIES */
-
-.confirmation-activities {
-  display: flex;
-  flex-direction: column;
-
-  gap: 10px;
-}
-
-.confirmation-activity-item {
+.footer-brand-mark {
   display: flex;
   align-items: center;
-
-  gap: 12px;
-
-  padding: 14px 16px;
-
-  background: #f7f8fa;
-
-  border-radius: 4px;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #172f4d;
+  color: #ffffff;
 }
 
-.confirmation-activity-item > div {
-  display: flex;
-  flex-direction: column;
 
-  flex: 1;
-
-  gap: 3px;
-}
-
-.confirmation-activity-item span {
-  color: var(--color-text-secondary);
-
+.footer-brand strong {
+  color: #24384e;
   font-size: 13px;
 }
 
-.confirmation-activity-item > strong:last-child {
-  font-size: 15px;
+
+.confirmation-footer > p {
+  max-width: 550px;
+  margin: 10px auto 17px;
+  color: #788595;
+  font-size: 11px;
+  line-height: 1.6;
 }
 
 
-/* PACKAGE */
-
-.confirmation-package {
-  display: flex;
+.footer-document {
+  display: inline-flex;
   align-items: center;
-
-  gap: 12px;
-
-  padding: 16px;
-
-  background: #fdf6e7;
-
-  border-radius: 4px;
-}
-
-.confirmation-package > div {
-  display: flex;
-  flex-direction: column;
-
-  gap: 4px;
-}
-
-.confirmation-package span {
-  color: var(--color-text-secondary);
-
-  font-size: 13px;
+  gap: 7px;
+  padding: 8px 12px;
+  border: 1px solid #e1e7ed;
+  border-radius: 6px;
+  background: #fafbfd;
 }
 
 
-/* ITINERARY */
-
-.confirmation-itinerary {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 14px;
-}
-
-.confirmation-itinerary div {
-  display: grid;
-
-  grid-template-columns:
-    70px 1fr;
-
-  gap: 12px;
-
-  align-items: center;
-}
-
-.confirmation-itinerary span {
-  color: var(--color-primary);
-
-  font-size: 13px;
-  font-weight: 700;
+.footer-document span {
+  color: #8a95a3;
+  font-size: 10px;
 }
 
 
-/* TOTAL */
-
-.confirmation-total {
-  position: relative;
-
-  z-index: 2;
-
-  padding: 24px;
-
-  margin-top: 24px;
-
-  background: #ffffff;
-
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-}
-
-.confirmation-total > div {
-  display: flex;
-
-  justify-content: space-between;
-
-  padding: 10px 0;
-}
-
-.confirmation-grand-total {
-  margin-top: 12px;
-  padding-top: 20px !important;
-
-  border-top: 1px dashed #c0c0c0;
-}
-
-.confirmation-grand-total strong {
-  font-size: 26px;
+.footer-document strong {
+  color: #40536a;
+  font-size: 10px;
 }
 
 
-/* RECEIPT FOOTER */
-
-.receipt-footer {
-  position: relative;
-
-  z-index: 2;
-
-  text-align: center;
-
-  margin-top: 24px;
-}
-
-.receipt-footer p {
-  margin: 0 0 6px;
-
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.receipt-footer small {
-  color: var(--color-text-secondary);
-
-  font-size: 12px;
+.confirmation-footer > small {
+  display: block;
+  margin-top: 16px;
+  color: #a0a9b4;
+  font-size: 9px;
   line-height: 1.5;
 }
 
 
-/* BUTTON */
+/* =====================================================
+   BOTTOM ACTION
+===================================================== */
 
-.confirmation-home-button {
-  position: relative;
-
-  z-index: 2;
-
+.confirmation-bottom-actions {
   display: flex;
-
-  align-items: center;
   justify-content: center;
-
-  gap: 8px;
-
-  width: 100%;
-
-  margin-top: 24px;
-  padding: 15px;
-
-  border: none;
-  border-radius: 4px;
-
-  background: var(--color-primary);
-
-  color: #1f1f1f;
-
-  font-size: 15px;
-  font-weight: 700;
-
-  cursor: pointer;
+  padding: 27px 44px 34px;
 }
 
+
+.confirmation-home-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 19px;
+  border: 1px solid #d8e0e8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #34485d;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+
 .confirmation-home-button:hover {
-  background: var(--color-primary-dark);
+  border-color: #bac7d4;
+  background: #f7f9fb;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.confirmation-empty {
+  padding: 80px 30px;
+  text-align: center;
+}
+
+
+.confirmation-empty h2 {
+  margin: 0;
+  color: #26394f;
+}
+
+
+.confirmation-empty p {
+  margin: 8px 0 25px;
+  color: #7a8795;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 760px) {
+
+  .booking-confirmation {
+    padding: 0;
+  }
+
+
+  .confirmation-container {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+
+  .confirmation-topbar {
+    padding: 18px 20px;
+  }
+
+
+  .confirmation-document {
+    display: none;
+  }
+
+
+  .confirmation-hero {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 30px 20px;
+    gap: 16px;
+  }
+
+
+  .success-icon {
+    width: 62px;
+    height: 62px;
+  }
+
+
+  .success-icon svg {
+    width: 38px;
+    height: 38px;
+  }
+
+
+  .success-content h1 {
+    font-size: 28px;
+  }
+
+
+  .hero-actions {
+    width: 100%;
+  }
+
+
+  .print-button {
+    width: 100%;
+  }
+
+
+  .booking-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+  .booking-meta-item {
+    padding: 16px;
+  }
+
+
+  .booking-meta-item:nth-child(2) {
+    border-right: 0;
+  }
+
+
+  .booking-meta-item:nth-child(-n + 2) {
+    border-bottom: 1px solid #e5e9ef;
+  }
+
+
+  .trip-summary-card {
+    margin: 22px 16px 0;
+    padding: 19px;
+  }
+
+
+  .trip-summary-details {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+
+  .confirmation-section {
+    padding: 28px 16px 0;
+  }
+
+
+  .traveler-card {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+
+  .traveler-count {
+    width: 100%;
+    padding-left: 59px;
+  }
+
+
+  .hotel-confirmation-card {
+    grid-template-columns: 1fr;
+  }
+
+
+  .hotel-image-wrapper {
+    height: 190px;
+    min-height: 190px;
+  }
+
+
+  .hotel-image-placeholder {
+    min-height: 160px;
+  }
+
+
+  .hotel-confirmation-info {
+    padding: 19px;
+  }
+
+
+  .flight-card {
+    padding: 17px;
+  }
+
+
+  .airport strong {
+    font-size: 23px;
+  }
+
+
+  .flight-route {
+    gap: 9px;
+  }
+
+
+  .flight-route-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+
+  .payment-section {
+    margin: 30px 16px 0;
+    padding: 20px;
+  }
+
+
+  .payment-header {
+    align-items: flex-start;
+  }
+
+
+  .payment-method {
+    flex: 0 0 auto;
+  }
+
+
+  .total-row > strong {
+    font-size: 23px;
+  }
+
+
+  .important-information {
+    margin: 24px 16px 0;
+  }
+
+
+  .confirmation-footer {
+    margin: 30px 16px 0;
+  }
+
+
+  .confirmation-bottom-actions {
+    padding: 24px 16px 30px;
+  }
+
+
+  .confirmation-home-button {
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 450px) {
+
+  .confirmation-topbar {
+    padding: 16px;
+  }
+
+
+  .confirmation-brand strong {
+    font-size: 15px;
+  }
+
+
+  .confirmation-hero {
+    padding: 26px 16px;
+  }
+
+
+  .success-content h1 {
+    font-size: 25px;
+  }
+
+
+  .booking-meta-item {
+    padding: 14px 12px;
+  }
+
+
+  .booking-meta-item strong {
+    font-size: 12px;
+  }
+
+
+  .trip-summary-heading h2 {
+    font-size: 21px;
+  }
+
+
+  .section-heading h2 {
+    font-size: 17px;
+  }
+
+
+  .flight-route {
+    grid-template-columns: 1fr 1.3fr 1fr;
+  }
+
+
+  .airport strong {
+    font-size: 20px;
+  }
+
+
+  .airport span {
+    font-size: 10px;
+  }
+
+
+  .hotel-details-row {
+    flex-direction: column;
+    gap: 9px;
+  }
+
+
+  .payment-header {
+    flex-direction: column;
+  }
+
+
+  .payment-method {
+    align-self: flex-start;
+  }
+
+
+  .total-row {
+    align-items: flex-end;
+  }
+
+
+  .total-row > strong {
+    font-size: 21px;
+  }
+
+}
+
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+@media print {
+
+  .booking-confirmation {
+    padding: 0;
+    background: #ffffff;
+  }
+
+
+  .confirmation-container {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+
+  .print-button,
+  .confirmation-bottom-actions {
+    display: none !important;
+  }
+
+
+  .confirmation-hero {
+    padding: 30px;
+  }
+
+
+  .confirmation-section {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+
+  .trip-summary-card,
+  .payment-section,
+  .important-information {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+
+  .confirmation-footer {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
 }
