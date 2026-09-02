@@ -353,7 +353,7 @@ const rooms = [
     name: "Standard King Room",
     beds: "1 King Bed",
     guests: "Sleeps 2",
-    pricePerNight: 140,
+    pricePerNight: 120,
 
     amenities: [
       "Free WiFi",
@@ -378,7 +378,7 @@ const rooms = [
     name: "Two Queen Beds",
     beds: "2 Queen Beds",
     guests: "Sleeps 4",
-    pricePerNight: 165,
+    pricePerNight: 155,
 
     amenities: [
       "Free WiFi",
