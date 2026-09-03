@@ -15,7 +15,7 @@ const flights = {
 
       to: {
         time: "22:05",
-        airport: "DCA",
+        airport: "BWI",
         city: "Washington",
         airportName:
           "Baltimore Airport Marriott",
@@ -35,7 +35,7 @@ const flights = {
 
       from: {
         time: "08:30",
-        airport: "DCA",
+        airport: "BWI",
         city: "Washington",
         airportName:
           "Baltimore Airport Marriott",
@@ -74,7 +74,7 @@ const flights = {
 
       to: {
         time: "22:05",
-        airport: "DCA",
+        airport: "BWI",
         city: "Washington",
         airportName:
           "Baltimore Airport Marriott",
@@ -94,7 +94,7 @@ const flights = {
 
       from: {
         time: "08:30",
-        airport: "DCA",
+        airport: "BWI",
         city: "Washington",
         airportName:
           "Baltimore Airport Marriott",
@@ -133,7 +133,7 @@ const flights = {
 
       to: {
         time: "22:05",
-        airport: "DCA",
+        airport: "BWI",
         city: "Washington",
         airportName:
           "Baltimore Airport Marriott",
@@ -153,7 +153,7 @@ const flights = {
 
       from: {
         time: "08:30",
-        airport: "DCA",
+        airport: "BWI",
         city: "Washington",
         airportName:
           "Baltimore Airport Marriott",
