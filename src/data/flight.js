@@ -18,7 +18,7 @@ const flights = {
         airport: "DCA",
         city: "Washington",
         airportName:
-          "Ronald Reagan Washington National Airport",
+          "Baltimore Airport Marriott",
       },
 
       duration: "5h 45m",
@@ -38,7 +38,7 @@ const flights = {
         airport: "DCA",
         city: "Washington",
         airportName:
-          "Ronald Reagan Washington National Airport",
+          "Baltimore Airport Marriott",
       },
 
       to: {
@@ -77,7 +77,7 @@ const flights = {
         airport: "DCA",
         city: "Washington",
         airportName:
-          "Ronald Reagan Washington National Airport",
+          "Baltimore Airport Marriott",
       },
 
       duration: "5h 45m",
@@ -97,7 +97,7 @@ const flights = {
         airport: "DCA",
         city: "Washington",
         airportName:
-          "Ronald Reagan Washington National Airport",
+          "Baltimore Airport Marriott",
       },
 
       to: {
@@ -136,7 +136,7 @@ const flights = {
         airport: "DCA",
         city: "Washington",
         airportName:
-          "Ronald Reagan Washington National Airport",
+          "Baltimore Airport Marriott",
       },
 
       duration: "5h 45m",
@@ -156,7 +156,7 @@ const flights = {
         airport: "DCA",
         city: "Washington",
         airportName:
-          "Ronald Reagan Washington National Airport",
+          "Baltimore Airport Marriott",
       },
 
       to: {
