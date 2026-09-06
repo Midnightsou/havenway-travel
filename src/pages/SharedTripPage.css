@@ -1,17 +1,35 @@
 .shared-trip-page {
   min-height: 100vh;
-  background: #f6f8fb;
+  background:
+    radial-gradient(circle at top left, rgba(71, 94, 135, 0.08), transparent 30%),
+    #f6f8fb;
   color: #172033;
 }
 
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .shared-trip-header {
   height: 72px;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.96);
   border-bottom: 1px solid #e7ebf1;
   display: flex;
   align-items: center;
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.shared-trip-header-inner {
+  width: min(1180px, 92%);
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 0 6%;
 }
 
 .shared-trip-back {
@@ -20,90 +38,83 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
-  font-weight: 700;
+  padding: 0;
   color: #172033;
+  font-size: 15px;
+  font-weight: 800;
   cursor: pointer;
 }
 
-.shared-trip-header-label {
+.shared-trip-secure {
   display: flex;
   align-items: center;
   gap: 7px;
   color: #287c4d;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 }
+
+
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
 
 .shared-trip-container {
   width: min(1180px, 92%);
   margin: 0 auto;
-  padding: 52px 0 80px;
+  padding: 48px 0 80px;
 }
 
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
 .shared-trip-hero {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 32px;
+  max-width: 760px;
+  margin-bottom: 30px;
 }
 
 .shared-trip-eyebrow,
-.shared-trip-action-eyebrow {
+.shared-trip-summary-eyebrow {
   display: block;
   font-size: 11px;
   letter-spacing: 0.14em;
-  font-weight: 800;
+  font-weight: 900;
   color: #6d7686;
-  margin-bottom: 9px;
+  margin-bottom: 10px;
 }
 
 .shared-trip-hero h1 {
   margin: 0;
+  max-width: 730px;
   font-size: clamp(34px, 5vw, 52px);
-  line-height: 1;
-  letter-spacing: -0.04em;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
 }
 
-.shared-trip-hero p {
-  max-width: 650px;
+.shared-trip-hero > p {
+  max-width: 660px;
   margin: 17px 0 0;
   color: #697386;
   line-height: 1.7;
   font-size: 16px;
 }
 
-.shared-trip-validity {
-  min-width: 190px;
-  padding: 15px 17px;
-  border: 1px solid #e3e8ef;
-  background: #fff;
-  border-radius: 14px;
-  display: flex;
+.shared-trip-hero-meta {
+  margin-top: 17px;
+  display: inline-flex;
   align-items: center;
-  gap: 11px;
-}
-
-.shared-trip-validity > svg {
-  color: #657083;
-}
-
-.shared-trip-validity div {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.shared-trip-validity span {
-  color: #7a8494;
-  font-size: 11px;
+  gap: 7px;
+  color: #287c4d;
+  font-size: 12px;
   font-weight: 700;
 }
 
-.shared-trip-validity strong {
-  font-size: 14px;
-}
+
+/* =========================================================
+   OVERVIEW
+   ========================================================= */
 
 .shared-trip-overview {
   display: grid;
@@ -114,23 +125,24 @@
   border-radius: 18px;
   overflow: hidden;
   margin-bottom: 28px;
+  box-shadow: 0 8px 24px rgba(32, 46, 70, 0.04);
 }
 
 .shared-trip-overview-item {
-  background: #fff;
-  min-height: 92px;
+  min-height: 94px;
   padding: 19px;
+  background: #ffffff;
   display: flex;
   align-items: center;
   gap: 13px;
 }
 
 .shared-trip-overview-item > svg {
-  color: #536074;
   flex-shrink: 0;
+  color: #536074;
 }
 
-.shared-trip-overview-item div {
+.shared-trip-overview-item > div {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -143,12 +155,18 @@
 }
 
 .shared-trip-overview-item strong {
+  color: #172033;
   font-size: 14px;
 }
 
+
+/* =========================================================
+   MAIN GRID
+   ========================================================= */
+
 .shared-trip-content {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 350px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 25px;
   align-items: start;
 }
@@ -159,12 +177,18 @@
   gap: 18px;
 }
 
+
+/* =========================================================
+   GENERIC CARD
+   ========================================================= */
+
 .shared-trip-card {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #e3e8ef;
-  border-radius: 18px;
-  padding: 25px;
+  border-radius: 20px;
+  padding: 26px;
   overflow: hidden;
+  box-shadow: 0 7px 24px rgba(32, 46, 70, 0.04);
 }
 
 .shared-trip-card-heading {
@@ -175,436 +199,539 @@
 }
 
 .shared-trip-card-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
   background: #f1f4f8;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #39465a;
+  flex-shrink: 0;
 }
 
-.shared-trip-card-heading span {
+.shared-trip-card-heading > div:nth-child(2) {
+  min-width: 0;
+  flex: 1;
+}
+
+.shared-trip-card-heading > div:nth-child(2) > span {
   display: block;
+  margin-bottom: 4px;
+  color: #8993a2;
   font-size: 10px;
-  letter-spacing: 0.12em;
-  font-weight: 800;
-  color: #8a93a1;
-  margin-bottom: 3px;
+  letter-spacing: 0.13em;
+  font-weight: 900;
 }
 
 .shared-trip-card-heading h2 {
   margin: 0;
-  font-size: 18px;
-  letter-spacing: -0.02em;
+  color: #172033;
+  font-size: 19px;
+  letter-spacing: -0.025em;
 }
 
-.shared-flight {
-  border: 1px solid #e7ebf0;
-  border-radius: 14px;
+.shared-trip-card-heading p {
+  margin: 6px 0 0;
+  color: #737d8d;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
+
+.shared-trip-card-price {
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.shared-trip-card-price span {
+  display: block;
+  color: #8a93a1;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.shared-trip-card-price strong {
+  color: #172033;
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   FLIGHT
+   ========================================================= */
 
 .shared-flight-leg {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr 1fr;
-  align-items: center;
-  gap: 20px;
-  padding: 20px;
+  padding: 21px 0;
+  border-top: 1px solid #e7ebf0;
 }
 
-.shared-flight-leg > div:first-child,
-.shared-flight-destination {
+.shared-flight-leg:last-child {
+  border-bottom: 1px solid #e7ebf0;
+}
+
+.shared-flight-date {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 19px;
 }
 
-.shared-flight-leg span {
-  font-size: 11px;
-  color: #818b9b;
-  font-weight: 700;
-}
-
-.shared-flight-leg strong {
-  font-size: 20px;
-}
-
-.shared-flight-leg small {
-  font-size: 12px;
-  color: #788294;
-}
-
-.shared-flight-destination {
-  text-align: right;
-}
-
-.shared-flight-route {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  justify-content: center;
-}
-
-.shared-flight-route small {
-  white-space: nowrap;
-}
-
-.shared-flight-line {
-  position: relative;
-  flex: 1;
-  max-width: 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.shared-flight-line span {
-  height: 1px;
-  width: 100%;
-  background: #cfd5de;
-}
-
-.shared-flight-line svg {
-  position: absolute;
-  background: #fff;
-  padding: 4px;
-  width: 25px;
-  height: 25px;
-  color: #48556a;
-}
-
-.shared-flight-divider {
-  height: 1px;
-  background: #e7ebf0;
-}
-
-.shared-trip-card-footer {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 13px;
-  font-size: 12px;
-  color: #788294;
-}
-
-.shared-hotel {
-  display: grid;
-  grid-template-columns: 170px minmax(0, 1fr);
-  gap: 18px;
-  align-items: stretch;
-}
-
-.shared-hotel img {
-  width: 170px;
-  height: 135px;
-  object-fit: cover;
-  border-radius: 13px;
-}
-
-.shared-hotel-details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 7px;
-  padding: 4px 0;
-}
-
-.shared-trip-location {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #747e8e;
-  font-size: 12px;
-}
-
-.shared-hotel-details h3 {
-  margin: 0;
-  font-size: 20px;
-}
-
-.shared-hotel-details strong {
+.shared-flight-date strong {
+  color: #172033;
   font-size: 14px;
 }
 
-.shared-hotel-details span:not(.shared-trip-location) {
+.shared-flight-date span {
+  color: #7a8494;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.shared-flight-route {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(150px, 1.2fr) minmax(110px, 1fr);
+  gap: 20px;
+  align-items: center;
+}
+
+.shared-flight-airport {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.shared-flight-airport strong {
+  color: #172033;
+  font-size: 24px;
+  letter-spacing: -0.03em;
+}
+
+.shared-flight-airport span {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.shared-flight-airport small {
+  color: #7b8595;
+  font-size: 11px;
+}
+
+.shared-flight-airport-right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.shared-flight-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.shared-flight-line > span {
+  color: #667184;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.shared-flight-line > div {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shared-flight-line > div::before {
+  content: "";
+  width: 100%;
+  height: 1px;
+  background: #ccd3dc;
+  position: absolute;
+}
+
+.shared-flight-line svg {
+  position: relative;
+  z-index: 1;
+  width: 27px;
+  height: 27px;
+  padding: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #46546a;
+}
+
+.shared-flight-line small {
+  color: #8b94a2;
+  font-size: 10px;
+}
+
+.shared-flight-details {
+  margin-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.shared-flight-details span {
+  padding: 7px 10px;
+  background: #f4f6f9;
+  border-radius: 999px;
+  color: #667184;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   HOTEL
+   ========================================================= */
+
+.shared-hotel-content {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 21px;
+  align-items: stretch;
+}
+
+.shared-hotel-image {
+  border-radius: 15px;
+  overflow: hidden;
+  min-height: 150px;
+}
+
+.shared-hotel-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.shared-hotel-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.shared-hotel-label {
+  color: #8a93a1;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  margin-bottom: 7px;
+}
+
+.shared-hotel-info h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 20px;
+}
+
+.shared-hotel-info > p {
+  margin: 6px 0 0;
   color: #6f7989;
   font-size: 13px;
 }
 
-.shared-hotel-details small {
-  color: #838c9a;
-  font-size: 12px;
-  margin-top: 3px;
+.shared-hotel-details {
+  margin-top: 17px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
 }
 
-.shared-car {
-  display: flex;
+.shared-hotel-details span {
+  display: inline-flex;
   align-items: center;
-  gap: 17px;
-  padding: 17px;
-  background: #f7f8fa;
-  border-radius: 13px;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #f5f7fa;
+  color: #667184;
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.shared-car-icon {
-  width: 58px;
-  height: 58px;
-  border-radius: 14px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.shared-car h3,
-.shared-activity h3,
-.shared-package h3 {
-  margin: 0 0 5px;
-  font-size: 16px;
-}
+/* =========================================================
+   CAR
+   ========================================================= */
 
-.shared-car div:last-child {
-  display: flex;
-  flex-direction: column;
-}
-
-.shared-car span,
-.shared-car small {
-  color: #737d8d;
-  font-size: 12px;
-}
-
-.shared-car small {
-  margin-top: 4px;
-}
-
-.shared-activity-list {
-  display: flex;
-  flex-direction: column;
+.shared-car-details {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
-.shared-activity {
-  display: flex;
-  align-items: center;
-  gap: 13px;
+.shared-car-details > div {
+  min-height: 78px;
+  border: 1px solid #e6eaf0;
+  background: #f8f9fb;
+  border-radius: 13px;
   padding: 14px;
-  background: #f7f8fa;
-  border-radius: 12px;
-}
-
-.shared-activity-icon {
-  width: 37px;
-  height: 37px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-}
-
-.shared-activity > div:last-child {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
 }
 
-.shared-activity h3 {
-  font-size: 14px;
+.shared-car-details svg {
+  color: #59667a;
 }
 
-.shared-activity span {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #737d8d;
+.shared-car-details span {
+  color: #596579;
   font-size: 12px;
+  font-weight: 700;
 }
 
-.shared-activity small {
-  color: #8a93a1;
-  margin-top: 3px;
-  font-size: 11px;
-}
 
-.shared-package {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 17px;
-  background: #f7f8fa;
-  border-radius: 13px;
-}
-
-.shared-package > svg {
-  flex-shrink: 0;
-}
-
-.shared-package span {
-  color: #737d8d;
-  font-size: 12px;
-}
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
 
 .shared-trip-sidebar {
   position: sticky;
-  top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
+  top: 92px;
 }
 
 .shared-trip-action-card {
-  background: #172033;
-  color: #fff;
-  border-radius: 20px;
-  padding: 26px;
-  box-shadow: 0 18px 45px rgba(23, 32, 51, 0.14);
+  padding: 27px;
+  border-radius: 21px;
+  color: #ffffff;
+  background:
+    linear-gradient(
+      145deg,
+      #1b263b 0%,
+      #172033 52%,
+      #111827 100%
+    );
+  box-shadow: 0 22px 52px rgba(23, 32, 51, 0.2);
 }
 
-.shared-trip-action-eyebrow {
-  color: #aab4c4;
+.shared-trip-summary-eyebrow {
+  color: #96a2b5;
 }
 
-.shared-trip-action-card h2 {
-  margin: 0;
+.shared-trip-action-card > h2 {
+  margin: 0 0 18px;
+  color: #ffffff;
   font-size: 25px;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
 }
 
-.shared-trip-action-card > p {
-  color: #b9c2cf;
-  font-size: 13px;
-  line-height: 1.65;
-  margin: 12px 0 20px;
-}
-
-.shared-trip-action-summary {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 14px 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.shared-trip-action-summary div {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.shared-trip-action-summary span {
-  color: #929dae;
-  font-size: 11px;
-}
-
-.shared-trip-action-summary strong {
-  font-size: 13px;
-}
-
-.shared-trip-continue-button {
-  width: 100%;
-  border: 0;
-  background: #fff;
-  color: #172033;
-  min-height: 50px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 800;
+.shared-trip-summary-meta {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 9px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+  gap: 8px;
+  margin-top: 9px;
+  color: #c0c8d4;
+  font-size: 12px;
 }
 
-.shared-trip-continue-button:hover {
-  transform: translateY(-1px);
-}
-
-.shared-trip-back-button {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  color: #c2cad6;
-  min-height: 42px;
-  margin-top: 7px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 7px;
-  font-size: 13px;
-}
-
-.shared-trip-trust {
-  background: #fff;
-  border: 1px solid #e3e8ef;
-  border-radius: 15px;
-  padding: 14px;
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  color: #687386;
-}
-
-.shared-trip-trust svg {
-  color: #287c4d;
+.shared-trip-summary-meta svg {
+  color: #8996aa;
   flex-shrink: 0;
 }
 
-.shared-trip-trust p {
-  margin: 0;
+.shared-trip-summary-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.11);
+  margin: 20px 0 5px;
+}
+
+.shared-trip-summary-section {
+  position: relative;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.shared-trip-summary-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  color: #929fb1;
+}
+
+.shared-trip-summary-title span {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.shared-trip-summary-section > strong {
+  display: block;
+  padding-right: 75px;
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.shared-trip-summary-section > small {
+  display: block;
+  max-width: 220px;
+  margin-top: 4px;
+  padding-right: 72px;
+  color: #aab4c4;
   font-size: 11px;
+  line-height: 1.45;
+}
+
+.shared-trip-summary-price {
+  position: absolute;
+  top: 41px;
+  right: 0;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.shared-trip-total {
+  margin-top: 21px;
+  padding: 18px 0 4px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.shared-trip-total span {
+  color: #aeb8c7;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.shared-trip-total strong {
+  color: #ffffff;
+  font-size: 28px;
+  letter-spacing: -0.04em;
+}
+
+.shared-trip-continue {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 19px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 13px;
+  background: #ffffff;
+  color: #172033;
+  font-size: 14px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.shared-trip-continue:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.shared-trip-protection {
+  margin-top: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: #909cad;
+}
+
+.shared-trip-protection svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.shared-trip-protection span {
+  font-size: 10px;
   line-height: 1.5;
 }
 
-.shared-trip-empty {
-  background: #fff;
-  border: 1px solid #e3e8ef;
-  border-radius: 16px;
-  padding: 25px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #707a8b;
-}
 
-.shared-trip-empty p {
-  margin: 0;
-}
+/* =========================================================
+   LOADING / ERRORS
+   ========================================================= */
 
-.shared-trip-state {
+.shared-trip-state-page {
   min-height: 100vh;
+  padding: 30px;
+  background: #f6f8fb;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+.shared-trip-state-card {
+  width: min(430px, 100%);
+  padding: 38px 30px;
+  border: 1px solid #e3e8ef;
+  border-radius: 20px;
+  background: #ffffff;
   text-align: center;
-  padding: 30px;
+  box-shadow: 0 15px 45px rgba(23, 32, 51, 0.08);
 }
 
-.shared-trip-state h1 {
-  margin: 20px 0 8px;
-  font-size: 30px;
+.shared-trip-state-card h2 {
+  margin: 19px 0 8px;
+  color: #172033;
+  font-size: 26px;
 }
 
-.shared-trip-state p {
-  margin: 0;
-  max-width: 470px;
+.shared-trip-state-card p {
+  margin: 0 auto;
+  max-width: 340px;
   color: #727c8c;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.65;
 }
 
-.shared-trip-spinner {
-  width: 42px;
-  height: 42px;
-  border: 3px solid #e3e7ed;
+.shared-trip-state-card button {
+  min-height: 45px;
+  margin-top: 24px;
+  padding: 0 19px;
+  border: 0;
+  border-radius: 11px;
+  background: #172033;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.shared-trip-loader {
+  width: 43px;
+  height: 43px;
+  margin: 0 auto;
+  border: 3px solid #e4e8ee;
   border-top-color: #172033;
   border-radius: 50%;
   animation: sharedTripSpin 0.8s linear infinite;
+}
+
+.shared-trip-error-icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto;
+  border-radius: 18px;
+  background: #f0f2f5;
+  color: #596579;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes sharedTripSpin {
@@ -613,33 +740,12 @@
   }
 }
 
-.shared-trip-state-icon {
-  width: 68px;
-  height: 68px;
-  border-radius: 20px;
-  background: #eef1f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #596579;
-}
 
-.shared-trip-secondary-button {
-  margin-top: 25px;
-  border: 1px solid #dce2e9;
-  background: #fff;
-  color: #172033;
-  border-radius: 10px;
-  min-height: 45px;
-  padding: 0 17px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-weight: 700;
-  cursor: pointer;
-}
+/* =========================================================
+   TABLET
+   ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 950px) {
   .shared-trip-content {
     grid-template-columns: 1fr;
   }
@@ -649,64 +755,156 @@
   }
 
   .shared-trip-overview {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .shared-trip-hero {
-    align-items: flex-start;
-    flex-direction: column;
+  .shared-trip-action-card {
+    max-width: none;
   }
 }
 
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 650px) {
+  .shared-trip-header {
+    height: 64px;
+  }
+
+  .shared-trip-header-inner {
+    width: 92%;
+  }
+
+  .shared-trip-secure {
+    font-size: 11px;
+  }
+
   .shared-trip-container {
     width: 94%;
-    padding-top: 30px;
+    padding: 30px 0 55px;
   }
 
-  .shared-trip-header {
-    padding: 0 4%;
+  .shared-trip-hero h1 {
+    font-size: 34px;
   }
 
-  .shared-trip-header-label {
-    display: none;
+  .shared-trip-hero > p {
+    font-size: 14px;
   }
 
   .shared-trip-overview {
     grid-template-columns: 1fr;
   }
 
+  .shared-trip-overview-item {
+    min-height: 74px;
+  }
+
   .shared-trip-card {
     padding: 18px;
+    border-radius: 16px;
   }
 
-  .shared-flight-leg {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .shared-trip-card-heading {
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 
-  .shared-flight-destination {
+  .shared-trip-card-price {
+    width: 100%;
+    margin-left: 56px;
     text-align: left;
   }
 
   .shared-flight-route {
-    justify-content: flex-start;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .shared-flight-airport-right {
+    text-align: left;
+    align-items: flex-start;
   }
 
   .shared-flight-line {
-    max-width: 120px;
+    width: 100%;
+    max-width: 150px;
+    align-items: flex-start;
   }
 
-  .shared-hotel {
+  .shared-flight-line > div {
+    justify-content: flex-start;
+  }
+
+  .shared-flight-line > div::before {
+    width: 120px;
+  }
+
+  .shared-flight-line svg {
+    margin-left: 48px;
+  }
+
+  .shared-hotel-content {
     grid-template-columns: 1fr;
   }
 
-  .shared-hotel img {
-    width: 100%;
+  .shared-hotel-image {
+    min-height: 190px;
+  }
+
+  .shared-hotel-image img {
     height: 190px;
   }
 
+  .shared-car-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .shared-trip-action-card {
-    padding: 21px;
+    padding: 22px;
+    border-radius: 17px;
+  }
+
+  .shared-trip-total strong {
+    font-size: 25px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+  .shared-trip-back {
+    font-size: 13px;
+  }
+
+  .shared-trip-secure span {
+    display: none;
+  }
+
+  .shared-trip-hero h1 {
+    font-size: 31px;
+  }
+
+  .shared-trip-card-heading {
+    gap: 10px;
+  }
+
+  .shared-trip-card-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .shared-car-details {
+    grid-template-columns: 1fr;
+  }
+
+  .shared-trip-summary-section > strong,
+  .shared-trip-summary-section > small {
+    padding-right: 65px;
   }
 }

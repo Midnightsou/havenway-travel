@@ -47,10 +47,18 @@ export function calculateHotelTotal(roomId, nights = 0) {
  * Calculate the car rental total for the trip.
  * Car price is per day, not per traveler.
  */
-export function calculateCarTotal(carId, days = 0) {
+export function calculateCarTotal(
+  carId,
+  days = 0
+) {
   if (!carId) return 0;
 
-  const car = cars.find((item) => item.id === carId);
+  const car = cars.find(
+    (item) =>
+      Number(item.id) ===
+      Number(carId)
+  );
+
   if (!car) return 0;
 
   return car.pricePerDay * days;
@@ -159,7 +167,7 @@ export function buildBooking(trip, traveler = null) {
     : null;
 
   const car = carId
-    ? cars.find((item) => item.id === carId)
+    ? cars.find((item) => Number(item.id) === Number(carId))
     : null;
 
   const selectedActivities = activityIds

@@ -1,30 +1,30 @@
 const flights = {
   economy: {
     name: "Economy",
+
     outbound: {
       type: "Nonstop",
       price: 231,
 
       from: {
-        time: "14:20",
+        time: "08:32",
         airport: "LAX",
         city: "Los Angeles",
-        airportName:
-          "Los Angeles International Airport",
+        airportName: "Los Angeles International Airport",
       },
 
       to: {
-        time: "22:05",
+        time: "16:37",
         airport: "BWI",
-        city: "Washington",
+        city: "Linthicum Heights",
         airportName:
-          "Baltimore Airport Marriott",
+          "Baltimore/Washington International Thurgood Marshall Airport",
       },
 
-      duration: "5h 45m",
+      duration: "5h 05m",
       stops: "Nonstop",
-      airline: "Delta Air Lines",
-      flightNumber: "DL 1248",
+      airline: "United Airlines",
+      flightNumber: "United Airlines",
       cabin: "Economy",
       baggage: "1 carry-on",
     },
@@ -34,25 +34,24 @@ const flights = {
       price: 249,
 
       from: {
-        time: "08:30",
+        time: "08:00",
         airport: "BWI",
-        city: "Washington",
+        city: "Linthicum Heights",
         airportName:
-          "Baltimore Airport Marriott",
+          "Baltimore/Washington International Thurgood Marshall Airport",
       },
 
       to: {
-        time: "11:05",
+        time: "10:36",
         airport: "LAX",
         city: "Los Angeles",
-        airportName:
-          "Los Angeles International Airport",
+        airportName: "Los Angeles International Airport",
       },
 
-      duration: "5h 35m",
+      duration: "5h 36m",
       stops: "Nonstop",
-      airline: "Delta Air Lines",
-      flightNumber: "DL 1249",
+      airline: "United Airlines",
+      flightNumber: "United Airlines",
       cabin: "Economy",
       baggage: "1 carry-on",
     },
@@ -60,30 +59,30 @@ const flights = {
 
   business: {
     name: "Business",
+
     outbound: {
       type: "Nonstop",
       price: 731,
 
       from: {
-        time: "14:20",
+        time: "08:32",
         airport: "LAX",
         city: "Los Angeles",
-        airportName:
-          "Los Angeles International Airport",
+        airportName: "Los Angeles International Airport",
       },
 
       to: {
-        time: "22:05",
+        time: "16:37",
         airport: "BWI",
-        city: "Washington",
+        city: "Linthicum Heights",
         airportName:
-          "Baltimore Airport Marriott",
+          "Baltimore/Washington International Thurgood Marshall Airport",
       },
 
-      duration: "5h 45m",
+      duration: "5h 05m",
       stops: "Nonstop",
-      airline: "Delta Air Lines",
-      flightNumber: "DL 1248",
+      airline: "United Airlines",
+      flightNumber: "United Airlines",
       cabin: "Business",
       baggage: "2 checked bags",
     },
@@ -93,25 +92,24 @@ const flights = {
       price: 749,
 
       from: {
-        time: "08:30",
+        time: "08:00",
         airport: "BWI",
-        city: "Washington",
+        city: "Linthicum Heights",
         airportName:
-          "Baltimore Airport Marriott",
+          "Baltimore/Washington International Thurgood Marshall Airport",
       },
 
       to: {
-        time: "11:05",
+        time: "10:36",
         airport: "LAX",
         city: "Los Angeles",
-        airportName:
-          "Los Angeles International Airport",
+        airportName: "Los Angeles International Airport",
       },
 
-      duration: "5h 35m",
+      duration: "5h 36m",
       stops: "Nonstop",
-      airline: "Delta Air Lines",
-      flightNumber: "DL 1249",
+      airline: "United Airlines",
+      flightNumber: "United Airlines",
       cabin: "Business",
       baggage: "2 checked bags",
     },
@@ -119,30 +117,30 @@ const flights = {
 
   first: {
     name: "First Class",
+
     outbound: {
       type: "Nonstop",
       price: 1281,
 
       from: {
-        time: "14:20",
+        time: "08:32",
         airport: "LAX",
         city: "Los Angeles",
-        airportName:
-          "Los Angeles International Airport",
+        airportName: "Los Angeles International Airport",
       },
 
       to: {
-        time: "22:05",
+        time: "16:37",
         airport: "BWI",
-        city: "Washington",
+        city: "Linthicum Heights",
         airportName:
-          "Baltimore Airport Marriott",
+          "Baltimore/Washington International Thurgood Marshall Airport",
       },
 
-      duration: "5h 45m",
+      duration: "5h 05m",
       stops: "Nonstop",
-      airline: "Delta Air Lines",
-      flightNumber: "DL 1248",
+      airline: "United Airlines",
+      flightNumber: "United Airlines",
       cabin: "First Class",
       baggage: "2 checked bags",
     },
@@ -152,25 +150,24 @@ const flights = {
       price: 1299,
 
       from: {
-        time: "08:30",
+        time: "08:00",
         airport: "BWI",
-        city: "Washington",
+        city: "Linthicum Heights",
         airportName:
-          "Baltimore Airport Marriott",
+          "Baltimore/Washington International Thurgood Marshall Airport",
       },
 
       to: {
-        time: "11:05",
+        time: "10:36",
         airport: "LAX",
         city: "Los Angeles",
-        airportName:
-          "Los Angeles International Airport",
+        airportName: "Los Angeles International Airport",
       },
 
-      duration: "5h 35m",
+      duration: "5h 36m",
       stops: "Nonstop",
-      airline: "Delta Air Lines",
-      flightNumber: "DL 1249",
+      airline: "United Airlines",
+      flightNumber: "United Airlines",
       cabin: "First Class",
       baggage: "2 checked bags",
     },

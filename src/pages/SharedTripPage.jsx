@@ -1,5 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+import {
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+
 import {
   ArrowLeft,
   ArrowRight,
@@ -10,32 +19,47 @@ import {
   Hotel,
   MapPin,
   Plane,
-  Sparkles,
-  Ticket,
+  ShieldCheck,
   Users,
   AlertCircle,
+  Briefcase,
 } from "lucide-react";
 
 import hotels from "../data/hotel";
 import rooms from "../data/rooms";
 import flights from "../data/flight";
 import cars from "../data/cars";
-import activities from "../data/activities";
-import packages from "../data/packages";
 
-import { formatShortDate } from "../utils/dates";
+import {
+  formatShortDate,
+} from "../utils/dates";
+
+import {
+  calculateFlightTotal,
+  calculateHotelTotal,
+  calculateCarTotal,
+} from "../utils/pricing";
 
 import "./SharedTripPage.css";
 
-const API_BASE_URL = "https://api.havenway-travels.cv";
+const API_BASE_URL =
+  "https://api.havenway-travels.cv";
 
-function SharedTripPage({ onContinueWithTrip }) {
+function SharedTripPage({
+  onContinueWithTrip,
+}) {
   const { token } = useParams();
+
   const navigate = useNavigate();
 
-  const [trip, setTrip] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errorType, setErrorType] = useState(null);
+  const [trip, setTrip] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [errorType, setErrorType] =
+    useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -45,16 +69,25 @@ function SharedTripPage({ onContinueWithTrip }) {
         setLoading(true);
         setErrorType(null);
 
-        const response = await fetch(
-          `${API_BASE_URL}/api/shared-trips/${encodeURIComponent(token)}`
-        );
+        const response =
+          await fetch(
+            `${API_BASE_URL}/api/shared-trips/${encodeURIComponent(
+              token
+            )}`
+          );
 
-        const data = await response.json();
+        const data =
+          await response.json();
 
-        if (!response.ok || !data.success) {
+        if (
+          !response.ok ||
+          !data.success
+        ) {
           if (response.status === 410) {
             setErrorType("expired");
-          } else if (response.status === 404) {
+          } else if (
+            response.status === 404
+          ) {
             setErrorType("not-found");
           } else {
             setErrorType("error");
@@ -67,7 +100,10 @@ function SharedTripPage({ onContinueWithTrip }) {
           setTrip(data.trip);
         }
       } catch (error) {
-        console.error("Failed to load shared itinerary:", error);
+        console.error(
+          "Failed to load shared itinerary:",
+          error
+        );
 
         if (!cancelled) {
           setErrorType("error");
@@ -92,32 +128,38 @@ function SharedTripPage({ onContinueWithTrip }) {
   }, [token]);
 
   const resolved = useMemo(() => {
-    if (!trip) {
-      return null;
-    }
+    if (!trip) return null;
 
     const hotel = trip.selectedHotel
-      ? hotels.find((item) => item.id === trip.selectedHotel)
+      ? hotels.find(
+          (item) =>
+            item.id ===
+            trip.selectedHotel
+        )
       : null;
 
     const room = trip.roomId
-      ? rooms.find((item) => item.id === trip.roomId)
+      ? rooms.find(
+          (item) =>
+            item.id === trip.roomId
+        )
       : null;
 
     const flight = trip.flightId
       ? flights[trip.flightId]
       : null;
 
+    /*
+     * car IDs are numeric in cars.js.
+     * Number() also protects us if
+     * Supabase sends "1" instead of 1.
+     */
     const car = trip.carId
-      ? cars.find((item) => item.id === trip.carId)
-      : null;
-
-    const selectedActivities = (trip.activityIds || [])
-      .map((id) => activities.find((item) => item.id === id))
-      .filter(Boolean);
-
-    const pkg = trip.packageId
-      ? packages.find((item) => item.id === trip.packageId)
+      ? cars.find(
+          (item) =>
+            Number(item.id) ===
+            Number(trip.carId)
+        )
       : null;
 
     return {
@@ -125,15 +167,63 @@ function SharedTripPage({ onContinueWithTrip }) {
       room,
       flight,
       car,
-      selectedActivities,
-      pkg,
+    };
+  }, [trip]);
+
+  const totals = useMemo(() => {
+    if (!trip) {
+      return {
+        flightTotal: 0,
+        hotelTotal: 0,
+        carTotal: 0,
+        tripTotal: 0,
+      };
+    }
+
+    /*
+     * Do not use calculateFlightTotal
+     * when there is no flightId because
+     * that utility currently falls back
+     * to economy.
+     */
+    const flightTotal =
+      trip.flightId
+        ? calculateFlightTotal(
+            trip.flightId,
+            trip.travellers || 1
+          )
+        : 0;
+
+    const hotelTotal =
+      trip.roomId
+        ? calculateHotelTotal(
+            trip.roomId,
+            trip.nights || 0
+          )
+        : 0;
+
+    const carTotal =
+      trip.carId
+        ? calculateCarTotal(
+            Number(trip.carId),
+            trip.days || 0
+          )
+        : 0;
+
+    return {
+      flightTotal,
+      hotelTotal,
+      carTotal,
+
+      tripTotal:
+        flightTotal +
+        hotelTotal +
+        carTotal,
     };
   }, [trip]);
 
   const handleContinue = () => {
-    if (!trip) {
-      return;
-    }
+    if (!trip) return;
 
     if (onContinueWithTrip) {
       onContinueWithTrip(trip);
@@ -149,14 +239,17 @@ function SharedTripPage({ onContinueWithTrip }) {
 
   if (loading) {
     return (
-      <div className="shared-trip-page">
-        <div className="shared-trip-state">
-          <div className="shared-trip-spinner" />
+      <div className="shared-trip-state-page">
+        <div className="shared-trip-state-card">
+          <div className="shared-trip-loader" />
 
-          <h1>Loading your itinerary</h1>
+          <h2>
+            Loading itinerary
+          </h2>
 
           <p>
-            We're retrieving the shared Havenway trip.
+            Retrieving the shared trip
+            details.
           </p>
         </div>
       </div>
@@ -164,47 +257,48 @@ function SharedTripPage({ onContinueWithTrip }) {
   }
 
   if (errorType) {
-    const errorContent = {
-      expired: {
-        icon: <Clock size={34} />,
-        title: "This itinerary has expired",
-        message:
-          "This shared itinerary was only available for 30 days. Ask the person who shared it to create a new link.",
-      },
-      "not-found": {
-        icon: <AlertCircle size={34} />,
-        title: "Itinerary not found",
-        message:
-          "This shared itinerary doesn't exist or the link may be incorrect.",
-      },
-      error: {
-        icon: <AlertCircle size={34} />,
-        title: "Unable to load itinerary",
-        message:
-          "Something went wrong while loading this shared trip. Please try again later.",
-      },
-    };
+    let title =
+      "Unable to load this itinerary";
 
-    const content = errorContent[errorType];
+    let description =
+      "Something went wrong while loading this shared trip.";
+
+    if (
+      errorType === "expired"
+    ) {
+      title =
+        "This itinerary has expired";
+
+      description =
+        "Shared itineraries remain available for 30 days.";
+    }
+
+    if (
+      errorType === "not-found"
+    ) {
+      title =
+        "Itinerary not found";
+
+      description =
+        "This shared itinerary may no longer exist or the link may be incorrect.";
+    }
 
     return (
-      <div className="shared-trip-page">
-        <div className="shared-trip-state shared-trip-error">
-          <div className="shared-trip-state-icon">
-            {content.icon}
+      <div className="shared-trip-state-page">
+        <div className="shared-trip-state-card">
+          <div className="shared-trip-error-icon">
+            <AlertCircle size={28} />
           </div>
 
-          <h1>{content.title}</h1>
+          <h2>{title}</h2>
 
-          <p>{content.message}</p>
+          <p>{description}</p>
 
           <button
             type="button"
-            className="shared-trip-secondary-button"
             onClick={handleBackHome}
           >
-            <ArrowLeft size={17} />
-            Back to Havenway
+            Return home
           </button>
         </div>
       </div>
@@ -220,97 +314,112 @@ function SharedTripPage({ onContinueWithTrip }) {
     room,
     flight,
     car,
-    selectedActivities,
-    pkg,
   } = resolved;
 
+  const {
+    flightTotal,
+    hotelTotal,
+    carTotal,
+    tripTotal,
+  } = totals;
+
+  const travellers =
+    trip.travellers || 1;
+
+  const nights =
+    trip.nights || 0;
+
+  const days =
+    trip.days || 0;
+
   const dateRange =
-    trip.startDate && trip.endDate
-      ? `${formatShortDate(trip.startDate)} – ${formatShortDate(
+    trip.startDate &&
+    trip.endDate
+      ? `${formatShortDate(
+          trip.startDate
+        )} – ${formatShortDate(
           trip.endDate
         )}`
       : "Dates not selected";
 
   const totalSelections =
-    Boolean(flight) +
-    Boolean(hotel || room) +
-    Boolean(car) +
-    selectedActivities.length +
-    Boolean(pkg);
+    Number(Boolean(flight)) +
+    Number(Boolean(room || hotel)) +
+    Number(Boolean(car));
 
   return (
     <div className="shared-trip-page">
-      <header className="shared-trip-header">
-        <button
-          type="button"
-          className="shared-trip-back"
-          onClick={handleBackHome}
-        >
-          <ArrowLeft size={18} />
-          Havenway
-        </button>
 
-        <div className="shared-trip-header-label">
-          <CheckCircle2 size={17} />
-          Shared itinerary
+      <header className="shared-trip-header">
+        <div className="shared-trip-container shared-trip-header-inner">
+
+          <button
+            className="shared-trip-back"
+            type="button"
+            onClick={handleBackHome}
+          >
+            <ArrowLeft size={18} />
+            Havenway Travel
+          </button>
+
+          <div className="shared-trip-secure">
+            <ShieldCheck size={17} />
+            Shared itinerary
+          </div>
+
         </div>
       </header>
 
       <main className="shared-trip-container">
+
         <section className="shared-trip-hero">
-          <div>
-            <span className="shared-trip-eyebrow">
-              HAVENWAY TRAVEL
+
+          <span className="shared-trip-eyebrow">
+            TRIP ITINERARY
+          </span>
+
+          <h1>
+            Your trip is ready to review
+          </h1>
+
+          <p>
+            Review the selections below.
+            You can continue with this exact
+            itinerary when you're ready.
+          </p>
+
+          <div className="shared-trip-hero-meta">
+            <CheckCircle2 size={17} />
+
+            <span>
+              Shared securely through
+              Havenway Travel
             </span>
-
-            <h1>Your shared trip</h1>
-
-            <p>
-              Someone shared this itinerary with you.
-              Review the selections below and continue
-              with this trip when you're ready.
-            </p>
           </div>
 
-          <div className="shared-trip-validity">
-            <Clock size={17} />
-
-            <div>
-              <span>Link expires</span>
-              <strong>
-                {trip.expiresAt
-                  ? new Date(trip.expiresAt).toLocaleDateString(
-                      undefined,
-                      {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      }
-                    )
-                  : "—"}
-              </strong>
-            </div>
-          </div>
         </section>
 
         <section className="shared-trip-overview">
+
           <div className="shared-trip-overview-item">
-            <CalendarDays size={19} />
+            <CalendarDays size={21} />
 
             <div>
               <span>Travel dates</span>
-              <strong>{dateRange}</strong>
+              <strong>
+                {dateRange}
+              </strong>
             </div>
           </div>
 
           <div className="shared-trip-overview-item">
-            <Users size={19} />
+            <Users size={21} />
 
             <div>
               <span>Travelers</span>
               <strong>
-                {trip.travellers}{" "}
-                {trip.travellers === 1
+                {travellers}{" "}
+                {travellers === 1
                   ? "traveler"
                   : "travelers"}
               </strong>
@@ -318,19 +427,21 @@ function SharedTripPage({ onContinueWithTrip }) {
           </div>
 
           <div className="shared-trip-overview-item">
-            <Clock size={19} />
+            <Clock size={21} />
 
             <div>
               <span>Duration</span>
               <strong>
-                {trip.nights || 0} nights ·{" "}
-                {trip.days || 0} days
+                {nights}{" "}
+                {nights === 1
+                  ? "night"
+                  : "nights"}
               </strong>
             </div>
           </div>
 
           <div className="shared-trip-overview-item">
-            <Ticket size={19} />
+            <CheckCircle2 size={21} />
 
             <div>
               <span>Selections</span>
@@ -342,374 +453,588 @@ function SharedTripPage({ onContinueWithTrip }) {
               </strong>
             </div>
           </div>
+
         </section>
 
-        <section className="shared-trip-content">
+        <div className="shared-trip-content">
+
           <div className="shared-trip-main">
 
             {flight && (
-              <article className="shared-trip-card">
+              <section className="shared-trip-card">
+
                 <div className="shared-trip-card-heading">
+
                   <div className="shared-trip-card-icon">
-                    <Plane size={20} />
+                    <Plane size={22} />
                   </div>
 
                   <div>
-                    <span>FLIGHTS</span>
-                    <h2>Round-trip flight</h2>
+                    <span>
+                      ROUND-TRIP FLIGHT
+                    </span>
+
+                    <h2>
+                      {flight.name}
+                    </h2>
+
+                    <p>
+                      {flight.outbound.airline}
+                      {" · "}
+                      {flight.outbound.stops}
+                    </p>
                   </div>
+
+                  <div className="shared-trip-card-price">
+                    <span>
+                      Flight total
+                    </span>
+
+                    <strong>
+                      ${flightTotal.toLocaleString()}
+                    </strong>
+                  </div>
+
                 </div>
 
-                <div className="shared-flight">
-                  <div className="shared-flight-leg">
-                    <div>
-                      <span>
-                        {trip.startDate
-                          ? formatShortDate(trip.startDate)
-                          : "Departure"}
-                      </span>
+                <div className="shared-flight-leg">
 
+                  <div className="shared-flight-date">
+                    <strong>
+                      {formatShortDate(
+                        trip.startDate
+                      )}
+                    </strong>
+
+                    <span>Departure</span>
+                  </div>
+
+                  <div className="shared-flight-route">
+
+                    <div className="shared-flight-airport">
                       <strong>
-                        {flight.outbound.from.airport}
+                        {flight.outbound.from.time}
                       </strong>
 
+                      <span>
+                        {flight.outbound.from.airport}
+                      </span>
+
                       <small>
-                        {flight.outbound.from.city}
+                        {
+                          flight.outbound.from.city
+                        }
                       </small>
                     </div>
 
-                    <div className="shared-flight-route">
-                      <small>
-                        {flight.outbound.from.time}
-                      </small>
+                    <div className="shared-flight-line">
+                      <span>
+                        {
+                          flight.outbound.duration
+                        }
+                      </span>
 
-                      <div className="shared-flight-line">
-                        <span />
-                        <Plane size={15} />
+                      <div>
+                        <Plane size={16} />
                       </div>
 
                       <small>
-                        {flight.outbound.to.time}
+                        {
+                          flight.outbound.stops
+                        }
                       </small>
                     </div>
 
-                    <div className="shared-flight-destination">
+                    <div className="shared-flight-airport shared-flight-airport-right">
+                      <strong>
+                        {flight.outbound.to.time}
+                      </strong>
+
                       <span>
                         {flight.outbound.to.airport}
                       </span>
 
-                      <strong>
-                        {flight.outbound.to.city}
-                      </strong>
+                      <small>
+                        {
+                          flight.outbound.to.city
+                        }
+                      </small>
                     </div>
+
                   </div>
 
-                  <div className="shared-flight-divider" />
+                  <div className="shared-flight-details">
+                    <span>
+                      {
+                        flight.outbound.airline
+                      }
+                    </span>
 
-                  <div className="shared-flight-leg">
-                    <div>
-                      <span>
-                        {trip.endDate
-                          ? formatShortDate(trip.endDate)
-                          : "Return"}
-                      </span>
+                    <span>
+                      {
+                        flight.outbound.cabin
+                      }
+                    </span>
 
+                    <span>
+                      {
+                        flight.outbound.baggage
+                      }
+                    </span>
+                  </div>
+
+                </div>
+
+                <div className="shared-flight-leg">
+
+                  <div className="shared-flight-date">
+                    <strong>
+                      {formatShortDate(
+                        trip.endDate
+                      )}
+                    </strong>
+
+                    <span>Return</span>
+                  </div>
+
+                  <div className="shared-flight-route">
+
+                    <div className="shared-flight-airport">
                       <strong>
-                        {flight.return.from.airport}
+                        {flight.return.from.time}
                       </strong>
 
+                      <span>
+                        {flight.return.from.airport}
+                      </span>
+
                       <small>
-                        {flight.return.from.city}
+                        {
+                          flight.return.from.city
+                        }
                       </small>
                     </div>
 
-                    <div className="shared-flight-route">
-                      <small>
-                        {flight.return.from.time}
-                      </small>
+                    <div className="shared-flight-line">
+                      <span>
+                        {
+                          flight.return.duration
+                        }
+                      </span>
 
-                      <div className="shared-flight-line">
-                        <span />
-                        <Plane size={15} />
+                      <div>
+                        <Plane size={16} />
                       </div>
 
                       <small>
-                        {flight.return.to.time}
+                        {
+                          flight.return.stops
+                        }
                       </small>
                     </div>
 
-                    <div className="shared-flight-destination">
+                    <div className="shared-flight-airport shared-flight-airport-right">
+                      <strong>
+                        {flight.return.to.time}
+                      </strong>
+
                       <span>
                         {flight.return.to.airport}
                       </span>
 
-                      <strong>
-                        {flight.return.to.city}
-                      </strong>
+                      <small>
+                        {
+                          flight.return.to.city
+                        }
+                      </small>
                     </div>
+
                   </div>
+
+                  <div className="shared-flight-details">
+                    <span>
+                      {
+                        flight.return.airline
+                      }
+                    </span>
+
+                    <span>
+                      {
+                        flight.return.cabin
+                      }
+                    </span>
+
+                    <span>
+                      {
+                        flight.return.baggage
+                      }
+                    </span>
+                  </div>
+
                 </div>
 
-                <div className="shared-trip-card-footer">
-                  <span>{flight.name}</span>
-
-                  <span>
-                    {trip.travellers}{" "}
-                    {trip.travellers === 1
-                      ? "traveler"
-                      : "travelers"}
-                  </span>
-                </div>
-              </article>
+              </section>
             )}
 
-            {(hotel || room) && (
-              <article className="shared-trip-card">
+            {(room || hotel) && (
+              <section className="shared-trip-card">
+
                 <div className="shared-trip-card-heading">
+
                   <div className="shared-trip-card-icon">
-                    <Hotel size={20} />
+                    <Hotel size={22} />
                   </div>
 
                   <div>
-                    <span>STAY</span>
-                    <h2>Hotel accommodation</h2>
-                  </div>
-                </div>
-
-                <div className="shared-hotel">
-                  {room?.images?.[0] && (
-                    <img
-                      src={room.images[0]}
-                      alt={room.name}
-                    />
-                  )}
-
-                  <div className="shared-hotel-details">
-                    <span className="shared-trip-location">
-                      <MapPin size={14} />
-                      {hotel?.location ||
-                        "Selected hotel"}
+                    <span>
+                      HOTEL STAY
                     </span>
 
-                    <h3>
+                    <h2>
                       {hotel?.name ||
                         "Selected hotel"}
-                    </h3>
+                    </h2>
+
+                    {hotel?.location && (
+                      <p>
+                        <MapPin size={14} />
+                        {hotel.location}
+                      </p>
+                    )}
+                  </div>
+
+                  {room && (
+                    <div className="shared-trip-card-price">
+                      <span>
+                        Stay total
+                      </span>
+
+                      <strong>
+                        ${hotelTotal.toLocaleString()}
+                      </strong>
+                    </div>
+                  )}
+
+                </div>
+
+                <div className="shared-hotel-content">
+
+                  {room?.images?.[0] && (
+                    <div className="shared-hotel-image">
+                      <img
+                        src={
+                          room.images[0]
+                        }
+                        alt={room.name}
+                      />
+                    </div>
+                  )}
+
+                  <div className="shared-hotel-info">
 
                     {room && (
                       <>
-                        <strong>{room.name}</strong>
-
-                        <span>
-                          {room.beds} · {room.guests}
+                        <span className="shared-hotel-label">
+                          SELECTED ROOM
                         </span>
+
+                        <h3>
+                          {room.name}
+                        </h3>
+
+                        <p>
+                          {room.beds}
+                          {" · "}
+                          {room.guests}
+                        </p>
+
+                        <div className="shared-hotel-details">
+                          <span>
+                            <CalendarDays
+                              size={16}
+                            />
+                            {dateRange}
+                          </span>
+
+                          <span>
+                            <Clock
+                              size={16}
+                            />
+                            {nights}{" "}
+                            {nights === 1
+                              ? "night"
+                              : "nights"}
+                          </span>
+                        </div>
                       </>
                     )}
 
-                    <small>
-                      {dateRange} ·{" "}
-                      {trip.nights || 0} nights
-                    </small>
                   </div>
+
                 </div>
-              </article>
+
+              </section>
             )}
 
             {car && (
-              <article className="shared-trip-card">
+              <section className="shared-trip-card">
+
                 <div className="shared-trip-card-heading">
+
                   <div className="shared-trip-card-icon">
-                    <Car size={20} />
+                    <Car size={22} />
                   </div>
 
                   <div>
-                    <span>TRANSPORT</span>
-                    <h2>Car rental</h2>
-                  </div>
-                </div>
-
-                <div className="shared-car">
-                  <div className="shared-car-icon">
-                    <Car size={30} />
-                  </div>
-
-                  <div>
-                    <h3>{car.name}</h3>
-
                     <span>
-                      {car.type} · {car.seats} seats
+                      CAR RENTAL
                     </span>
 
-                    <small>
-                      {dateRange} ·{" "}
-                      {trip.days || 0} days
-                    </small>
-                  </div>
-                </div>
-              </article>
-            )}
+                    <h2>
+                      {car.name}
+                    </h2>
 
-            {selectedActivities.length > 0 && (
-              <article className="shared-trip-card">
-                <div className="shared-trip-card-heading">
-                  <div className="shared-trip-card-icon">
-                    <Ticket size={20} />
+                    <p>
+                      {car.type}
+                    </p>
                   </div>
 
-                  <div>
-                    <span>EXPERIENCES</span>
-                    <h2>Activities</h2>
-                  </div>
-                </div>
-
-                <div className="shared-activity-list">
-                  {selectedActivities.map(
-                    (activity) => (
-                      <div
-                        className="shared-activity"
-                        key={activity.id}
-                      >
-                        <div className="shared-activity-icon">
-                          <Ticket size={17} />
-                        </div>
-
-                        <div>
-                          <h3>{activity.name}</h3>
-
-                          <span>
-                            <MapPin size={13} />
-                            {activity.location}
-                          </span>
-
-                          <small>
-                            {activity.duration}
-                          </small>
-                        </div>
-                      </div>
-                    )
-                  )}
-                </div>
-              </article>
-            )}
-
-            {pkg && (
-              <article className="shared-trip-card">
-                <div className="shared-trip-card-heading">
-                  <div className="shared-trip-card-icon">
-                    <Sparkles size={20} />
-                  </div>
-
-                  <div>
-                    <span>PACKAGE</span>
-                    <h2>Travel package</h2>
-                  </div>
-                </div>
-
-                <div className="shared-package">
-                  <Sparkles size={23} />
-
-                  <div>
-                    <h3>{pkg.name}</h3>
+                  <div className="shared-trip-card-price">
                     <span>
-                      Flight + hotel bundled
+                      Rental total
+                    </span>
+
+                    <strong>
+                      ${carTotal.toLocaleString()}
+                    </strong>
+                  </div>
+
+                </div>
+
+                <div className="shared-car-details">
+
+                  <div>
+                    <Users size={18} />
+
+                    <span>
+                      {car.seats} seats
                     </span>
                   </div>
+
+                  <div>
+                    <Briefcase size={18} />
+
+                    <span>
+                      {car.bags} bags
+                    </span>
+                  </div>
+
+                  <div>
+                    <Car size={18} />
+
+                    <span>
+                      {car.transmission}
+                    </span>
+                  </div>
+
+                  <div>
+                    <Clock size={18} />
+
+                    <span>
+                      {days}{" "}
+                      {days === 1
+                        ? "day"
+                        : "days"}
+                    </span>
+                  </div>
+
                 </div>
-              </article>
+
+              </section>
             )}
 
-            {!flight &&
-              !hotel &&
-              !room &&
-              !car &&
-              selectedActivities.length === 0 &&
-              !pkg && (
-                <div className="shared-trip-empty">
-                  <AlertCircle size={24} />
-                  <p>
-                    Some selections from this itinerary
-                    are no longer available.
-                  </p>
-                </div>
-              )}
           </div>
 
           <aside className="shared-trip-sidebar">
+
             <div className="shared-trip-action-card">
-              <span className="shared-trip-action-eyebrow">
-                READY TO TRAVEL?
+
+              <span className="shared-trip-summary-eyebrow">
+                YOUR TRIP
               </span>
 
               <h2>
-                Continue with this trip
+                Trip summary
               </h2>
 
-              <p>
-                We'll load these selections into
-                Havenway so you can review your booking
-                details before continuing.
-              </p>
+              <div className="shared-trip-summary-meta">
+                <CalendarDays size={17} />
 
-              <div className="shared-trip-action-summary">
-                <div>
-                  <span>Travelers</span>
-                  <strong>{trip.travellers}</strong>
-                </div>
+                <span>
+                  {dateRange}
+                </span>
+              </div>
 
-                <div>
-                  <span>Duration</span>
+              <div className="shared-trip-summary-meta">
+                <Users size={17} />
+
+                <span>
+                  {travellers}{" "}
+                  {travellers === 1
+                    ? "traveler"
+                    : "travelers"}
+                  {" · "}
+                  {nights}{" "}
+                  {nights === 1
+                    ? "night"
+                    : "nights"}
+                </span>
+              </div>
+
+              <div className="shared-trip-summary-divider" />
+
+              {flight && (
+                <div className="shared-trip-summary-section">
+
+                  <div className="shared-trip-summary-title">
+                    <Plane size={17} />
+
+                    <span>
+                      Flight
+                    </span>
+                  </div>
+
                   <strong>
-                    {trip.nights || 0} nights
+                    {flight.name}
                   </strong>
-                </div>
 
-                <div>
-                  <span>Flight</span>
-                  <strong>
-                    {flight ? "Selected" : "Not selected"}
-                  </strong>
-                </div>
+                  <small>
+                    {
+                      flight.outbound.from
+                        .airport
+                    }
+                    {" → "}
+                    {
+                      flight.outbound.to
+                        .airport
+                    }
+                    {" · "}
+                    {
+                      flight.outbound.airline
+                    }
+                  </small>
 
-                <div>
-                  <span>Hotel</span>
-                  <strong>
-                    {room || hotel
-                      ? "Selected"
-                      : "Not selected"}
-                  </strong>
+                  <div className="shared-trip-summary-price">
+                    ${flightTotal.toLocaleString()}
+                  </div>
+
                 </div>
+              )}
+
+              {(hotel || room) && (
+                <div className="shared-trip-summary-section">
+
+                  <div className="shared-trip-summary-title">
+                    <Hotel size={17} />
+
+                    <span>
+                      Stay
+                    </span>
+                  </div>
+
+                  <strong>
+                    {hotel?.name ||
+                      "Selected hotel"}
+                  </strong>
+
+                  {room && (
+                    <small>
+                      {room.name}
+                    </small>
+                  )}
+
+                  {room && (
+                    <div className="shared-trip-summary-price">
+                      ${hotelTotal.toLocaleString()}
+                    </div>
+                  )}
+
+                </div>
+              )}
+
+              {car && (
+                <div className="shared-trip-summary-section">
+
+                  <div className="shared-trip-summary-title">
+                    <Car size={17} />
+
+                    <span>
+                      Car
+                    </span>
+                  </div>
+
+                  <strong>
+                    {car.name}
+                  </strong>
+
+                  <small>
+                    {car.type}
+                    {" · "}
+                    {days} days
+                  </small>
+
+                  <div className="shared-trip-summary-price">
+                    ${carTotal.toLocaleString()}
+                  </div>
+
+                </div>
+              )}
+
+              <div className="shared-trip-total">
+
+                <span>
+                  Total trip price
+                </span>
+
+                <strong>
+                  ${tripTotal.toLocaleString()}
+                </strong>
+
               </div>
 
               <button
                 type="button"
-                className="shared-trip-continue-button"
-                onClick={handleContinue}
+                className="shared-trip-continue"
+                onClick={
+                  handleContinue
+                }
               >
                 Continue with this trip
-                <ArrowRight size={18} />
+
+                <ArrowRight
+                  size={18}
+                />
               </button>
 
-              <button
-                type="button"
-                className="shared-trip-back-button"
-                onClick={handleBackHome}
-              >
-                <ArrowLeft size={16} />
-                Back to Havenway
-              </button>
+              <div className="shared-trip-protection">
+                <ShieldCheck
+                  size={16}
+                />
+
+                <span>
+                  You'll review everything
+                  again before payment.
+                </span>
+              </div>
+
             </div>
 
-            <div className="shared-trip-trust">
-              <CheckCircle2 size={17} />
-
-              <p>
-                This itinerary was created using
-                Havenway Travel's secure sharing system.
-              </p>
-            </div>
           </aside>
-        </section>
+
+        </div>
+
       </main>
+
     </div>
   );
 }
