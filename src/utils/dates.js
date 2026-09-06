@@ -113,16 +113,36 @@ export function formatDate(date) {
   );
 }
 
-export function formatShortDate(date) {
-  const parsed = toDate(date);
+export function formatShortDate(value) {
+  if (!value) return "";
 
-  if (!parsed) return "";
+  if (typeof value === "string") {
+    const match = value.match(
+      /^(\d{4})-(\d{2})-(\d{2})/
+    );
 
-  return parsed.toLocaleDateString(
-    "en-US",
-    {
+    if (match) {
+      const [, year, month, day] = match;
+
+      const date = new Date(
+        Number(year),
+        Number(month) - 1,
+        Number(day)
+      );
+
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    }
+  }
+
+  if (value instanceof Date) {
+    return value.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
-    }
-  );
+    });
+  }
+
+  return "";
 }

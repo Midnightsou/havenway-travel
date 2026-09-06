@@ -53,6 +53,54 @@ const API_BASE_URL =
 const PAYMENT_SESSION_VERSION = 1;
 
 
+function preserveSelectedDate(value) {
+  if (!value) return null;
+
+  // Already a plain date string
+  if (
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(value)
+  ) {
+    return value;
+  }
+
+  // If it's a Date object, read exactly what the
+  // user selected from the local calendar.
+  if (value instanceof Date) {
+    const year = value.getFullYear();
+    const month = String(
+      value.getMonth() + 1
+    ).padStart(2, "0");
+    const day = String(
+      value.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  return null;
+}
+
+
+function dateStringToLocalDate(value) {
+  if (!value) return null;
+
+  const match = String(value).match(
+    /^(\d{4})-(\d{2})-(\d{2})/
+  );
+
+  if (!match) return null;
+
+  const [, year, month, day] = match;
+
+  return new Date(
+    Number(year),
+    Number(month) - 1,
+    Number(day)
+  );
+}
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -517,8 +565,10 @@ function AppRoutes() {
 
           body: JSON.stringify({
             travellers,
-            startDate,
-            endDate,
+
+            startDate: preserveSelectedDate(startDate),
+            endDate: preserveSelectedDate(endDate),
+
             nights,
             days,
 
@@ -601,11 +651,15 @@ function AppRoutes() {
     );
 
     setStartDate(
-      sharedTrip.startDate ?? null
+      dateStringToLocalDate(
+        sharedTrip.startDate
+      )
     );
 
     setEndDate(
-      sharedTrip.endDate ?? null
+      dateStringToLocalDate(
+        sharedTrip.endDate
+      )
     );
 
     setSelectedHotel(
