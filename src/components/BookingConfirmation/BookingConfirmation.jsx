@@ -17,10 +17,11 @@ import {
   Users,
   Printer,
   ShieldCheck,
-  Download,
 } from "lucide-react";
 
-import { formatShortDate } from "../../utils/dates";
+import cars from "../../data/cars";
+
+import { formatDate as formatShortDate } from "../../utils/dates";
 
 import "./BookingConfirmation.css";
 
@@ -54,7 +55,7 @@ function BookingConfirmation({
   const {
     traveler,
     room,
-    car,
+    car: savedCar,
     activities = [],
     package: pkg,
     flight,
@@ -68,6 +69,15 @@ function BookingConfirmation({
     itinerary = [],
     hotel,
   } = booking;
+
+  // Saved API selections may use string IDs; local bookings contain the car object.
+  const carSelection = savedCar ?? booking.selectedCar ?? booking.selected_car ?? booking.carId;
+  const car = carSelection && typeof carSelection === "object"
+    ? carSelection
+    : cars.find((item) => String(item.id) === String(carSelection));
+  const money = (value) => new Intl.NumberFormat("en-US", {
+    style: "currency", currency: "USD",
+  }).format(value);
 
   /*
    * ------------------------------------------------
@@ -101,7 +111,7 @@ function BookingConfirmation({
     Number(
       totals.car ??
         totals.carTotal ??
-        0
+        (car ? car.pricePerDay * days : 0)
     );
 
   const activitiesTotal =
@@ -262,11 +272,11 @@ function BookingConfirmation({
 
             <span>
               <Receipt size={15} />
-              Booking confirmation
+              Booking receipt
             </span>
 
             <small>
-              Official travel document
+              Your reservation details
             </small>
 
           </div>
@@ -317,7 +327,7 @@ function BookingConfirmation({
               onClick={handlePrint}
             >
               <Printer size={17} />
-              Print
+              Print / Save PDF
             </button>
 
           </div>
@@ -347,7 +357,7 @@ function BookingConfirmation({
           <div className="booking-meta-item">
 
             <span>
-              Confirmation date
+              Receipt date
             </span>
 
             <strong>
@@ -397,6 +407,15 @@ function BookingConfirmation({
         {/* =========================================
             TRIP SUMMARY
         ========================================= */}
+
+        <section className="receipt-overview" aria-label="Receipt overview">
+          <div><span>Total trip price · USD</span><strong>{money(tripTotal)}</strong></div>
+          <div><span>Included in your booking</span><p>{[
+            (outbound || returnFlight) && "Flights", room && "Hotel",
+            (car || carTotal > 0) && "Car rental",
+            (activities.length > 0 || activitiesTotal > 0) && "Activities", pkg && "Package",
+          ].filter(Boolean).join(" · ") || "Trip reservation"}</p></div>
+        </section>
 
         <section className="trip-summary-card">
 
@@ -940,11 +959,11 @@ function BookingConfirmation({
               <div className="service-content">
 
                 <strong>
-                  {car.name}
+                  {car.name || "Selected rental car"}
                 </strong>
 
                 <span>
-                  {car.type}
+                  {[car.type, car.transmission].filter(Boolean).join(" · ")}
                   {car.seats
                     ? ` · ${car.seats} seats`
                     : ""}
@@ -963,6 +982,13 @@ function BookingConfirmation({
 
               </div>
 
+              <div className="rental-receipt-price">
+                <span>Rental total</span>
+                <strong>{money(carTotal)}</strong>
+                {car.pricePerDay != null && days > 0 && (
+                  <small>{money(car.pricePerDay)} × {days} {days === 1 ? "day" : "days"}</small>
+                )}
+              </div>
             </div>
 
           </section>
@@ -1217,7 +1243,7 @@ function BookingConfirmation({
                 </span>
 
                 <strong>
-                  ${flightTotal.toFixed(2)}
+                  {money(flightTotal)}
                 </strong>
 
               </div>
@@ -1234,7 +1260,7 @@ function BookingConfirmation({
                 </span>
 
                 <strong>
-                  ${hotelTotal.toFixed(2)}
+                  {money(hotelTotal)}
                 </strong>
 
               </div>
@@ -1242,7 +1268,7 @@ function BookingConfirmation({
             )}
 
 
-            {car && carTotal > 0 && (
+            {(car || carTotal > 0) && (
 
               <div className="price-row">
 
@@ -1251,7 +1277,7 @@ function BookingConfirmation({
                 </span>
 
                 <strong>
-                  ${carTotal.toFixed(2)}
+                  {money(carTotal)}
                 </strong>
 
               </div>
@@ -1269,7 +1295,7 @@ function BookingConfirmation({
                   </span>
 
                   <strong>
-                    ${activitiesTotal.toFixed(2)}
+                    {money(activitiesTotal)}
                   </strong>
 
                 </div>
@@ -1286,7 +1312,7 @@ function BookingConfirmation({
                 </span>
 
                 <strong>
-                  ${packageTotal.toFixed(2)}
+                  {money(packageTotal)}
                 </strong>
 
               </div>
@@ -1311,7 +1337,7 @@ function BookingConfirmation({
             </div>
 
             <strong>
-              ${tripTotal.toFixed(2)}
+              {money(tripTotal)}
             </strong>
 
           </div>

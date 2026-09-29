@@ -125,8 +125,8 @@ function BookingConfirmationPage({
           serverBooking.selectedCar
             ? cars.find(
                 (item) =>
-                  item.id ===
-                  serverBooking.selectedCar
+                  String(item.id) ===
+                  String(serverBooking.selectedCar)
               )
             : null;
 

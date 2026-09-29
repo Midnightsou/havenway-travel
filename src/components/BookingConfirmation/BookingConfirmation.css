@@ -1448,50 +1448,87 @@
    PRINT
 ===================================================== */
 
+.booking-confirmation .receipt-overview {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+  margin: 28px 44px 0;
+  padding: 24px;
+  border-radius: 12px;
+  background: #172f4d;
+  color: #fff;
+}
+.receipt-overview span, .rental-receipt-price span {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.receipt-overview strong { font-size: 30px; font-variant-numeric: tabular-nums; }
+.receipt-overview p { margin: 0; line-height: 1.7; font-size: 14px; }
+.booking-confirmation .service-content { flex: 1; }
+.rental-receipt-price { text-align: right; flex-shrink: 0; }
+.rental-receipt-price strong { display: block; font-size: 20px; color: #172f4d; }
+.rental-receipt-price small { display: block; margin-top: 6px; color: #52667a; }
+.booking-confirmation .price-row strong { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.booking-confirmation .booking-meta-item strong,
+.booking-confirmation .traveler-contact { overflow-wrap: anywhere; }
+
+@media screen and (max-width: 760px) {
+  .booking-confirmation .receipt-overview { margin: 22px 16px 0; grid-template-columns: 1fr; gap: 16px; }
+  .booking-confirmation .additional-service-card { flex-wrap: wrap; }
+  .rental-receipt-price { width: 100%; text-align: left; border-top: 1px solid #dfe6ed; padding-top: 14px; }
+}
+
+@page { size: auto; margin: 12mm; }
 @media print {
-
-  .booking-confirmation {
-    padding: 0;
-    background: #ffffff;
+  body:has(.booking-confirmation) { margin: 0; background: white; }
+  .booking-confirmation { padding: 0; min-height: 0; background: white; color: #172033; }
+  .booking-confirmation .confirmation-container {
+    width: 100%; overflow: visible; border: 0; border-radius: 0; box-shadow: none;
   }
-
-
-  .confirmation-container {
-    width: 100%;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
+  .booking-confirmation .hero-actions,
+  .booking-confirmation .confirmation-bottom-actions,
+  .booking-confirmation .hotel-image-wrapper,
+  .booking-confirmation .hotel-image-placeholder { display: none !important; }
+  .booking-confirmation .confirmation-topbar { padding: 0 0 14px; }
+  .booking-confirmation .confirmation-document { display: block; }
+  .booking-confirmation .confirmation-hero { flex-direction: row; padding: 18px 0; gap: 16px; }
+  .booking-confirmation .success-icon { width: 44px; height: 44px; }
+  .booking-confirmation .success-icon svg { width: 30px; height: 30px; }
+  .booking-confirmation .success-content h1 { font-size: 22px; }
+  .booking-confirmation .booking-meta { grid-template-columns: repeat(4, 1fr); }
+  .booking-confirmation .booking-meta-item { padding: 12px; border: 1px solid #dfe6ed; }
+  .booking-confirmation .receipt-overview {
+    margin: 16px 0 0; padding: 16px; background: white; color: #172f4d; border: 1px solid #aebdcb;
   }
-
-
-  .print-button,
-  .confirmation-bottom-actions {
-    display: none !important;
-  }
-
-
-  .confirmation-hero {
-    padding: 30px;
-  }
-
-
-  .confirmation-section {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-
-
-  .trip-summary-card,
-  .payment-section,
-  .important-information {
-    margin-left: 30px;
-    margin-right: 30px;
-  }
-
-
-  .confirmation-footer {
-    margin-left: 30px;
-    margin-right: 30px;
-  }
-
+  .booking-confirmation .receipt-overview strong { font-size: 24px; }
+  .booking-confirmation .trip-summary-card,
+  .booking-confirmation .payment-section,
+  .booking-confirmation .important-information { margin: 16px 0 0; padding: 16px; }
+  .booking-confirmation .trip-summary-details { grid-template-columns: repeat(3, 1fr); }
+  .booking-confirmation .confirmation-section { padding: 18px 0 0; }
+  .booking-confirmation .section-heading { margin-bottom: 10px; break-after: avoid; }
+  .booking-confirmation .section-heading h2 { font-size: 17px; }
+  .booking-confirmation .hotel-confirmation-card { display: block; min-height: 0; }
+  .booking-confirmation .hotel-confirmation-info { padding: 16px; }
+  .booking-confirmation .hotel-details-row { flex-direction: row; margin-top: 12px; }
+  .booking-confirmation .flight-card { padding: 14px; }
+  .booking-confirmation .flight-route-footer { flex-direction: row; }
+  .booking-confirmation .traveler-count { width: auto; padding-left: 0; }
+  .booking-confirmation .payment-header { flex-direction: row; }
+  .booking-confirmation .confirmation-footer { margin: 18px 0 0; padding-top: 14px; }
+  .booking-confirmation .booking-meta,
+  .booking-confirmation .receipt-overview,
+  .booking-confirmation .trip-summary-card,
+  .booking-confirmation .traveler-card,
+  .booking-confirmation .flight-card,
+  .booking-confirmation .hotel-confirmation-card,
+  .booking-confirmation .additional-service-card,
+  .booking-confirmation .activity-item,
+  .booking-confirmation .itinerary-item,
+  .booking-confirmation .payment-section,
+  .booking-confirmation .important-information,
+  .booking-confirmation .confirmation-footer { break-inside: avoid; }
+  .booking-confirmation .activity-list,
+  .booking-confirmation .itinerary-list { overflow: visible; }
 }

@@ -889,7 +889,7 @@ function AppRoutes() {
 
     const car = selectedCar
       ? cars.find(
-          (item) => item.id === selectedCar
+          (item) => String(item.id) === String(selectedCar)
         )
       : null;
 
