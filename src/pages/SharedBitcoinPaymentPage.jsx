@@ -3,8 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import BitcoinPayment from "../components/BitcoinPayment/BitcoinPayment";
 
-const API_BASE_URL =
-  "https://api.havenway-travels.cv";
+import { API_BASE_URL } from "../utils/api";
 
 function SharedBitcoinPaymentPage() {
 

@@ -15,12 +15,11 @@ import {
 import "./BitcoinPayment.css";
 
 
-const API_BASE_URL =
-  "https://api.havenway-travels.cv";
+import { API_BASE_URL } from "../../utils/api";
 
 const PAYMENT_WINDOW = 20 * 60;
 const POLL_INTERVAL = 15000;
-const DEV_PAYMENT_SIMULATOR = false;
+const DEV_PAYMENT_SIMULATOR = true;
 
 
 function BitcoinPayment({

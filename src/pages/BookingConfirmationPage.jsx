@@ -12,8 +12,7 @@ import activities from "../data/activities";
 
 import { generateItinerary } from "../data/itinerary";
 
-const API_BASE_URL =
-  "https://api.havenway-travels.cv";
+import { API_BASE_URL } from "../utils/api";
 
 
 function BookingConfirmationPage({

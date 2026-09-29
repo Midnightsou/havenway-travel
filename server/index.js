@@ -7,6 +7,7 @@ dns.setDefaultResultOrder("ipv4first");
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const { getBitcoinPrice } = require("./bitcoinPrice");
 
 require("dotenv").config();
 
@@ -345,6 +346,7 @@ app.use(
 
 // Create a Bitcoin payment session
 app.post("/api/create-payment", async (req, res) => {
+  let stage = "validation";
   try {
     const {
       name,
@@ -384,33 +386,19 @@ app.post("/api/create-payment", async (req, res) => {
       });
     }
 
+    stage = "configuration";
+    if (!BTC_RECEIVING_ADDRESS?.trim()) {
+      throw new Error("BTC_RECEIVING_ADDRESS is not configured");
+    }
+
     /*
       Get the current Bitcoin price.
       This happens on the backend so the
       frontend cannot manipulate the BTC amount.
     */
 
-    const priceResponse = await axios.get(
-      "https://api.coingecko.com/api/v3/simple/price",
-      {
-        params: {
-          ids: "bitcoin",
-          vs_currencies: "usd",
-        },
-        timeout: 30000,
-
-        family: 4,
-      }
-    );
-
-    const btcPrice =
-      priceResponse.data?.bitcoin?.usd;
-
-    if (!btcPrice) {
-      throw new Error(
-        "Bitcoin price unavailable"
-      );
-    }
+    stage = "price_lookup";
+    const btcPrice = await getBitcoinPrice();
 
     const expectedBtc =
       totalUsd / btcPrice;
@@ -425,6 +413,10 @@ app.post("/api/create-payment", async (req, res) => {
         expectedBtc * 100000000
       ) / 100000000;
 
+    if (!Number.isFinite(roundedBtc) || roundedBtc <= 0) {
+      throw new Error("Calculated Bitcoin amount is invalid");
+    }
+
     const paymentStartedAt =
       new Date().toISOString();
 
@@ -435,6 +427,7 @@ app.post("/api/create-payment", async (req, res) => {
       Create booking record in Supabase.
     */
 
+    stage = "booking_insert";
     const { data, error } = await supabase
       .from("bookings")
       .insert({
@@ -513,13 +506,34 @@ app.post("/api/create-payment", async (req, res) => {
 
     console.error(
       "Create payment failed:",
-      error.message
+      {
+        stage,
+        code: error.code,
+        message: error.message,
+        upstreamStatus: error.response?.status,
+      }
     );
 
-    return res.status(500).json({
+    const failures = {
+      configuration: {
+        code: "PAYMENT_NOT_CONFIGURED",
+        message: "Bitcoin payments are not configured. Please contact support.",
+      },
+      price_lookup: {
+        code: "BTC_PRICE_UNAVAILABLE",
+        message: "Unable to retrieve the Bitcoin exchange rate. Please try again shortly.",
+      },
+      booking_insert: {
+        code: "BOOKING_SAVE_FAILED",
+        message: "Unable to save your payment booking. Please contact support.",
+      },
+    };
+    const failure = failures[stage];
+
+    return res.status(stage === "price_lookup" ? 503 : 500).json({
       success: false,
-      error:
-        "Failed to create payment session",
+      code: failure?.code || "PAYMENT_CREATION_FAILED",
+      error: failure?.message || "Failed to create payment session",
     });
   }
 });

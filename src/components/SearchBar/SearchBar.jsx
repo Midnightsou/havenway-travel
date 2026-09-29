@@ -189,10 +189,6 @@ function SearchBar({
    * Select a date.
    */
   const handleDateSelect = (date) => {
-    if (date < today) {
-      return;
-    }
-
     /*
      * First selection:
      * choose departure/check-in.
@@ -245,16 +241,6 @@ function SearchBar({
       currentMonth.getMonth() - 1,
       1
     );
-
-    const minimumMonth = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1
-    );
-
-    if (previousMonth < minimumMonth) {
-      return;
-    }
 
     setCurrentMonth(previousMonth);
   };
@@ -493,9 +479,6 @@ function SearchBar({
                   {calendarDays.map(
                     (date) => {
 
-                      const isPast =
-                        date < today;
-
                       const isStart =
                         sameDate(
                           date,
@@ -527,14 +510,12 @@ function SearchBar({
                         <button
                           type="button"
                           key={date.toISOString()}
-                          disabled={isPast}
                           onClick={() =>
                             handleDateSelect(
                               date
                             )
                           }
                           onMouseEnter={() =>
-                            !isPast &&
                             selectingReturn &&
                             setHoverDate(
                               date
@@ -547,9 +528,6 @@ function SearchBar({
                             "calendar-day",
                             isOutsideMonth
                               ? "outside-month"
-                              : "",
-                            isPast
-                              ? "past-date"
                               : "",
                             isToday
                               ? "today"

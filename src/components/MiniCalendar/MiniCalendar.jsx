@@ -78,7 +78,7 @@ function MiniCalendar({
 
   const minimumDate = minDate
     ? startOfDay(new Date(minDate))
-    : today;
+    : null;
 
   const initialStartDate = value?.startDate
     ? startOfDay(new Date(value.startDate))
@@ -170,13 +170,13 @@ function MiniCalendar({
       1
     );
 
-    const minimumMonth = new Date(
+    const minimumMonth = minimumDate && new Date(
       minimumDate.getFullYear(),
       minimumDate.getMonth(),
       1
     );
 
-    if (previousMonth < minimumMonth) {
+    if (minimumMonth && previousMonth < minimumMonth) {
       return;
     }
 
@@ -195,7 +195,7 @@ function MiniCalendar({
 
   const handleDateClick = (date) => {
     // Don't allow dates before the minimum allowed date.
-    if (isDateBefore(date, minimumDate)) {
+    if (minimumDate && isDateBefore(date, minimumDate)) {
       return;
     }
 
@@ -353,7 +353,7 @@ function MiniCalendar({
       <div className="mini-calendar-grid">
         {calendarDays.map(
           ({ date, currentMonth: isCurrentMonth }) => {
-            const disabled = isDateBefore(
+            const disabled = minimumDate && isDateBefore(
               date,
               minimumDate
             );

@@ -1,5 +1,17 @@
 # React + Vite
 
+## Local development
+
+Run `node index.js` from `server/` and `npm run dev` from the project root
+in separate terminals. The Vite development server proxies `/api` requests
+to `http://127.0.0.1:5000`, so backend errors appear in the local server terminal.
+Restart Vite after changing its configuration.
+
+Production builds default to `https://api.havenway-travels.cv`.
+To use a different backend, set `VITE_API_BASE_URL` in `.env.local` and restart
+Vite (or rebuild for production). This URL is public configuration; never put
+server credentials in a `VITE_` variable.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

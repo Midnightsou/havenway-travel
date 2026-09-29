@@ -46,8 +46,7 @@ import "./styles/global.css";
 import "./styles/responsive.css";
 
 
-const API_BASE_URL =
-  "https://api.havenway-travels.cv";
+import { API_BASE_URL } from "./utils/api";
 
 
 const PAYMENT_SESSION_VERSION = 1;
@@ -804,12 +803,12 @@ function AppRoutes() {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
-      if (!response.ok || !data.success) {
+      if (!response.ok || !data?.success) {
         throw new Error(
-          data.error ||
-            "Failed to create payment session"
+          data?.error ||
+            `The payment service returned an invalid response (HTTP ${response.status}). Please try again later.`
         );
       }
 
@@ -854,7 +853,9 @@ function AppRoutes() {
       setPaymentSession(null);
 
       alert(
-        "Unable to start Bitcoin payment. Please try again."
+        error instanceof TypeError
+          ? "Cannot connect to the Bitcoin payment service. Please check your connection and try again. If this continues, contact support."
+          : error.message || "Unable to start Bitcoin payment. Please try again."
       );
 
       return false;
