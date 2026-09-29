@@ -319,6 +319,8 @@ function BookingConfirmationPage({
 
           car,
 
+          carRentalDetails: serverBooking.carRentalDetails ?? null,
+
           activities:
             activityObjects,
 

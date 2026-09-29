@@ -19,6 +19,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+import CarRentalVoucher from "./CarRentalVoucher";
+
 import cars from "../../data/cars";
 
 import { formatDate as formatShortDate } from "../../utils/dates";
@@ -926,7 +928,7 @@ function BookingConfirmation({
 
         {car && (
 
-          <section className="confirmation-section">
+          <section className="confirmation-section rental-confirmation-section">
 
             <div className="section-heading">
 
@@ -991,6 +993,12 @@ function BookingConfirmation({
               </div>
             </div>
 
+            <CarRentalVoucher
+              booking={booking}
+              car={car}
+              total={carTotal}
+              travelerName={travelerFullName}
+            />
           </section>
 
         )}

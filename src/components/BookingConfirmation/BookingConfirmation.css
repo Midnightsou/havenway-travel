@@ -1532,3 +1532,49 @@
   .booking-confirmation .activity-list,
   .booking-confirmation .itinerary-list { overflow: visible; }
 }
+
+/* Supplier details are shared by the receipt and standalone rental printout. */
+.booking-confirmation .rental-voucher {
+  margin-top: 18px;
+  padding: 24px;
+  border: 1px solid #dfe6ed;
+  border-top: 3px solid #172f4d;
+  border-radius: 12px;
+  color: #26394f;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+.rental-voucher-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.rental-voucher-brand { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #52667a; }
+.rental-voucher-header h3 { display: flex; align-items: center; gap: 8px; margin: 10px 0 6px; font-size: 20px; }
+.rental-voucher-header p { margin: 0; font-size: 12px; color: #52667a; }
+.rental-voucher-booking, .rental-voucher-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+.rental-voucher-booking { margin-top: 20px; padding: 18px; background: #f4f7fb; border-radius: 8px; }
+.rental-voucher-booking span, .rental-voucher dt { display: block; margin-bottom: 6px; font-size: 11px; color: #52667a; }
+.rental-voucher-booking strong, .rental-voucher dd { font-size: 13px; line-height: 1.6; }
+.rental-voucher-grid { margin: 22px 0; }
+.rental-voucher dd { margin: 0; white-space: pre-line; }
+.rental-voucher-policies { border-top: 1px solid #dfe6ed; margin: 0; padding-top: 18px; }
+.rental-voucher-policies > div + div { margin-top: 16px; }
+.rental-voucher-policies dt { font-weight: 700; }
+.rental-voucher-note { margin: 20px 0 0; padding: 12px; border-left: 3px solid #aebdcb; background: #f8fafc; font-size: 11px; line-height: 1.7; color: #52667a; }
+@media screen and (max-width: 600px) {
+  .booking-confirmation .rental-voucher { padding: 18px; }
+  .rental-voucher-header { flex-direction: column; }
+  .rental-voucher-header .print-button { width: 100%; }
+  .rental-voucher-booking, .rental-voucher-grid { grid-template-columns: 1fr; }
+}
+@media print {
+  .rental-voucher .print-button { display: none !important; }
+  .booking-confirmation .rental-voucher { padding: 16px; border-radius: 0; }
+  .rental-voucher-header, .rental-voucher-booking,
+  .rental-voucher-grid > div, .rental-voucher-policies > div,
+  .rental-voucher-note { break-inside: avoid; }
+  .rental-voucher-header { break-after: avoid; }
+  .rental-voucher-grid { gap: 12px 20px; }
+  .rental-voucher-booking, .rental-voucher-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  body.printing-rental-voucher .confirmation-container > :not(.rental-confirmation-section),
+  body.printing-rental-voucher .rental-confirmation-section > :not(.rental-voucher) { display: none !important; }
+  body.printing-rental-voucher .rental-confirmation-section { padding: 0; }
+  body.printing-rental-voucher .rental-voucher { margin: 0; }
+}
