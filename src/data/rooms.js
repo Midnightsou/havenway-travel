@@ -378,7 +378,7 @@ const rooms = [
     name: "Two Queen Beds",
     beds: "2 Queen Beds",
     guests: "Sleeps 4",
-    pricePerNight: 155,
+    pricePerNight: 150,
 
     amenities: [
       "Free WiFi",

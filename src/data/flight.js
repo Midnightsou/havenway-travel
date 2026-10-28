@@ -4,7 +4,7 @@ const flights = {
 
     outbound: {
       type: "Nonstop",
-      price: 231,
+      price: 250,
 
       from: {
         time: "08:32",
@@ -31,7 +31,7 @@ const flights = {
 
     return: {
       type: "Nonstop",
-      price: 249,
+      price: 250,
 
       from: {
         time: "08:00",
