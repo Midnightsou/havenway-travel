@@ -37,7 +37,7 @@ export function calculateFlightTotal(
 export function calculateHotelTotal(roomId, nights = 0) {
   if (!roomId) return 0;
 
-  const room = rooms.find((item) => item.id === roomId);
+  const room = rooms.find((item) => String(item.id) === String(roomId));
   if (!room) return 0;
 
   return room.pricePerNight * nights;
@@ -55,8 +55,7 @@ export function calculateCarTotal(
 
   const car = cars.find(
     (item) =>
-      Number(item.id) ===
-      Number(carId)
+      String(item.id) === String(carId)
   );
 
   if (!car) return 0;
@@ -71,7 +70,7 @@ export function calculateCarTotal(
 export function calculateActivityTotal(activityId, travellers = 1) {
   if (!activityId) return 0;
 
-  const activity = activities.find((item) => item.id === activityId);
+  const activity = activities.find((item) => String(item.id) === String(activityId));
   if (!activity) return 0;
 
   return activity.pricePerPerson * travellers;
@@ -95,7 +94,7 @@ export function calculateActivitiesTotal(activityIds = [], travellers = 1) {
 export function calculatePackageTotal(packageId, travellers = 1, nights = 0) {
   if (!packageId) return 0;
 
-  const pkg = packages.find((item) => item.id === packageId);
+  const pkg = packages.find((item) => String(item.id) === String(packageId));
   if (!pkg) return 0;
 
   const hotelTotal = calculateHotelTotal(pkg.roomId, nights);
@@ -163,19 +162,19 @@ export function buildBooking(trip, traveler = null) {
   } = trip;
 
   const room = roomId
-    ? rooms.find((item) => item.id === roomId)
+    ? rooms.find((item) => String(item.id) === String(roomId))
     : null;
 
   const car = carId
-    ? cars.find((item) => Number(item.id) === Number(carId))
+    ? cars.find((item) => String(item.id) === String(carId))
     : null;
 
   const selectedActivities = activityIds
-    .map((id) => activities.find((item) => item.id === id))
+    .map((id) => activities.find((item) => String(item.id) === String(id)))
     .filter(Boolean);
 
   const pkg = packageId
-    ? packages.find((item) => item.id === packageId)
+    ? packages.find((item) => String(item.id) === String(packageId))
     : null;
 
   const flightPlan = flightId

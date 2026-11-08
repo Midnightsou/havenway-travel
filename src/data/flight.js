@@ -4,7 +4,8 @@ const flights = {
 
     outbound: {
       type: "Nonstop",
-      price: 250,
+      price: 325,
+      flexible: true,
 
       from: {
         time: "08:32",
@@ -26,12 +27,14 @@ const flights = {
       airline: "United Airlines",
       flightNumber: "United Airlines",
       cabin: "Economy",
+      flexible: true,
       baggage: "1 carry-on",
     },
 
     return: {
       type: "Nonstop",
-      price: 250,
+      price: 325,
+      flexible: true,
 
       from: {
         time: "08:00",
@@ -53,6 +56,7 @@ const flights = {
       airline: "United Airlines",
       flightNumber: "United Airlines",
       cabin: "Economy",
+      flexible: true,
       baggage: "1 carry-on",
     },
   },

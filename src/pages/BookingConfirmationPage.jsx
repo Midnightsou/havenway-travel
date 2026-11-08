@@ -13,6 +13,7 @@ import activities from "../data/activities";
 import { generateItinerary } from "../data/itinerary";
 
 import { API_BASE_URL } from "../utils/api";
+import { useCatalogRevision } from "../data/catalogStore";
 
 
 function BookingConfirmationPage({
@@ -34,6 +35,7 @@ function BookingConfirmationPage({
 
   const [error, setError] =
     useState("");
+  const catalogRevision = useCatalogRevision();
 
 
   useEffect(() => {
@@ -105,8 +107,7 @@ function BookingConfirmationPage({
           serverBooking.selectedHotel
             ? hotels.find(
                 (item) =>
-                  item.id ===
-                  serverBooking.selectedHotel
+                  String(item.id) === String(serverBooking.selectedHotel)
               )
             : null;
 
@@ -115,8 +116,7 @@ function BookingConfirmationPage({
           serverBooking.selectedRoom
             ? rooms.find(
                 (item) =>
-                  item.id ===
-                  serverBooking.selectedRoom
+                  String(item.id) === String(serverBooking.selectedRoom)
               )
             : null;
 
@@ -148,7 +148,7 @@ function BookingConfirmationPage({
             .map((activityId) =>
               activities.find(
                 (item) =>
-                  item.id === activityId
+                  String(item.id) === String(activityId)
               )
             )
             .filter(Boolean);
@@ -386,6 +386,7 @@ function BookingConfirmationPage({
   }, [
     bookingId,
     localBooking,
+    catalogRevision,
   ]);
 
 

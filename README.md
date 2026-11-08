@@ -7,6 +7,18 @@ in separate terminals. The Vite development server proxies `/api` requests
 to `http://127.0.0.1:5000`, so backend errors appear in the local server terminal.
 Restart Vite after changing its configuration.
 
+The admin dashboard is available at `/admin`. Its default password is
+`Admin123` (case-sensitive); set `ADMIN_TOKEN` in the server environment to
+change it. Copy the root `.env.example` to `server/.env` and set the Supabase
+credentials there; the server loads its environment from its working directory.
+Before using the catalog editor, run `server/schema.sql` in the Supabase SQL
+editor. This also creates the public `catalog-images` Storage bucket used for
+hotel and room photos. In the admin dashboard, choose **Import current
+listings** once to populate the editable hotel, room, flight, car, activity,
+and package catalog. After that, customer-facing pages load the saved catalog
+from the API. Hotel and room photos can be selected from a phone or computer;
+the first photo is the cover image, and each upload is limited to 7 MB.
+
 Production builds default to `https://api.havenway-travels.cv`.
 To use a different backend, set `VITE_API_BASE_URL` in `.env.local` and restart
 Vite (or rebuild for production). This URL is public configuration; never put

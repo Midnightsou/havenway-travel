@@ -31,13 +31,13 @@ function Activities({
     if (!onSelectActivities) return;
 
     const isSelected =
-      selectedActivities.includes(activityId);
+      selectedActivities.some((id) => String(id) === String(activityId));
 
     if (isSelected) {
 
       onSelectActivities(
         selectedActivities.filter(
-          (id) => id !== activityId
+          (id) => String(id) !== String(activityId)
         )
       );
 
@@ -95,8 +95,8 @@ function Activities({
               travellers;
 
             const isSelected =
-              selectedActivities.includes(
-                activity.id
+              selectedActivities.some(
+                (id) => String(id) === String(activity.id)
               );
 
             return (

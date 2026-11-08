@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useMemo,
   useState,
 } from "react";
 
@@ -30,6 +29,8 @@ import rooms from "../data/rooms";
 import flights from "../data/flight";
 import cars from "../data/cars";
 
+import Itinerary from "../components/Itinerary/Itinerary";
+
 import {
   formatShortDate,
 } from "../utils/dates";
@@ -43,10 +44,12 @@ import {
 import "./SharedTripPage.css";
 
 import { API_BASE_URL } from "../utils/api";
+import { useCatalogRevision } from "../data/catalogStore";
 
 function SharedTripPage({
   onContinueWithTrip,
 }) {
+  useCatalogRevision();
   const { token } = useParams();
 
   const navigate = useNavigate();
@@ -126,21 +129,20 @@ function SharedTripPage({
     };
   }, [token]);
 
-  const resolved = useMemo(() => {
+  const resolved = (() => {
     if (!trip) return null;
 
     const hotel = trip.selectedHotel
       ? hotels.find(
           (item) =>
-            item.id ===
-            trip.selectedHotel
+            String(item.id) === String(trip.selectedHotel)
         )
       : null;
 
     const room = trip.roomId
       ? rooms.find(
           (item) =>
-            item.id === trip.roomId
+            String(item.id) === String(trip.roomId)
         )
       : null;
 
@@ -167,9 +169,9 @@ function SharedTripPage({
       flight,
       car,
     };
-  }, [trip]);
+  })();
 
-  const totals = useMemo(() => {
+  const totals = (() => {
     if (!trip) {
       return {
         flightTotal: 0,
@@ -219,7 +221,7 @@ function SharedTripPage({
         hotelTotal +
         carTotal,
     };
-  }, [trip]);
+  })();
 
   const handleContinue = () => {
     if (!trip) return;
@@ -573,6 +575,7 @@ function SharedTripPage({
                       {
                         flight.outbound.cabin
                       }
+                      {flight.outbound.flexible ? " · Flexible" : ""}
                     </span>
 
                     <span>
@@ -661,6 +664,7 @@ function SharedTripPage({
                       {
                         flight.return.cabin
                       }
+                      {flight.return.flexible ? " · Flexible" : ""}
                     </span>
 
                     <span>
@@ -851,6 +855,14 @@ function SharedTripPage({
 
               </section>
             )}
+
+          {trip.startDate && trip.endDate && (
+            <Itinerary
+              startDate={trip.startDate}
+              endDate={trip.endDate}
+              selectedFlight={trip.flightId}
+            />
+          )}
 
           </div>
 

@@ -21,6 +21,9 @@ export function generateItinerary(
   const returning =
     selectedFlightPlan?.return;
 
+  const isFlexible =
+    Boolean(selectedFlightPlan?.flexible);
+
 
   const itineraryTemplates = {
 
@@ -62,6 +65,20 @@ export function generateItinerary(
           details:
             "5400 W Century Blvd, Los Angeles",
         },
+
+        ...(isFlexible
+          ? [
+              {
+                id: "flexible-ticket",
+                time: "Anytime",
+                type: "activity",
+                title: "Open/Flexible ticket",
+                description:
+                  "Your economy fare is open and flexible — changes are allowed up to departure.",
+                details: "Economy · Open/Flexible · United Airlines",
+              },
+            ]
+          : []),
       ],
     },
 

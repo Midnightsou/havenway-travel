@@ -22,6 +22,7 @@ import TermsOfServicePage from "./pages/TermsOfServicePage";
 import SharedPaymentPage from "./pages/SharedPaymentPage";
 import SharedBitcoinPaymentPage from "./pages/SharedBitcoinPaymentPage";
 import SharedTripPage from "./pages/SharedTripPage";
+import AdminPage from "./pages/Admin/AdminPage";
 
 import { getTripDuration } from "./utils/dates";
 
@@ -47,6 +48,11 @@ import "./styles/responsive.css";
 
 
 import { API_BASE_URL } from "./utils/api";
+import {
+  CATALOG_UPDATED_EVENT,
+  loadCatalog,
+  useCatalogRevision,
+} from "./data/catalogStore";
 
 
 const PAYMENT_SESSION_VERSION = 1;
@@ -113,6 +119,25 @@ function AppRoutes() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const catalogRevision = useCatalogRevision();
+
+  useEffect(() => {
+    const refreshCatalog = async () => {
+      try {
+        await loadCatalog();
+      } catch (error) {
+        console.error("Failed to load the current travel catalog:", error);
+      }
+    };
+
+    refreshCatalog();
+    window.addEventListener(CATALOG_UPDATED_EVENT, refreshCatalog);
+    window.addEventListener("focus", refreshCatalog);
+    return () => {
+      window.removeEventListener(CATALOG_UPDATED_EVENT, refreshCatalog);
+      window.removeEventListener("focus", refreshCatalog);
+    };
+  }, []);
 
   const handleLegalNavigate = (path) => {
     const allowedLegalRoutes = [
@@ -279,6 +304,16 @@ function AppRoutes() {
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    const hotelExists = hotels.some(
+      (hotel) => String(hotel.id) === String(selectedHotel)
+    );
+    if (!hotelExists) {
+      setSelectedHotel(hotels[0]?.id ?? null);
+      setSelectedRoom(null);
+    }
+  }, [catalogRevision, selectedHotel]);
+
 
   /*
    * If a selected room no longer belongs to the
@@ -293,10 +328,10 @@ function AppRoutes() {
     }
 
     const room = rooms.find(
-      (item) => item.id === selectedRoom
+      (item) => String(item.id) === String(selectedRoom)
     );
 
-    if (!room || room.hotelId !== selectedHotel) {
+    if (!room || String(room.hotelId) !== String(selectedHotel)) {
       setSelectedRoom(null);
     }
 
@@ -883,7 +918,7 @@ function AppRoutes() {
 
     const room = selectedRoom
       ? rooms.find(
-          (item) => item.id === selectedRoom
+          (item) => String(item.id) === String(selectedRoom)
         )
       : null;
 
@@ -895,7 +930,7 @@ function AppRoutes() {
 
     const hotel = selectedHotel
       ? hotels.find(
-          (item) => item.id === selectedHotel
+          (item) => String(item.id) === String(selectedHotel)
         )
       : null;
 
@@ -927,7 +962,7 @@ function AppRoutes() {
     const activitiesTotal =
       selectedActivities.reduce((total, activityId) => {
         const activity = activities.find(
-          (item) => item.id === activityId
+          (item) => String(item.id) === String(activityId)
         );
 
         if (!activity) return total;
@@ -1387,6 +1422,11 @@ function AppRoutes() {
             onReturnHome={handleReturnHome}
           />
         }
+      />
+
+      <Route
+        path="/admin"
+        element={<AdminPage />}
       />
 
       </Routes>

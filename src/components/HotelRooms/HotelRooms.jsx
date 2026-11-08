@@ -35,7 +35,7 @@ function HotelRooms({
   };
 
   const hotelRooms = rooms.filter(
-    (room) => room.hotelId === hotel?.id
+    (room) => String(room.hotelId) === String(hotel?.id)
   );
 
   return (
@@ -71,7 +71,7 @@ function HotelRooms({
             const total = calculateTotal(room);
 
             const isSelected =
-              selectedRoom === room.id;
+              String(selectedRoom) === String(room.id);
 
             return (
               <article
@@ -189,8 +189,8 @@ function HotelRooms({
 
           const room = hotelRooms.find(
             (item) =>
-              item.id === selectedRoom &&
-              item.hotelId === hotel?.id
+            String(item.id) === String(selectedRoom) &&
+            String(item.hotelId) === String(hotel?.id)
           );
 
           // The selected room may belong to a

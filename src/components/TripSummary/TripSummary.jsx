@@ -46,17 +46,17 @@ function TripSummary({
 }) {
 
   const room = rooms.find(
-    (item) => item.id === selectedRoom
+    (item) => String(item.id) === String(selectedRoom)
   );
 
   const hotel = selectedHotel
     ? hotels.find(
-        (item) => item.id === selectedHotel
+        (item) => String(item.id) === String(selectedHotel)
       )
     : null;
 
   const car = cars.find(
-    (item) => item.id === selectedCar
+    (item) => String(item.id) === String(selectedCar)
   );
 
   const rentalDays = days;
@@ -90,12 +90,12 @@ function TripSummary({
   const selectedActivityItems =
     selectedActivities
       .map((id) =>
-        activities.find((item) => item.id === id)
+        activities.find((item) => String(item.id) === String(id))
       )
       .filter(Boolean);
 
   const pkg = selectedPackage
-    ? packages.find((item) => item.id === selectedPackage)
+    ? packages.find((item) => String(item.id) === String(selectedPackage))
     : null;
 
 

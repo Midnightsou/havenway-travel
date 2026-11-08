@@ -81,23 +81,23 @@ function BookingModal({
     Boolean(paymentLink);
 
   const room = roomId
-    ? rooms.find((item) => item.id === roomId)
+    ? rooms.find((item) => String(item.id) === String(roomId))
     : null;
 
   const hotel = selectedHotel
-    ? hotels.find((item) => item.id === selectedHotel)
+    ? hotels.find((item) => String(item.id) === String(selectedHotel))
     : null;
 
   const car = carId
-    ? cars.find((item) => item.id === carId)
+    ? cars.find((item) => String(item.id) === String(carId))
     : null;
 
   const selectedActivities = activityIds
-    .map((id) => activities.find((item) => item.id === id))
+    .map((id) => activities.find((item) => String(item.id) === String(id)))
     .filter(Boolean);
 
   const pkg = packageId
-    ? packages.find((item) => item.id === packageId)
+    ? packages.find((item) => String(item.id) === String(packageId))
     : null;
 
   const rentalDays = days;
@@ -358,7 +358,11 @@ function BookingModal({
                   <div>
                     <span>{startDate ? formatShortDate(startDate) : ""} · Departure</span>
                     <strong>{flightPlan.outbound.from.airport} → {flightPlan.outbound.to.airport}</strong>
-                    <small>{flightPlan.outbound.from.time} – {flightPlan.outbound.to.time}</small>
+                    <small>
+                      {flightPlan.outbound.cabin}
+                      {flightPlan.outbound.flexible ? " · Flexible" : ""}
+                      · {flightPlan.outbound.from.time} – {flightPlan.outbound.to.time}
+                    </small>
                   </div>
                 </div>
 
@@ -366,7 +370,11 @@ function BookingModal({
                   <div>
                     <span>{endDate ? formatShortDate(endDate) : ""} · Return</span>
                     <strong>{flightPlan.return.from.airport} → {flightPlan.return.to.airport}</strong>
-                    <small>{flightPlan.return.from.time} – {flightPlan.return.to.time}</small>
+                    <small>
+                      {flightPlan.return.cabin}
+                      {flightPlan.return.flexible ? " · Flexible" : ""}
+                      · {flightPlan.return.from.time} – {flightPlan.return.to.time}
+                    </small>
                   </div>
                 </div>
               </section>

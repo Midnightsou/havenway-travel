@@ -88,6 +88,15 @@
   background: #f2f2f2;
 }
 
+.admin-button {
+  color: #2563eb;
+}
+
+.admin-button:hover {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
 .header-action {
   display: flex;
   align-items: center;

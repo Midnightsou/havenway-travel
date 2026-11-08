@@ -14,6 +14,7 @@ require("dotenv").config();
 const supabase = require("./supabase");
 
 const sharedTripsRouter = require("./routes/sharedTrips");
+const adminRouter = require("./routes/admin");
 
 const app = express();
 
@@ -22,6 +23,7 @@ const BTC_RECEIVING_ADDRESS =
   process.env.BTC_RECEIVING_ADDRESS;
 
 app.use(cors());
+app.use("/api/admin/images", express.json({ limit: "10mb" }));
 app.use(express.json());
 
 
@@ -343,6 +345,9 @@ app.use(
   "/api/shared-trips",
   sharedTripsRouter
 );
+
+// Admin API (requires Bearer token: ADMIN_TOKEN env or default "admin123")
+app.use("/api/admin", adminRouter);
 
 // Create a Bitcoin payment session
 app.post("/api/create-payment", async (req, res) => {

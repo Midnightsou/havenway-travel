@@ -3,6 +3,7 @@ import {
   Globe,
   ChevronDown,
   User,
+  Shield,
 } from "lucide-react";
 
 import "./Header.css";
@@ -103,6 +104,15 @@ function Header({
             <User size={21} />
           </button>
 
+          <button
+            className="icon-button admin-button"
+            aria-label="Admin"
+            onClick={() => {
+              window.location.href = "/admin";
+            }}
+          >
+            <Shield size={21} />
+          </button>
 
         </div>
 

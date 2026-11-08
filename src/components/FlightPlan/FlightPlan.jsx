@@ -205,6 +205,7 @@ function FlightCard({
 
             <span>
               {flight.cabin}
+              {flight.flexible ? " · Flexible" : ""}
             </span>
 
           </div>
@@ -397,6 +398,7 @@ function FlightPlan({
 
                   <span>
                     {plan.outbound.cabin}
+                    {plan.outbound.flexible ? " · Flexible" : ""}
                   </span>
 
                 </div>

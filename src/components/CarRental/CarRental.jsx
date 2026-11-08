@@ -70,7 +70,7 @@ function CarRental({
               car.pricePerDay * rentalDays;
 
             const isSelected =
-              selectedCar === car.id;
+              String(selectedCar) === String(car.id);
 
             return (
               <article
@@ -197,7 +197,7 @@ function CarRental({
 
           const car = cars.find(
             (item) =>
-              item.id === selectedCar
+              String(item.id) === String(selectedCar)
           );
 
           const total =

@@ -38,11 +38,15 @@ function TravelContent({
 }) {
 
   const activeHotel =
-    selectedHotel
+    (selectedHotel
       ? hotels?.find(
           (hotel) => hotel.id === selectedHotel
         )
-      : undefined;
+      : undefined) || hotels?.[0];
+
+  if (activeTab === "Stays" && !activeHotel) {
+    return <div className="container">No hotels are available right now.</div>;
+  }
 
   if (activeTab === "Stays") {
     return (

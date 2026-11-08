@@ -9,8 +9,10 @@ import cars from "../data/cars";
 import "./SharedPaymentPage.css";
 
 import { API_BASE_URL } from "../utils/api";
+import { useCatalogRevision } from "../data/catalogStore";
 
 function SharedPaymentPage() {
+  const catalogRevision = useCatalogRevision();
   const { bookingId } = useParams();
   const navigate = useNavigate();
 
@@ -40,7 +42,7 @@ function SharedPaymentPage() {
 
   useEffect(() => {
     loadBooking();
-  }, [bookingId]);
+  }, [bookingId, catalogRevision]);
 
   const loadBooking = async () => {
     try {
@@ -252,8 +254,7 @@ function SharedPaymentPage() {
     booking?.selectedHotel
       ? hotels.find(
           (item) =>
-            item.id ===
-            booking.selectedHotel
+            String(item.id) === String(booking.selectedHotel)
         )
       : null;
 
@@ -261,8 +262,7 @@ function SharedPaymentPage() {
     booking?.selectedRoom
       ? rooms.find(
           (item) =>
-            item.id ===
-            booking.selectedRoom
+            String(item.id) === String(booking.selectedRoom)
         )
       : null;
 
@@ -277,8 +277,7 @@ function SharedPaymentPage() {
     booking?.selectedCar
       ? cars.find(
           (item) =>
-            item.id ===
-            booking.selectedCar
+            String(item.id) === String(booking.selectedCar)
         )
       : null;
 
