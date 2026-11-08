@@ -83,6 +83,13 @@ function CarRental({
                 <div className="car-card-top">
 
                   <div>
+                    {car.images?.[0] && (
+                      <img
+                        className="car-card-image"
+                        src={car.images[0]}
+                        alt={car.name}
+                      />
+                    )}
                     <span className="car-type">
                       {car.type}
                     </span>

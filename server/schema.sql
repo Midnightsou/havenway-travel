@@ -54,9 +54,13 @@ CREATE TABLE IF NOT EXISTS admin_cars (
   bags INTEGER DEFAULT 0,
   transmission TEXT,
   features JSONB DEFAULT '[]',
+  images JSONB DEFAULT '[]',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE admin_cars
+  ADD COLUMN IF NOT EXISTS images JSONB DEFAULT '[]';
 
 -- Activities
 CREATE TABLE IF NOT EXISTS admin_activities (

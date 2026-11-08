@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { Car, Plus, Trash2, Save, Edit2 } from "lucide-react";
+import { Plus, Trash2, Save, Edit2 } from "lucide-react";
 import { API_BASE_URL } from "../../utils/api";
 import { notifyCatalogUpdated } from "../../data/catalogStore";
+import ImageGalleryField from "./ImageGalleryField";
 
 export default function AdminCars({ headers }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ type: "", name: "", price_per_day: "", seats: "", bags: "", transmission: "", features: [] });
+  const [form, setForm] = useState({ type: "", name: "", price_per_day: "", seats: "", bags: "", transmission: "", features: [], images: [] });
 
   const load = () => {
     fetch(`${API_BASE_URL}/api/admin/cars`, { headers })
@@ -15,7 +16,7 @@ export default function AdminCars({ headers }) {
   };
   useEffect(() => { load(); }, [headers]);
 
-  const handleCreate = () => { setEditing("new"); setForm({ type: "", name: "", price_per_day: "", seats: "", bags: "", transmission: "", features: [] }); };
+  const handleCreate = () => { setEditing("new"); setForm({ type: "", name: "", price_per_day: "", seats: "", bags: "", transmission: "", features: [], images: [] }); };
   const handleEdit = (item) => { setEditing(item.id); setForm({ ...item }); };
   const handleSave = async () => {
     const body = { ...form, features: Array.isArray(form.features) ? form.features : form.features.split(",").map(s=>s.trim()).filter(Boolean) };
@@ -68,6 +69,12 @@ export default function AdminCars({ headers }) {
               onChange={(e) => setForm({ ...form, features: e.target.value.split(",").map(s=>s.trim()).filter(Boolean) })}
             />
           </div>
+          <ImageGalleryField
+            label="Car photos"
+            images={form.images || []}
+            headers={headers}
+            onChange={(images) => setForm({ ...form, images })}
+          />
           <div className="admin-actions">
             <button className="admin-btn admin-btn-secondary" onClick={() => setEditing(null)}>Cancel</button>
             <button className="admin-btn admin-btn-primary" onClick={handleSave}><Save size={16} style={{ marginRight: 6 }} /> Save</button>

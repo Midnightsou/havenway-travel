@@ -34,6 +34,33 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.get("/api/keepalive", async (req, res) => {
+  const expectedToken = process.env.SUPABASE_KEEPALIVE_TOKEN;
+  const providedToken = req.get("authorization")?.replace(/^Bearer\s+/i, "");
+
+  if (!expectedToken) {
+    return res.status(503).json({
+      success: false,
+      error: "Supabase keep-alive is not configured",
+    });
+  }
+
+  const expected = Buffer.from(expectedToken);
+  const provided = Buffer.from(providedToken || "");
+  if (expected.length !== provided.length || !crypto.timingSafeEqual(expected, provided)) {
+    return res.status(401).json({ success: false, error: "Unauthorized" });
+  }
+
+  try {
+    const { error } = await supabase.from("bookings").select("id").limit(1);
+    if (error) throw error;
+    return res.json({ success: true });
+  } catch (error) {
+    console.error("Supabase keep-alive query failed:", error.message);
+    return res.status(503).json({ success: false, error: "Supabase check failed" });
+  }
+});
+
 
 // Temporary Supabase test endpoint
 app.get("/api/test-supabase", async (req, res) => {

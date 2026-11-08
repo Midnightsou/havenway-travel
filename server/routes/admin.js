@@ -184,6 +184,7 @@ router.get("/catalog", async (req, res) => {
         cars: carResult.data.map((car) => ({
           ...car,
           pricePerDay: car.price_per_day,
+          images: car.images || [],
         })),
         activities: activityResult.data.map((activity) => ({
           ...activity,
@@ -267,6 +268,7 @@ router.post("/seed", requireAdmin, async (req, res) => {
           bags: car.bags,
           transmission: car.transmission,
           features: car.features,
+          images: car.images || [],
         })),
         conflict: "id",
       },

@@ -62,6 +62,40 @@ const cars = [
       "Premium sound system",
     ],
   },
+
+  {
+    id: 5,
+    type: "Premium Sedan",
+    name: "BMW 3 Series or similar",
+    pricePerDay: 110,
+    seats: 5,
+    bags: 3,
+    transmission: "Automatic",
+    features: [
+      "Unlimited mileage",
+      "Free cancellation",
+      "Air conditioning",
+      "Leather interior",
+      "Premium sound system",
+    ],
+  },
+
+  {
+    id: 6,
+    type: "Minivan",
+    name: "Chrysler Pacifica or similar",
+    pricePerDay: 88,
+    seats: 7,
+    bags: 6,
+    transmission: "Automatic",
+    features: [
+      "Unlimited mileage",
+      "Free cancellation",
+      "Air conditioning",
+      "Sliding doors",
+      "Family-sized luggage space",
+    ],
+  },
 ];
 
 export default cars;
