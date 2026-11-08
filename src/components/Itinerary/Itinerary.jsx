@@ -10,6 +10,7 @@ import {
 import flights from "../../data/flight";
 
 import { generateItinerary } from "../../data/itinerary";
+import { adminItineraryTemplates, useCatalogRevision } from "../../data/catalogStore";
 
 import "./Itinerary.css";
 
@@ -86,7 +87,10 @@ function Itinerary({
   startDate,
   endDate,
   selectedFlight,
+  selectedHotel,
 }) {
+  useCatalogRevision();
+
 
   if (!startDate || !endDate) {
     return null;
@@ -105,7 +109,9 @@ function Itinerary({
     generateItinerary(
       startDate,
       endDate,
-      selectedFlightPlan
+      selectedFlightPlan,
+      adminItineraryTemplates,
+      selectedHotel,
     );
 
 

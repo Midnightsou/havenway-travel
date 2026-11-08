@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Wallet,
+  CalendarDays,
 } from "lucide-react";
 import "./Admin.css";
 const navItems = [
@@ -26,6 +27,7 @@ const navItems = [
   { key: "packages", label: "Packages", icon: Package },
   { key: "bookings", label: "Bookings", icon: CreditCard },
   { key: "payment-settings", label: "Payment Settings", icon: Wallet },
+  { key: "itinerary", label: "Itinerary", icon: CalendarDays },
 ];
 
 export default function AdminLayout({ active, setActive, children }) {

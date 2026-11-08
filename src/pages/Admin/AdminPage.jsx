@@ -10,6 +10,7 @@ import AdminActivities from "./AdminActivities";
 import AdminPackages from "./AdminPackages";
 import AdminBookings from "./AdminBookings";
 import AdminPaymentSettings from "./AdminPaymentSettings";
+import AdminItinerary from "./AdminItinerary";
 import { API_BASE_URL } from "../../utils/api";
 
 const sectionComponents = {
@@ -22,6 +23,7 @@ const sectionComponents = {
   packages: AdminPackages,
   bookings: AdminBookings,
   "payment-settings": AdminPaymentSettings,
+  itinerary: AdminItinerary,
 };
 
 export default function AdminPage() {

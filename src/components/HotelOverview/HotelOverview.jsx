@@ -19,6 +19,8 @@ import "./HotelOverview.css";
 function HotelOverview({ hotel }) {
 
   const activeHotel = hotel ?? hotelData[0];
+  const amenities = Array.isArray(activeHotel.amenities) ? activeHotel.amenities : [];
+  const highlights = Array.isArray(activeHotel.highlights) ? activeHotel.highlights : [];
 
   const amenityIcons = {
     "Outdoor pool": Waves,
@@ -44,7 +46,7 @@ function HotelOverview({ hotel }) {
           <h2>About this property</h2>
 
           <p>
-            {activeHotel.longDescription}
+            {activeHotel.longDescription || activeHotel.long_description || activeHotel.description || "Explore the property details and available rooms below."}
           </p>
 
         </div>
@@ -58,7 +60,7 @@ function HotelOverview({ hotel }) {
 
           <div className="amenities-grid">
 
-            {activeHotel.amenities.map((amenity) => {
+            {amenities.length ? amenities.map((amenity) => {
 
               const Icon = amenityIcons[amenity];
 
@@ -73,7 +75,7 @@ function HotelOverview({ hotel }) {
                 </div>
               );
 
-            })}
+            }) : <p className="hotel-content-empty">Amenity details have not been added yet.</p>}
 
           </div>
 
@@ -88,7 +90,7 @@ function HotelOverview({ hotel }) {
 
           <div className="highlights-list">
 
-            {activeHotel.highlights.map((highlight) => (
+            {highlights.length ? highlights.map((highlight) => (
               <div
                 className="overview-highlight"
                 key={highlight}
@@ -101,7 +103,7 @@ function HotelOverview({ hotel }) {
                 <span>{highlight}</span>
 
               </div>
-            ))}
+            )) : <p className="hotel-content-empty">Property highlights have not been added yet.</p>}
 
           </div>
 
@@ -128,7 +130,7 @@ function HotelOverview({ hotel }) {
                 </span>
 
                 <strong>
-                  From {activeHotel.checkIn}
+                  From {activeHotel.checkIn || activeHotel.check_in || "Contact property"}
                 </strong>
               </div>
 
@@ -147,7 +149,7 @@ function HotelOverview({ hotel }) {
                 </span>
 
                 <strong>
-                  Before {activeHotel.checkOut}
+                  Before {activeHotel.checkOut || activeHotel.check_out || "Contact property"}
                 </strong>
               </div>
 

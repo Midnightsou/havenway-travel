@@ -861,6 +861,7 @@ function SharedTripPage({
               startDate={trip.startDate}
               endDate={trip.endDate}
               selectedFlight={trip.flightId}
+              selectedHotel={resolved.hotel}
             />
           )}
 

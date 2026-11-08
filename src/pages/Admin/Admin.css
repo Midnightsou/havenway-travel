@@ -301,6 +301,160 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.admin-hotel-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-hotel-summary > div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  color: #2563eb;
+}
+
+.admin-hotel-summary strong {
+  color: #0f172a;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+.admin-hotel-summary span {
+  grid-column: 2;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.admin-hotel-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 520px;
+  box-sizing: border-box;
+  margin-bottom: 18px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #fff;
+  color: #64748b;
+}
+
+.admin-hotel-search input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #0f172a;
+  font: inherit;
+}
+
+.admin-hotel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: 16px;
+}
+
+.admin-hotel-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.admin-hotel-card-image {
+  position: relative;
+  display: flex;
+  height: 170px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #eff6ff;
+  color: #94a3b8;
+}
+
+.admin-hotel-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-hotel-card-image > span {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgb(15 23 42 / 78%);
+  color: #fff;
+  font-size: 12px;
+}
+
+.admin-hotel-card-content {
+  padding: 16px;
+}
+
+.admin-hotel-card-content h3 {
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.admin-hotel-card-content > p {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.admin-hotel-card-content > p svg {
+  flex: 0 0 auto;
+}
+
+.admin-hotel-card-meta,
+.admin-hotel-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-hotel-card-meta {
+  flex-wrap: wrap;
+  margin-top: 14px;
+  color: #475569;
+  font-size: 12px;
+}
+
+.admin-hotel-card-actions {
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.admin-hotel-card-actions .admin-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -444,6 +598,55 @@
 
 .admin-payment-settings > form {
   display: grid;
+}
+
+.admin-itinerary > form {
+  display: grid;
+  grid-column: 1 / -1;
+}
+
+.admin-itinerary-events {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-itinerary-event {
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.admin-itinerary-event legend {
+  padding: 0 6px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.admin-itinerary-event-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 14px;
+}
+
+.admin-itinerary-event-fields .admin-field {
+  min-width: 0;
+}
+
+.admin-itinerary-event-title,
+.admin-itinerary-event-description,
+.admin-itinerary-event-details,
+.admin-itinerary-remove {
+  grid-column: 1 / -1;
+}
+
+.admin-itinerary-remove {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .admin-payment-settings-note {
@@ -870,6 +1073,10 @@
     padding: 16px;
   }
 
+  .admin-itinerary-event-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .admin-form h2,
   .admin-form .admin-actions,
   .admin-form .admin-image-field {
@@ -907,6 +1114,25 @@
 
   .admin-stat-info h3 {
     font-size: 24px;
+  }
+
+  .admin-hotel-summary {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .admin-hotel-summary > div {
+    grid-template-columns: auto auto 1fr;
+    justify-content: start;
+    padding: 11px 13px;
+  }
+
+  .admin-hotel-summary span {
+    grid-column: auto;
+  }
+
+  .admin-hotel-card-image {
+    height: 150px;
   }
 }
 

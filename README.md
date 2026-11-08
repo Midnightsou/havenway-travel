@@ -19,6 +19,9 @@ listings** once to populate the editable hotel, room, flight, car, activity,
 and package catalog. After that, customer-facing pages load the saved catalog
 from the API. Hotel, room, and car photos can be selected from a phone or
 computer; the first photo is the cover image, and each upload is limited to 7 MB.
+Use the admin **Itinerary** section to add, edit, or remove events for arrival,
+explore, free, and departure days. Saved itinerary templates are stored in the
+existing `admin_settings` table and are published to customer trip pages.
 The same schema also creates the protected `admin_settings` table. Use the
 admin **Payment Settings** section to update the Bitcoin receiving address;
 new payment sessions and unpaid pending sessions use the saved address when

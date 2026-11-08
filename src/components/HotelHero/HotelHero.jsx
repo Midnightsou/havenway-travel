@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  ChevronLeft,
   Heart,
   Share2,
   MapPin,
@@ -9,7 +8,6 @@ import {
 
 import hotelData from "../../data/hotel";
 import HotelGallery from "../HotelGallery/HotelGallery";
-import hotelImages from "../../data/hotelImages";
 
 import "./HotelHero.css";
 
@@ -18,74 +16,47 @@ function HotelHero({ hotel }) {
   const [galleryOpen, setGalleryOpen] = useState(false);
 
   const activeHotel = hotel ?? hotelData[0];
+  const images = Array.isArray(activeHotel.images) && activeHotel.images.length
+    ? activeHotel.images
+    : ["/images/hotel/image 1.jpeg"];
+  const highlights = Array.isArray(activeHotel.highlights)
+    ? activeHotel.highlights.filter(Boolean).slice(0, 3)
+    : [];
 
   return (
     <>
       <section className="hotel-hero">
         <div className="container">
 
-          {/* Breadcrumb */}
-         
-
-
           {/* Image Gallery */}
-          <div className="hotel-gallery">
+          <div className={`hotel-gallery ${images.length === 1 ? "single-image" : ""}`}>
 
             <div className="gallery-main">
               <img
-                src={activeHotel.images[0]}
+                src={images[0]}
                 alt={activeHotel.name}
               />
 
               <button
-                className="see-more-photos-mobile"
+                className="see-more-photos"
                 onClick={() => setGalleryOpen(true)}
               >
-                See all  photos
+                See all {images.length} photos
               </button>
             </div>
 
-
-            <div className="gallery-side">
-
-              <div className="gallery-image">
-                <img
-                  src={activeHotel.images[1]}
-                  alt={`${activeHotel.name} exterior`}
-                />
+            {images.length > 1 && (
+              <div className="gallery-side">
+                {images.slice(1, 5).map((image, index) => (
+                  <div className="gallery-image" key={`${image}-${index}`}>
+                    <img
+                      src={image}
+                      alt={`${activeHotel.name} photo ${index + 2}`}
+                    />
+                  </div>
+                ))}
               </div>
-
-              <div className="gallery-image">
-                <img
-                  src={activeHotel.images[2]}
-                  alt={`${activeHotel.name} room`}
-                />
-              </div>
-
-              <div className="gallery-image">
-                <img
-                  src={activeHotel.images[3]}
-                  alt={`${activeHotel.name} amenities`}
-                />
-              </div>
-
-              <div className="gallery-image last-image">
-
-                <img
-                  src={activeHotel.images[4]}
-                  alt={`${activeHotel.name} hotel`}
-                />
-
-                <button
-                  className="see-more-photos"
-                  onClick={() => setGalleryOpen(true)}
-                >
-                  See all {hotelImages.length} photos
-                </button>
-
-              </div>
-
-            </div>
+            )}
 
 
             {/* Gallery actions */}
@@ -122,14 +93,14 @@ function HotelHero({ hotel }) {
               <div className="hotel-rating">
 
                 <div className="rating-score">
-                  {activeHotel.rating}
+                  {activeHotel.rating || "—"}
                 </div>
 
                 <div className="rating-details">
-                  <strong>{activeHotel.ratingLabel}</strong>
+                  <strong>{activeHotel.ratingLabel || activeHotel.rating_label || "Guest rating"}</strong>
 
                   <span>
-                    {activeHotel.reviewCount.toLocaleString()} reviews
+                    {Number(activeHotel.reviewCount ?? activeHotel.review_count ?? 0).toLocaleString()} reviews
                   </span>
                 </div>
 
@@ -145,24 +116,23 @@ function HotelHero({ hotel }) {
               </div>
 
 
-              <p className="hotel-description">
-                {activeHotel.description}
-              </p>
+              {activeHotel.description && (
+                <p className="hotel-description">
+                  {activeHotel.description}
+                </p>
+              )}
 
             </div>
 
 
             <div className="hotel-highlights">
 
-              <div className="highlight">
-                <Star size={20} />
-                <span>Comfortable stay</span>
-              </div>
-
-              <div className="highlight">
-                <Star size={20} />
-                <span>Near Los Angeles Airport</span>
-              </div>
+              {(highlights.length ? highlights : ["Comfortable stay"]).map((highlight) => (
+                <div className="highlight" key={highlight}>
+                  <Star size={20} />
+                  <span>{highlight}</span>
+                </div>
+              ))}
 
             </div>
 
@@ -175,6 +145,8 @@ function HotelHero({ hotel }) {
       <HotelGallery
         isOpen={galleryOpen}
         onClose={() => setGalleryOpen(false)}
+        images={images}
+        hotelName={activeHotel.name}
       />
 
     </>

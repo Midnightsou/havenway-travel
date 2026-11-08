@@ -1,16 +1,7 @@
-import {
-  BedDouble,
-  Users,
-  Check,
-  Wifi,
-} from "lucide-react";
-
+import { BedDouble, Users, Check, Wifi } from "lucide-react";
 import rooms from "../../data/rooms";
-
 import RoomGallery from "../RoomGallery/RoomGallery";
-
 import { formatShortDate } from "../../utils/dates";
-
 import "./HotelRooms.css";
 
 function HotelRooms({
@@ -21,222 +12,94 @@ function HotelRooms({
   endDate,
   nights = 0,
 }) {
-  const calculateTotal = (room) => {
-
-    // Never assume a room exists. A stale
-    // selectedRoom from another hotel could
-    // slip through, so return 0 instead of
-    // crashing.
-    if (!room) {
-      return 0;
-    }
-
-    return room.pricePerNight * nights;
-  };
-
   const hotelRooms = rooms.filter(
     (room) => String(room.hotelId) === String(hotel?.id)
   );
+  const selected = hotelRooms.find(
+    (room) => String(room.id) === String(selectedRoom)
+  );
+  const calculateTotal = (room) => room.pricePerNight * nights;
 
   return (
-    <section
-      className="hotel-rooms"
-      id="rooms"
-    >
+    <section className="hotel-rooms" id="rooms">
       <div className="container">
-
         <div className="rooms-heading">
-
           <div>
-            <span className="section-eyebrow">
-              Your stay
-            </span>
-
+            <span className="section-eyebrow">Your stay</span>
             <h2>Choose your room</h2>
-
             <p>
-              Check-in {startDate ? formatShortDate(startDate) : ""} ·
-              Check-out {endDate ? formatShortDate(endDate) : ""} ·
+              Check-in {startDate ? formatShortDate(startDate) : "—"} ·
+              Check-out {endDate ? formatShortDate(endDate) : "—"} ·
               {nights} nights
             </p>
           </div>
-
         </div>
 
+        {hotelRooms.length ? (
+          <div className="room-list">
+            {hotelRooms.map((room) => {
+              const total = calculateTotal(room);
+              const isSelected = String(selectedRoom) === String(room.id);
+              const amenities = Array.isArray(room.amenities) ? room.amenities : [];
 
-        <div className="room-list">
-
-          {hotelRooms.map((room) => {
-
-            const total = calculateTotal(room);
-
-            const isSelected =
-              String(selectedRoom) === String(room.id);
-
-            return (
-              <article
-                className={`room-card ${
-                  isSelected ? "selected" : ""
-                }`}
-                key={room.id}
-              >
-
-                <RoomGallery
-                  images={room.images}
-                  roomName={room.name}
-                />
-
-
-                <div className="room-content">
-
-                  <div className="room-info">
-
-                    <h3>{room.name}</h3>
-
-
-                    <div className="room-meta">
-
-                      <span>
-                        <BedDouble size={18} />
-
-                        {room.beds}
-                      </span>
-
-                      <span>
-                        <Users size={18} />
-
-                        {room.guests}
-                      </span>
-
-                    </div>
-
-
-                    <div className="room-benefits">
-
-                      {room.amenities.map(
-                        (amenity) => (
-                          <div
-                            className="room-benefit"
-                            key={amenity}
-                          >
-
-                            {amenity ===
-                            "Free WiFi" ? (
-                              <Wifi size={17} />
-                            ) : (
-                              <Check size={17} />
-                            )}
-
-                            <span>{amenity}</span>
-
-                          </div>
-                        )
+              return (
+                <article className={`room-card ${isSelected ? "selected" : ""}`} key={room.id}>
+                  <RoomGallery images={room.images} roomName={room.name} />
+                  <div className="room-content">
+                    <div className="room-info">
+                      <h3>{room.name}</h3>
+                      <div className="room-meta">
+                        <span><BedDouble size={18} />{room.beds || "Bed details unavailable"}</span>
+                        <span><Users size={18} />{room.guests || "Guest limit unavailable"}</span>
+                      </div>
+                      {amenities.length > 0 && (
+                        <div className="room-benefits">
+                          {amenities.map((amenity) => (
+                            <div className="room-benefit" key={amenity}>
+                              {amenity === "Free WiFi" ? <Wifi size={17} /> : <Check size={17} />}
+                              <span>{amenity}</span>
+                            </div>
+                          ))}
+                        </div>
                       )}
-
                     </div>
-
-                  </div>
-
-
-                  <div className="room-pricing">
-
-                    <div className="room-price">
-
-                      <span>
-                        ${room.pricePerNight} per night
-                      </span>
-
-                      <strong>
-                        ${total}
-                      </strong>
-
-                      <small>
-                        for {nights} nights
-                      </small>
-
+                    <div className="room-pricing">
+                      <div className="room-price">
+                        <span>${room.pricePerNight} per night</span>
+                        <strong>${total}</strong>
+                        <small>for {nights} nights</small>
+                      </div>
+                      <button
+                        className={`select-room-button ${isSelected ? "room-selected" : ""}`}
+                        onClick={() => onSelectRoom(isSelected ? null : room.id)}
+                      >
+                        {isSelected ? "Selected" : "Select"}
+                      </button>
                     </div>
-
-
-                    <button
-                      className={`select-room-button ${
-                        isSelected ? "room-selected" : ""
-                      }`}
-                      onClick={() =>
-                        onSelectRoom(
-                          isSelected
-                            ? null
-                            : room.id
-                        )
-                      }
-                    >
-                      {isSelected
-                        ? "Selected"
-                        : "Select"}
-                    </button>
-
                   </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="hotel-no-rooms">
+            <h3>No rooms listed yet</h3>
+            <p>Room options for this property will appear here once they are available.</p>
+          </div>
+        )}
 
-                </div>
-
-              </article>
-            );
-          })}
-
-        </div>
-
-
-        {selectedRoom && (() => {
-
-          const room = hotelRooms.find(
-            (item) =>
-            String(item.id) === String(selectedRoom) &&
-            String(item.hotelId) === String(hotel?.id)
-          );
-
-          // The selected room may belong to a
-          // different hotel. Never assume it
-          // exists here — if it doesn't, don't
-          // render a summary for it.
-          if (!room) {
-            return null;
-          }
-
-          const total =
-            calculateTotal(room);
-
-          return (
-            <div className="selected-room-summary">
-
-              <div>
-
-                <span>
-                  Selected room
-                </span>
-
-                <strong>
-                  {room.name}
-                </strong>
-
-              </div>
-
-
-              <div className="selected-room-price">
-
-                <span>
-                  Hotel total
-                </span>
-
-                <strong>
-                  ${total}
-                </strong>
-
-              </div>
-
+        {selected && (
+          <div className="selected-room-summary">
+            <div>
+              <span>Selected room</span>
+              <strong>{selected.name}</strong>
             </div>
-          );
-
-        })()}
-
+            <div className="selected-room-price">
+              <span>Hotel total</span>
+              <strong>${calculateTotal(selected)}</strong>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

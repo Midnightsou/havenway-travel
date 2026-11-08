@@ -13,7 +13,7 @@ import activities from "../data/activities";
 import { generateItinerary } from "../data/itinerary";
 
 import { API_BASE_URL } from "../utils/api";
-import { useCatalogRevision } from "../data/catalogStore";
+import { adminItineraryTemplates, useCatalogRevision } from "../data/catalogStore";
 
 
 function BookingConfirmationPage({
@@ -223,7 +223,9 @@ function BookingConfirmationPage({
           generateItinerary(
             serverBooking.startDate,
             serverBooking.endDate,
-            flight
+            flight,
+            adminItineraryTemplates,
+            hotel,
           );
 
 

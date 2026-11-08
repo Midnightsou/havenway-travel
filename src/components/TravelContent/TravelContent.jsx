@@ -68,6 +68,7 @@ function TravelContent({
           startDate={startDate}
           endDate={endDate}
           selectedFlight={selectedFlight}
+          selectedHotel={activeHotel}
         />
 
         <TripSummary

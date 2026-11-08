@@ -8,6 +8,7 @@ import packageCatalog from "./packages";
 import { API_BASE_URL } from "../utils/api";
 
 export const CATALOG_UPDATED_EVENT = "havenway:catalog-updated";
+export let adminItineraryTemplates = {};
 const starterCars = carCatalog.map((car) => ({
   ...car,
   features: [...(car.features || [])],
@@ -62,6 +63,13 @@ export function applyCatalog(catalog) {
     for (const key of Object.keys(flightCatalog)) delete flightCatalog[key];
     Object.assign(flightCatalog, catalog.flights);
   }
+  if (
+    catalog.itineraryTemplates &&
+    typeof catalog.itineraryTemplates === "object" &&
+    !Array.isArray(catalog.itineraryTemplates)
+  ) {
+    adminItineraryTemplates = catalog.itineraryTemplates;
+  }
 
   catalogRevision += 1;
   for (const listener of catalogListeners) listener();
@@ -83,7 +91,9 @@ export async function loadCatalog() {
     catalog?.activities,
     catalog?.packages,
   ].some((items) => Array.isArray(items) && items.length > 0) ||
-    Object.keys(catalog?.flights || {}).length > 0;
+    Object.keys(catalog?.flights || {}).length > 0 ||
+    (catalog?.itineraryTemplates &&
+      Object.keys(catalog.itineraryTemplates).length > 0);
   if (!hasSavedItems) return;
   applyCatalog(catalog);
 }

@@ -50,6 +50,7 @@ import "./styles/responsive.css";
 import { API_BASE_URL } from "./utils/api";
 import {
   CATALOG_UPDATED_EVENT,
+  adminItineraryTemplates,
   loadCatalog,
   useCatalogRevision,
 } from "./data/catalogStore";
@@ -986,7 +987,9 @@ function AppRoutes() {
       generateItinerary(
         startDate,
         endDate,
-        selectedFlightPlan
+        selectedFlightPlan,
+        adminItineraryTemplates,
+        hotels.find((hotel) => String(hotel.id) === String(selectedHotel)) || null,
       );
 
 

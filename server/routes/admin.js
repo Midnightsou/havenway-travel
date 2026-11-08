@@ -5,6 +5,9 @@ const { SETTING_KEY } = require("../bitcoinConfig");
 const { isValidBitcoinAddress } = require("../bitcoinAddress");
 
 const router = express.Router();
+const ITINERARY_TEMPLATES_KEY = "itinerary_templates";
+const ITINERARY_TEMPLATE_KEYS = ["arrival", "explore", "freeDay", "departure"];
+const ITINERARY_EVENT_TYPES = ["flight", "arrival", "hotel", "activity", "free"];
 
 function requireAdmin(req, res, next) {
   const auth = req.headers["authorization"];
@@ -27,6 +30,93 @@ function sendResult(res, result) {
 
 router.get("/verify", requireAdmin, (req, res) => {
   return res.json({ success: true });
+});
+
+router.get("/itinerary-templates", async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  try {
+    const { data, error } = await supabase
+      .from("admin_settings")
+      .select("value")
+      .eq("key", ITINERARY_TEMPLATES_KEY)
+      .maybeSingle();
+    if (error) throw error;
+
+    return res.json({
+      success: true,
+      templates: data?.value ? JSON.parse(data.value) : null,
+    });
+  } catch (error) {
+    console.error("Itinerary templates load failed:", error.message);
+    return res.status(500).json({ success: false, error: "Could not load itinerary templates." });
+  }
+});
+
+router.put("/itinerary-templates", requireAdmin, async (req, res) => {
+  const templates = req.body?.templates;
+  if (!templates || typeof templates !== "object" || Array.isArray(templates)) {
+    return res.status(400).json({ success: false, error: "Provide itinerary templates to save." });
+  }
+
+  const normalized = {};
+  for (const key of ITINERARY_TEMPLATE_KEYS) {
+    const template = templates[key];
+    if (!template || typeof template.title !== "string" || !Array.isArray(template.events)) {
+      return res.status(400).json({ success: false, error: `The ${key} itinerary template is invalid.` });
+    }
+    if (template.title.length > 200 || template.events.length > 100) {
+      return res.status(400).json({ success: false, error: `The ${key} template exceeds the allowed size.` });
+    }
+
+    const events = [];
+    for (const event of template.events) {
+      if (!event || typeof event !== "object" || Array.isArray(event)) {
+        return res.status(400).json({ success: false, error: `An event in the ${key} template is invalid.` });
+      }
+      if (
+        typeof event.type !== "string" ||
+        !ITINERARY_EVENT_TYPES.includes(event.type) ||
+        ["id", "time", "title", "description", "details"].some(
+          (field) => typeof event[field] !== "string"
+        ) ||
+        event.id.length > 100 ||
+        event.time.length > 50 ||
+        event.title.length > 200 ||
+        event.description.length > 2000 ||
+        event.details.length > 500
+      ) {
+        return res.status(400).json({ success: false, error: `An event in the ${key} template has invalid fields.` });
+      }
+      events.push({
+        id: event.id,
+        time: event.time,
+        type: event.type,
+        title: event.title,
+        description: event.description,
+        details: event.details,
+      });
+    }
+
+    normalized[key] = { title: template.title, events };
+  }
+
+  try {
+    const { error } = await supabase
+      .from("admin_settings")
+      .upsert({
+        key: ITINERARY_TEMPLATES_KEY,
+        value: JSON.stringify(normalized),
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "key" });
+    if (error) throw error;
+    return res.json({ success: true, templates: normalized });
+  } catch (error) {
+    console.error("Itinerary templates save failed:", error.message);
+    return res.status(500).json({
+      success: false,
+      error: "Could not save itinerary templates. Confirm the admin_settings table exists.",
+    });
+  }
 });
 
 router.get("/payment-settings/bitcoin-address", requireAdmin, async (req, res) => {
@@ -140,7 +230,7 @@ router.post("/images", requireAdmin, async (req, res) => {
 router.get("/catalog", async (req, res) => {
   res.set("Cache-Control", "no-store");
   try {
-    const [flightResult, hotelResult, roomResult, carResult, activityResult, packageResult] =
+    const [flightResult, hotelResult, roomResult, carResult, activityResult, packageResult, itineraryResult] =
       await Promise.all([
         supabase.from("admin_flights").select("plan_key, name, data").order("plan_key"),
         supabase.from("admin_hotels").select("*").order("name"),
@@ -148,10 +238,11 @@ router.get("/catalog", async (req, res) => {
         supabase.from("admin_cars").select("*").order("type"),
         supabase.from("admin_activities").select("*").order("name"),
         supabase.from("admin_packages").select("*").order("name"),
+        supabase.from("admin_settings").select("value").eq("key", ITINERARY_TEMPLATES_KEY).maybeSingle(),
       ]);
 
     const failedResult = [
-      flightResult, hotelResult, roomResult, carResult, activityResult, packageResult,
+      flightResult, hotelResult, roomResult, carResult, activityResult, packageResult, itineraryResult,
     ].find((result) => result.error);
     if (failedResult) {
       return res.status(500).json({ success: false, error: failedResult.error.message });
@@ -194,6 +285,9 @@ router.get("/catalog", async (req, res) => {
           ...pkg,
           roomId: pkg.room_id,
         })),
+        itineraryTemplates: itineraryResult.data?.value
+          ? JSON.parse(itineraryResult.data.value)
+          : {},
       },
     });
   } catch (error) {
@@ -333,6 +427,10 @@ router.post("/seed", requireAdmin, async (req, res) => {
         counts,
       });
     }
+
+    const imported = Object.fromEntries(
+      seedGroups.map((group) => [group.table, group.rows.length])
+    );
 
     return res.json({
       success: true,

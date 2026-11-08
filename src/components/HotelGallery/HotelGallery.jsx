@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { X, Images } from "lucide-react";
 
-import hotelImages from "../../data/hotelImages";
 import PhotoViewer from "../PhotoViewer/PhotoViewer";
 
 import "./HotelGallery.css";
@@ -10,6 +9,8 @@ import "./HotelGallery.css";
 function HotelGallery({
   isOpen,
   onClose,
+  images = [],
+  hotelName = "Hotel",
 }) {
 
   const [activeCategory, setActiveCategory] =
@@ -56,11 +57,17 @@ function HotelGallery({
 
   if (!isOpen) return null;
 
+  const galleryImages = images.map((image, index) => ({
+    id: `${hotelName}-${index}`,
+    image,
+    alt: `${hotelName} photo ${index + 1}`,
+    category: "Property",
+  }));
 
   const categories = [
     "All photos",
     ...new Set(
-      hotelImages.map(
+      galleryImages.map(
         (photo) => photo.category
       )
     ),
@@ -69,8 +76,8 @@ function HotelGallery({
 
   const filteredImages =
     activeCategory === "All photos"
-      ? hotelImages
-      : hotelImages.filter(
+      ? galleryImages
+      : galleryImages.filter(
           (photo) =>
             photo.category === activeCategory
         );
@@ -115,12 +122,12 @@ function HotelGallery({
 
               <h2>
                 {activeCategory === "All photos"
-                  ? `All ${hotelImages.length} photos`
+                  ? `${hotelName} · ${galleryImages.length} photos`
                   : activeCategory}
               </h2>
 
               <span>
-                Explore all available room photos
+                Explore photos of this property
               </span>
 
             </div>
@@ -204,6 +211,9 @@ function HotelGallery({
 
         </div>
 
+        {filteredImages.length === 0 && (
+          <p className="hotel-gallery-empty">No property photos have been added yet.</p>
+        )}
 
         {activeImageIndex !== null && (
 

@@ -247,3 +247,73 @@
 .selected-room-price strong {
   font-size: 26px;
 }
+
+.hotel-no-rooms {
+  padding: 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background: #f8fafc;
+  text-align: center;
+}
+
+.hotel-no-rooms h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.hotel-no-rooms p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .room-card {
+    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+  }
+
+  .room-content {
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .room-pricing {
+    min-width: 130px;
+  }
+}
+
+@media (max-width: 640px) {
+  .room-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .room-content {
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .room-pricing,
+  .room-price {
+    align-items: flex-start;
+  }
+
+  .room-pricing {
+    min-width: 0;
+    gap: 14px;
+  }
+
+  .select-room-button {
+    width: 100%;
+  }
+
+  .selected-room-summary {
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .selected-room-price {
+    align-items: flex-start;
+  }
+}
