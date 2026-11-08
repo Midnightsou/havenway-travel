@@ -221,6 +221,14 @@
   color: #991b1b;
 }
 
+.admin-catalog-message {
+  color: #166534;
+}
+
+.admin-catalog-error {
+  color: #991b1b;
+}
+
 .admin-catalog-counts {
   display: flex;
   flex-basis: 100%;
@@ -398,6 +406,42 @@
 .admin-form .admin-actions,
 .admin-form .admin-image-field {
   grid-column: 1 / -1;
+}
+
+.admin-payment-settings-title,
+.admin-payment-settings > form {
+  grid-column: 1 / -1;
+}
+
+.admin-payment-settings-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.admin-payment-settings-title h2 {
+  margin: 0 0 5px;
+}
+
+.admin-payment-settings-title p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.admin-payment-settings > form {
+  display: grid;
+}
+
+.admin-payment-settings-note {
+  padding: 12px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e40af;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .admin-form h2 {

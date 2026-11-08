@@ -23,6 +23,9 @@ function BitcoinPaymentPage({
   const [sharedBooking, setSharedBooking] =
     useState(null);
 
+  const [refreshedPaymentSession, setRefreshedPaymentSession] =
+    useState(null);
+
   const [loadingSharedBooking, setLoadingSharedBooking] =
     useState(false);
 
@@ -33,6 +36,34 @@ function BitcoinPaymentPage({
    * If it was reached through a shared payment
    * link, load the booking from the API.
    */
+
+  useEffect(() => {
+    if (!paymentSession?.bookingId) {
+      setRefreshedPaymentSession(null);
+      return;
+    }
+
+    let active = true;
+    fetch(`${API_BASE_URL}/api/payment-session/${paymentSession.bookingId}`)
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+          throw new Error(data.error || "Unable to refresh payment address");
+        }
+        if (active && data.paymentSession) {
+          setRefreshedPaymentSession(data.paymentSession);
+        }
+      })
+      .catch((error) => {
+        console.error("Bitcoin payment session refresh failed:", error);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [paymentSession?.bookingId]);
+
+  const currentPaymentSession = refreshedPaymentSession || paymentSession;
 
   useEffect(() => {
     if (
@@ -84,12 +115,12 @@ function BitcoinPaymentPage({
    * Normal checkout payment session.
    */
 
-  if (paymentSession?.bookingId) {
+  if (currentPaymentSession?.bookingId) {
     const sessionReady = Boolean(
-      paymentSession.bookingId &&
-      paymentSession.btcAddress &&
+      currentPaymentSession.bookingId &&
+      currentPaymentSession.btcAddress &&
       Number(
-        paymentSession.btcAmount
+        currentPaymentSession.btcAmount
       ) > 0
     );
 
@@ -151,21 +182,21 @@ function BitcoinPaymentPage({
     return (
       <BitcoinPayment
         booking={booking}
-        bookingId={paymentSession.bookingId}
+        bookingId={currentPaymentSession.bookingId}
         paymentToken={
-          paymentSession.paymentToken
+          currentPaymentSession.paymentToken
         }
         btcAddress={
-          paymentSession.btcAddress
+          currentPaymentSession.btcAddress
         }
         btcAmount={
-          paymentSession.btcAmount
+          currentPaymentSession.btcAmount
         }
         btcPrice={
-          paymentSession.btcPrice
+          currentPaymentSession.btcPrice
         }
         paymentStartedAt={
-          paymentSession.paymentStartedAt
+          currentPaymentSession.paymentStartedAt
         }
         onBack={onBack}
         onPaymentComplete={

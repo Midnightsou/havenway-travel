@@ -9,6 +9,7 @@ import AdminCars from "./AdminCars";
 import AdminActivities from "./AdminActivities";
 import AdminPackages from "./AdminPackages";
 import AdminBookings from "./AdminBookings";
+import AdminPaymentSettings from "./AdminPaymentSettings";
 import { API_BASE_URL } from "../../utils/api";
 
 const sectionComponents = {
@@ -20,6 +21,7 @@ const sectionComponents = {
   activities: AdminActivities,
   packages: AdminPackages,
   bookings: AdminBookings,
+  "payment-settings": AdminPaymentSettings,
 };
 
 export default function AdminPage() {

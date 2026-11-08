@@ -171,6 +171,16 @@ $$;
 REVOKE ALL ON FUNCTION sync_admin_catalog_sequences() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION sync_admin_catalog_sequences() TO service_role;
 
+CREATE TABLE IF NOT EXISTS admin_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE admin_settings ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE admin_settings FROM anon, authenticated;
+GRANT ALL ON TABLE admin_settings TO service_role;
+
 INSERT INTO storage.buckets (
   id,
   name,

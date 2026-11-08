@@ -1,6 +1,8 @@
 const express = require("express");
 const crypto = require("crypto");
 const supabase = require("../supabase");
+const { SETTING_KEY } = require("../bitcoinConfig");
+const { isValidBitcoinAddress } = require("../bitcoinAddress");
 
 const router = express.Router();
 
@@ -25,6 +27,55 @@ function sendResult(res, result) {
 
 router.get("/verify", requireAdmin, (req, res) => {
   return res.json({ success: true });
+});
+
+router.get("/payment-settings/bitcoin-address", requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("admin_settings")
+      .select("value")
+      .eq("key", SETTING_KEY)
+      .maybeSingle();
+    if (error) throw error;
+
+    const address = data?.value || process.env.BTC_RECEIVING_ADDRESS || "";
+    return res.json({
+      success: true,
+      address,
+      source: data?.value ? "admin" : address ? "environment" : "unset",
+    });
+  } catch (error) {
+    console.error("Bitcoin payment settings load failed:", error.message);
+    return res.status(500).json({ success: false, error: "Could not load payment settings." });
+  }
+});
+
+router.put("/payment-settings/bitcoin-address", requireAdmin, async (req, res) => {
+  const address = typeof req.body?.address === "string" ? req.body.address.trim() : "";
+  if (!isValidBitcoinAddress(address)) {
+    return res.status(400).json({
+      success: false,
+      error: "Enter a valid Bitcoin mainnet address.",
+    });
+  }
+
+  try {
+    const { error } = await supabase
+      .from("admin_settings")
+      .upsert({
+        key: SETTING_KEY,
+        value: address,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "key" });
+    if (error) throw error;
+    return res.json({ success: true, address });
+  } catch (error) {
+    console.error("Bitcoin payment settings save failed:", error.message);
+    return res.status(500).json({
+      success: false,
+      error: "Could not save the Bitcoin address. Confirm the admin_settings table exists.",
+    });
+  }
 });
 
 router.post("/images", requireAdmin, async (req, res) => {

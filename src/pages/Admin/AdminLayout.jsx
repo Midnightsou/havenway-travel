@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Menu,
   X,
+  Wallet,
 } from "lucide-react";
 import "./Admin.css";
 const navItems = [
@@ -24,6 +25,7 @@ const navItems = [
   { key: "activities", label: "Activities", icon: MapPin },
   { key: "packages", label: "Packages", icon: Package },
   { key: "bookings", label: "Bookings", icon: CreditCard },
+  { key: "payment-settings", label: "Payment Settings", icon: Wallet },
 ];
 
 export default function AdminLayout({ active, setActive, children }) {

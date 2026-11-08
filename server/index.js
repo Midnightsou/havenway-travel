@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const crypto = require("crypto");
 
 const dns = require("dns");
@@ -8,8 +10,7 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const { getBitcoinPrice } = require("./bitcoinPrice");
-
-require("dotenv").config();
+const { getBitcoinReceivingAddress } = require("./bitcoinConfig");
 
 const supabase = require("./supabase");
 
@@ -19,8 +20,6 @@ const adminRouter = require("./routes/admin");
 const app = express();
 
 const PORT = process.env.PORT || 5000;
-const BTC_RECEIVING_ADDRESS =
-  process.env.BTC_RECEIVING_ADDRESS;
 
 app.use(cors());
 app.use("/api/admin/images", express.json({ limit: "10mb" }));
@@ -134,12 +133,14 @@ app.get("/api/check-payment", async (req, res) => {
       });
     }
 
+    const btcAddress = booking.btc_address || await getBitcoinReceivingAddress();
+
     /*
      * Query blockchain.
      */
 
     const response = await axios.get(
-      `https://blockstream.info/api/address/${BTC_RECEIVING_ADDRESS}/txs`,
+      `https://blockstream.info/api/address/${encodeURIComponent(btcAddress)}/txs`,
       {
         timeout: 30000,
         family: 4,
@@ -161,7 +162,7 @@ app.get("/api/check-payment", async (req, res) => {
         transaction.vout?.find(
           (output) =>
             output.scriptpubkey_address ===
-            BTC_RECEIVING_ADDRESS
+            btcAddress
         );
 
       if (!outputToOurAddress) {
@@ -392,9 +393,7 @@ app.post("/api/create-payment", async (req, res) => {
     }
 
     stage = "configuration";
-    if (!BTC_RECEIVING_ADDRESS?.trim()) {
-      throw new Error("BTC_RECEIVING_ADDRESS is not configured");
-    }
+    const btcAddress = await getBitcoinReceivingAddress();
 
     /*
       Get the current Bitcoin price.
@@ -459,8 +458,7 @@ app.post("/api/create-payment", async (req, res) => {
         usd_total: totalUsd,
         expected_btc: roundedBtc,
 
-        btc_address:
-          BTC_RECEIVING_ADDRESS,
+        btc_address: btcAddress,
 
         payment_status: "pending",
         booking_status: "pending",
@@ -497,8 +495,7 @@ app.post("/api/create-payment", async (req, res) => {
 
       paymentToken,
 
-      btcAddress:
-        BTC_RECEIVING_ADDRESS,
+      btcAddress,
 
       expectedBtc: roundedBtc,
 
@@ -870,6 +867,21 @@ app.get("/api/payment-session/:bookingId", async (req, res) => {
       });
     }
 
+    let btcAddress = booking.btc_address;
+    if (booking.payment_status === "pending") {
+      btcAddress = await getBitcoinReceivingAddress();
+      if (btcAddress !== booking.btc_address) {
+        const { error: addressUpdateError } = await supabase
+          .from("bookings")
+          .update({
+            btc_address: btcAddress,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", bookingId);
+        if (addressUpdateError) throw addressUpdateError;
+      }
+    }
+
     if (!booking.payment_token) {
       return res.status(400).json({
         success: false,
@@ -877,7 +889,7 @@ app.get("/api/payment-session/:bookingId", async (req, res) => {
       });
     }
 
-    if (!booking.btc_address) {
+    if (!btcAddress) {
       return res.status(400).json({
         success: false,
         error: "Bitcoin address is missing",
@@ -903,8 +915,7 @@ app.get("/api/payment-session/:bookingId", async (req, res) => {
         paymentToken:
           booking.payment_token,
 
-        btcAddress:
-          booking.btc_address,
+        btcAddress,
 
         btcAmount:
           Number(booking.expected_btc),

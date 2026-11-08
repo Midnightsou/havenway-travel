@@ -18,6 +18,14 @@ listings** once to populate the editable hotel, room, flight, car, activity,
 and package catalog. After that, customer-facing pages load the saved catalog
 from the API. Hotel and room photos can be selected from a phone or computer;
 the first photo is the cover image, and each upload is limited to 7 MB.
+The same schema also creates the protected `admin_settings` table. Use the
+admin **Payment Settings** section to update the Bitcoin receiving address;
+new payment sessions and unpaid pending sessions use the saved address when
+their payment page is opened again. Payments already detected or confirmed
+keep their assigned address. The `BTC_RECEIVING_ADDRESS` server environment
+variable remains the fallback until an address is saved in admin.
+After deploying the frontend, deploy or restart the Express backend as well;
+the payment settings API route must be live before the admin can save changes.
 
 Production builds default to `https://api.havenway-travels.cv`.
 To use a different backend, set `VITE_API_BASE_URL` in `.env.local` and restart
