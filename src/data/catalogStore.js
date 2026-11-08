@@ -8,6 +8,11 @@ import packageCatalog from "./packages";
 import { API_BASE_URL } from "../utils/api";
 
 export const CATALOG_UPDATED_EVENT = "havenway:catalog-updated";
+const starterCars = carCatalog.map((car) => ({
+  ...car,
+  features: [...(car.features || [])],
+  images: [...(car.images || [])],
+}));
 let catalogRevision = 0;
 const catalogListeners = new Set();
 
@@ -32,6 +37,14 @@ function replaceArray(target, incoming) {
   target.splice(0, target.length, ...incoming);
 }
 
+function mergeCarsWithStarterCatalog(savedCars) {
+  const carsById = new Map(starterCars.map((car) => [String(car.id), car]));
+  for (const car of savedCars) {
+    carsById.set(String(car.id), car);
+  }
+  return [...carsById.values()];
+}
+
 export function applyCatalog(catalog) {
   if (!catalog || typeof catalog !== "object") {
     throw new Error("The catalog response is invalid.");
@@ -39,7 +52,9 @@ export function applyCatalog(catalog) {
 
   if (Array.isArray(catalog.hotels)) replaceArray(hotelCatalog, catalog.hotels);
   if (Array.isArray(catalog.rooms)) replaceArray(roomCatalog, catalog.rooms);
-  if (Array.isArray(catalog.cars)) replaceArray(carCatalog, catalog.cars);
+  if (Array.isArray(catalog.cars)) {
+    replaceArray(carCatalog, mergeCarsWithStarterCatalog(catalog.cars));
+  }
   if (Array.isArray(catalog.activities)) replaceArray(activityCatalog, catalog.activities);
   if (Array.isArray(catalog.packages)) replaceArray(packageCatalog, catalog.packages);
 
