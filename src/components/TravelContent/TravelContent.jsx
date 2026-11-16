@@ -93,6 +93,7 @@ function TravelContent({
   if (activeTab === "Flights") {
     return (
       <FlightPlan
+        hotel={activeHotel}
         travellers={travellers}
         startDate={startDate}
         endDate={endDate}
@@ -152,6 +153,7 @@ function TravelContent({
   if (activeTab === "Things to do") {
     return (
       <Activities
+        hotel={activeHotel}
         travellers={travellers}
         startDate={startDate}
         endDate={endDate}

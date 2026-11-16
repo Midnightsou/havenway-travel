@@ -1,7 +1,5 @@
 import {
   Menu,
-  Globe,
-  ChevronDown,
   User,
   Shield,
 } from "lucide-react";
@@ -23,6 +21,11 @@ function Header({
       label: "Stays",
       tab: "Stays",
       section: "rooms",
+    },
+    {
+      label: "Things to do",
+      tab: "Things to do",
+      section: null,
     },
     {
       label: "Itinerary",

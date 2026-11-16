@@ -104,6 +104,11 @@ function Itinerary({
       ? flights[selectedFlight]
       : null;
 
+  const routeLabel = selectedHotel?.airportCode === "CIC"
+    ? `Los Angeles International Airport (LAX) → Chico, California (${selectedHotel.airportCode})`
+    : selectedFlightPlan
+      ? `${selectedFlightPlan.outbound?.from?.city || "Origin"} → ${selectedFlightPlan.outbound?.to?.city || "Destination"}`
+      : selectedHotel?.location || "Your trip";
 
   const itinerary =
     generateItinerary(
@@ -151,7 +156,7 @@ function Itinerary({
             </h2>
 
             <p>
-              Los Angeles → Washington ·{" "}
+              {routeLabel} ·{" "}
               {formattedStart} –{" "}
               {formattedEnd}
             </p>

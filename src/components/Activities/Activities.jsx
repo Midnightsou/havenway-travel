@@ -7,7 +7,7 @@ import {
   Plus,
 } from "lucide-react";
 
-import activities from "../../data/activities";
+import { getHotelActivities } from "../../data/activities";
 
 import { formatDate } from "../../utils/dates";
 
@@ -15,12 +15,15 @@ import "./Activities.css";
 
 
 function Activities({
+  hotel,
   travellers = 1,
   startDate,
   endDate,
   selectedActivities = [],
   onSelectActivities,
 }) {
+
+  const activityList = getHotelActivities(hotel?.id);
 
   const dateRange = startDate && endDate
     ? `${formatDate(startDate)} – ${formatDate(endDate)}`
@@ -64,7 +67,7 @@ function Activities({
 
           <div>
             <span className="section-eyebrow">
-              Explore Los Angeles
+              Explore {hotel?.name ? hotel.name : "Chico"}
             </span>
 
             <h2>
@@ -73,14 +76,14 @@ function Activities({
 
             <p>
               Top activities and experiences in
-              Los Angeles · {dateRange}
+              {hotel?.name ? ` ${hotel.name}` : " Chico"} · {dateRange}
             </p>
           </div>
 
           <div className="activity-badge">
             <Ticket size={18} />
 
-            {activities.length} experiences
+            {activityList.length} experiences
           </div>
 
         </div>
@@ -88,7 +91,7 @@ function Activities({
 
         <div className="activity-list">
 
-          {activities.map((activity) => {
+          {activityList.map((activity) => {
 
             const total =
               activity.pricePerPerson *

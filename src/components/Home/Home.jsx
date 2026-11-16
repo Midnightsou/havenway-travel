@@ -41,7 +41,7 @@ function Home({
 
             <p>
               Discover your stay, plan your trip,
-              and experience Washington with Havenway.
+              and explore destinations with Havenway.
             </p>
 
           </div>
@@ -68,8 +68,7 @@ function Home({
             </h2>
 
             <p>
-              Choose a comfortable stay for your
-              Washington journey.
+              Choose a comfortable stay for your next journey.
             </p>
 
           </div>

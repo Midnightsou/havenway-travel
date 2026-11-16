@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import {
   Plane,
   ArrowRight,
@@ -9,7 +7,7 @@ import {
   Check,
 } from "lucide-react";
 
-import flights from "../../data/flight";
+import flights, { chicoAirport } from "../../data/flight";
 
 import { formatDate } from "../../utils/dates";
 
@@ -291,6 +289,7 @@ function FlightCard({
 
 
 function FlightPlan({
+  hotel,
   travellers = 1,
   startDate,
   endDate,
@@ -298,13 +297,15 @@ function FlightPlan({
   onSelectFlight,
 }) {
 
-  const flightOptions = Object.entries(
-    flights
+  const isChicoTrip = hotel?.airportCode === chicoAirport.code;
+  const flightOptions = Object.entries(flights).filter(([id]) =>
+    isChicoTrip
+      ? id.startsWith("chico-")
+      : !id.startsWith("chico-")
   );
 
-
   const selectedPlan =
-    flights[selectedFlight] || null;
+    flightOptions.find(([id]) => id === selectedFlight)?.[1] || null;
 
 
   const flightTotal = selectedPlan
@@ -340,14 +341,16 @@ function FlightPlan({
             </span>
 
             <h2>
-              Choose your flight (non-refundable)
+              {isChicoTrip
+                ? "Choose an airline fare for Chico"
+                : "Choose your flight (non-refundable)"}
             </h2>
 
             <p>
-              Los Angeles to Washington ·{" "}
-              {dateRange}
+              {isChicoTrip
+                  ? `Los Angeles International Airport (LAX) to ${chicoAirport.name} (CIC) · ${dateRange}`
+                : `Los Angeles to Washington · ${dateRange}`}
             </p>
-
           </div>
 
 
@@ -437,6 +440,8 @@ function FlightPlan({
                   ? formatDate(startDate)
                   : ""
               }
+              selected
+              onSelect={() => onSelectFlight(selectedFlight)}
             />
 
             <FlightCard
@@ -446,6 +451,8 @@ function FlightPlan({
                   ? formatDate(endDate)
                   : ""
               }
+              selected
+              onSelect={() => onSelectFlight(selectedFlight)}
             />
 
           </div>

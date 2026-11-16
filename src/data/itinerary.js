@@ -118,6 +118,9 @@ export function generateItinerary(
   const returning =
     selectedFlightPlan?.return;
 
+  const isChicoTrip =
+    selectedHotel?.airportCode === "CIC";
+
   const isFlexible =
     Boolean(selectedFlightPlan?.flexible);
 
@@ -228,6 +231,18 @@ export function generateItinerary(
     const template = savedTemplate || itineraryTemplateDefaults[templateKey];
     const events = template.events.map((event) => ({ ...event }));
     const defaultEvents = itineraryTemplateDefaults[templateKey].events;
+    const chicoDayTitles = {
+      arrival: "Travel to Chico",
+      explore: "Explore Chico",
+      freeDay: "Free day in Chico",
+      departure: "Return to Los Angeles",
+    };
+    const title =
+      isChicoTrip &&
+      (!savedTemplate ||
+        template.title === itineraryTemplateDefaults[templateKey].title)
+        ? chicoDayTitles[templateKey]
+        : template.title;
     const applyDynamicValues = (eventId, values) => {
       const event = events.find((item) => item.id === eventId);
       const original = defaultEvents.find((item) => item.id === eventId);
@@ -243,11 +258,13 @@ export function generateItinerary(
     if (templateKey === "arrival") {
       if (outbound) {
         applyDynamicValues("flight-out", {
+          title: `Depart ${outbound.from?.city || "your origin"}`,
           time: outbound.from?.time,
           description: `Depart ${outbound.from.airportName} (${outbound.from.airport}) for ${outbound.to.airportName} (${outbound.to.airport}).`,
           details: `${outbound.airline} · ${outbound.flightNumber}`,
         });
         applyDynamicValues("arrival", {
+          title: `Arrive in ${outbound.to?.city || "your destination"}`,
           time: outbound.to?.time,
           description: `Arrive at ${outbound.to.airportName} (${outbound.to.airport}).`,
         });
@@ -271,14 +288,39 @@ export function generateItinerary(
       }
     }
 
+    if (isChicoTrip && templateKey === "explore") {
+      applyDynamicValues("morning-la", {
+        title: "Explore Chico",
+        description:
+          "Spend the day exploring Chico's local attractions, downtown, or nearby trails.",
+        details: "Chico, California",
+      });
+      applyDynamicValues("evening-la", {
+        description:
+          "Relax, explore nearby restaurants, or enjoy Chico at your own pace.",
+        details: "Chico, California",
+      });
+    }
+
+    if (isChicoTrip && templateKey === "freeDay") {
+      applyDynamicValues("free-day", {
+        title: "Enjoy Chico",
+        description:
+          "A full day to explore Chico, visit local attractions, or relax at your own pace.",
+        details: "Chico, California",
+      });
+    }
+
     if (templateKey === "departure") {
       if (returning) {
         applyDynamicValues("return-flight", {
+          title: `Depart ${returning.from?.city || "your destination"}`,
           time: returning.from?.time,
           description: `Depart ${returning.from.airportName} (${returning.from.airport}) for ${returning.to.airportName} (${returning.to.airport}).`,
           details: `${returning.airline} · ${returning.flightNumber}`,
         });
         applyDynamicValues("arrive-los-angeles", {
+          title: `Arrive in ${returning.to?.city || "your origin"}`,
           time: returning.to?.time,
           description: `Arrive at ${returning.to.airportName} (${returning.to.airport}).`,
         });
@@ -304,7 +346,7 @@ export function generateItinerary(
       fullDate:
         formatFullDate(currentDate),
 
-      title: template.title,
+      title,
 
       events: events.map((event, eventIndex) => ({
         ...event,

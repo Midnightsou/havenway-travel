@@ -1,15 +1,14 @@
 import {
-  Search,
   Plane,
   Hotel,
   CalendarDays,
   ReceiptText,
+  Compass,
 } from "lucide-react";
 
 import "./MobileNav.css";
 
 function MobileNav({
-  activeTab,
   onNavigate,
 }) {
   const navItems = [
@@ -25,6 +24,12 @@ function MobileNav({
       icon: Hotel,
       tab: "Stays",
       target: "rooms",
+    },
+    {
+      label: "Activities",
+      icon: Compass,
+      tab: "Things to do",
+      target: null,
     },
     {
       label: "Plan",

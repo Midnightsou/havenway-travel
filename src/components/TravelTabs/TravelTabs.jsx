@@ -2,8 +2,7 @@ import {
   BedDouble,
   Plane,
   Car,
-  Package,
-  MapPin,
+  Compass,
 } from "lucide-react";
 
 import "./TravelTabs.css";
@@ -25,6 +24,10 @@ function TravelTabs({
     {
       name: "Cars",
       icon: Car,
+    },
+    {
+      name: "Things to do",
+      icon: Compass,
     },
 
   ];

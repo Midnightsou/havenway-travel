@@ -9,6 +9,17 @@ const ITINERARY_TEMPLATES_KEY = "itinerary_templates";
 const ITINERARY_TEMPLATE_KEYS = ["arrival", "explore", "freeDay", "departure"];
 const ITINERARY_EVENT_TYPES = ["flight", "arrival", "hotel", "activity", "free"];
 
+function getActivitySeedId(activityId) {
+  const numericId = Number(activityId);
+  if (Number.isSafeInteger(numericId) && numericId > 0) return numericId;
+
+  let hash = 0;
+  for (const character of String(activityId)) {
+    hash = (hash * 31 + character.charCodeAt(0)) % 1_000_000_000;
+  }
+  return hash + 1_000_000_000;
+}
+
 function requireAdmin(req, res, next) {
   const auth = req.headers["authorization"];
   const token = process.env.ADMIN_TOKEN || "Admin123";
@@ -261,6 +272,9 @@ router.get("/catalog", async (req, res) => {
         flights,
         hotels: hotelResult.data.map((hotel) => ({
           ...hotel,
+          airportCode: hotel.airport_code,
+          airportName: hotel.airport_name,
+          airportLocation: hotel.airport_location,
           ratingLabel: hotel.rating_label,
           reviewCount: hotel.review_count,
           longDescription: hotel.long_description,
@@ -279,6 +293,8 @@ router.get("/catalog", async (req, res) => {
         })),
         activities: activityResult.data.map((activity) => ({
           ...activity,
+          id: activity.source_id || activity.id,
+          hotelId: activity.hotel_id,
           pricePerPerson: activity.price_per_person,
         })),
         packages: packageResult.data.map((pkg) => ({
@@ -324,6 +340,9 @@ router.post("/seed", requireAdmin, async (req, res) => {
           id: String(hotel.id),
           name: hotel.name,
           location: hotel.location,
+          airport_code: hotel.airportCode,
+          airport_name: hotel.airportName,
+          airport_location: hotel.airportLocation,
           rating: hotel.rating,
           rating_label: hotel.ratingLabel,
           review_count: hotel.reviewCount,
@@ -369,7 +388,9 @@ router.post("/seed", requireAdmin, async (req, res) => {
       {
         table: "admin_activities",
         rows: activitiesModule.default.map((activity) => ({
-          id: Number(activity.id),
+          id: getActivitySeedId(activity.id),
+          source_id: String(activity.id),
+          hotel_id: activity.hotelId || null,
           name: activity.name,
           location: activity.location,
           duration: activity.duration,

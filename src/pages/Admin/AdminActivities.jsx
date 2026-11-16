@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
-import { MapPin, Plus, Trash2, Save, Edit2 } from "lucide-react";
+import { Plus, Trash2, Save, Edit2 } from "lucide-react";
 import { API_BASE_URL } from "../../utils/api";
 import { notifyCatalogUpdated } from "../../data/catalogStore";
+import hotels from "../../data/hotel";
 
 export default function AdminActivities({ headers }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ name: "", location: "", duration: "", price_per_person: "", rating: "", reviews: "", description: "", includes: [] });
+  const [form, setForm] = useState({ hotel_id: "", name: "", location: "", duration: "", price_per_person: "", rating: "", reviews: "", description: "", includes: [] });
 
   const load = () => {
     fetch(`${API_BASE_URL}/api/admin/activities`, { headers })
@@ -15,10 +16,10 @@ export default function AdminActivities({ headers }) {
   };
   useEffect(() => { load(); }, [headers]);
 
-  const handleCreate = () => { setEditing("new"); setForm({ name: "", location: "", duration: "", price_per_person: "", rating: "", reviews: "", description: "", includes: [] }); };
-  const handleEdit = (item) => { setEditing(item.id); setForm({ ...item }); };
+  const handleCreate = () => { setEditing("new"); setForm({ hotel_id: hotels[0]?.id || "", name: "", location: "", duration: "", price_per_person: "", rating: "", reviews: "", description: "", includes: [] }); };
+  const handleEdit = (item) => { setEditing(item.id); setForm({ ...item, hotel_id: item.hotel_id || "" }); };
   const handleSave = async () => {
-    const body = { ...form, includes: Array.isArray(form.includes) ? form.includes : form.includes.split(",").map(s=>s.trim()).filter(Boolean) };
+    const body = { ...form, hotel_id: form.hotel_id || null, includes: Array.isArray(form.includes) ? form.includes : form.includes.split(",").map(s=>s.trim()).filter(Boolean) };
     const url = editing === "new" ? `${API_BASE_URL}/api/admin/activities` : `${API_BASE_URL}/api/admin/activities/${editing}`;
     const method = editing === "new" ? "POST" : "PUT";
     const res = await fetch(url, { method, headers, body: JSON.stringify(body) });
@@ -38,6 +39,7 @@ export default function AdminActivities({ headers }) {
       {editing !== null && (
         <div className="admin-form" style={{ marginBottom: 24 }}>
           <h2>{editing === "new" ? "Add Activity" : "Edit Activity"}</h2>
+          <div className="admin-field"><label>Hotel</label><select value={form.hotel_id} onChange={(e) => setForm({ ...form, hotel_id: e.target.value })}><option value="">All hotels</option>{hotels.map((hotel) => <option key={hotel.id} value={hotel.id}>{hotel.name}</option>)}</select></div>
           <div className="admin-field"><label>Name</label><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
           <div className="admin-field"><label>Location</label><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} /></div>
           <div className="admin-field"><label>Duration</label><input value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} /></div>
@@ -55,11 +57,11 @@ export default function AdminActivities({ headers }) {
 
       <div className="admin-table-wrap">
         <table className="admin-table">
-          <thead><tr><th>Name</th><th>Location</th><th>Duration</th><th>Price/Person</th><th>Rating</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Name</th><th>Hotel</th><th>Location</th><th>Duration</th><th>Price/Person</th><th>Rating</th><th>Actions</th></tr></thead>
           <tbody>
             {items.map((a) => (
               <tr key={a.id}>
-                <td><strong>{a.name}</strong></td><td>{a.location}</td><td>{a.duration}</td><td>${a.price_per_person}</td><td>{a.rating}</td>
+                <td><strong>{a.name}</strong></td><td>{hotels.find((hotel) => String(hotel.id) === String(a.hotel_id))?.name || "All hotels"}</td><td>{a.location}</td><td>{a.duration}</td><td>${a.price_per_person}</td><td>{a.rating}</td>
                 <td>
                   <button className="admin-btn admin-btn-secondary" style={{ padding: "6px 10px", fontSize: "12px" }} onClick={() => handleEdit(a)}><Edit2 size={14} /> Edit</button>
                   <button className="admin-btn admin-btn-danger" onClick={() => handleDelete(a.id)}><Trash2 size={14} /></button>

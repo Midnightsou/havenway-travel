@@ -37,7 +37,7 @@ import hotels from "./data/hotel";
 import rooms from "./data/rooms";
 import cars from "./data/cars";
 import flights from "./data/flight";
-import activities from "./data/activities";
+import activities, { getHotelActivities } from "./data/activities";
 
 import {
   generateItinerary,
@@ -302,6 +302,8 @@ function AppRoutes() {
       setActiveTab("Flights");
     } else if (location.pathname === "/cars") {
       setActiveTab("Cars");
+    } else if (location.pathname === "/activities") {
+      setActiveTab("Things to do");
     }
   }, [location.pathname]);
 
@@ -357,6 +359,7 @@ function AppRoutes() {
   const getRouteForTab = (tab) => {
     if (tab === "Flights") return "/flights";
     if (tab === "Cars") return "/cars";
+    if (tab === "Things to do") return "/activities";
     return "/stays";
   };
 
@@ -416,6 +419,12 @@ function AppRoutes() {
 
 
   const handleSelectHotel = (hotelId) => {
+    const previousHotel = hotels.find(
+      (hotel) => String(hotel.id) === String(selectedHotel)
+    );
+    const nextHotel = hotels.find(
+      (hotel) => String(hotel.id) === String(hotelId)
+    );
 
     // Change the hotel.
     setSelectedHotel(hotelId);
@@ -423,6 +432,17 @@ function AppRoutes() {
     // The previously selected room may belong
     // to the old hotel, so clear it.
     setSelectedRoom(null);
+
+    if (previousHotel?.airportCode !== nextHotel?.airportCode) {
+      setSelectedFlight(null);
+    }
+
+    const validActivityIds = new Set(
+      getHotelActivities(hotelId).map((activity) => String(activity.id))
+    );
+    setSelectedActivities((currentActivities) =>
+      currentActivities.filter((id) => validActivityIds.has(String(id)))
+    );
 
     navigate("/stays");
 
@@ -1336,6 +1356,18 @@ function AppRoutes() {
           <TravelPage
             activeTab="Cars"
             {...travelPageProps}
+          />
+        }
+      />
+
+      <Route
+        path="/activities"
+        element={
+          <TravelPage
+            activeTab="Things to do"
+            {...travelPageProps}
+            hotels={hotels}
+            selectedHotel={selectedHotel}
           />
         }
       />

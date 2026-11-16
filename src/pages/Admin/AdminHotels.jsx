@@ -13,7 +13,8 @@ export default function AdminHotels({ headers, onNavigate }) {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
-    name: "", location: "", rating: "", rating_label: "", review_count: "",
+    name: "", location: "", airport_code: "", airport_name: "", airport_location: "",
+    rating: "", rating_label: "", review_count: "",
     description: "", long_description: "", check_in: "", check_out: "",
     amenities: [], highlights: [], images: [],
   });
@@ -45,7 +46,8 @@ export default function AdminHotels({ headers, onNavigate }) {
 
   const handleCreate = () => {
     setEditing("new");
-    setForm({ name: "", location: "", rating: "", rating_label: "", review_count: "",
+    setForm({ name: "", location: "", airport_code: "", airport_name: "", airport_location: "",
+      rating: "", rating_label: "", review_count: "",
       description: "", long_description: "", check_in: "", check_out: "",
       amenities: [], highlights: [], images: [] });
   };
@@ -136,6 +138,18 @@ export default function AdminHotels({ headers, onNavigate }) {
           <div className="admin-field">
             <label>Location</label>
             <input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+          </div>
+          <div className="admin-field">
+            <label>Airport Code</label>
+            <input value={form.airport_code || ""} onChange={(e) => setForm({ ...form, airport_code: e.target.value.toUpperCase() })} />
+          </div>
+          <div className="admin-field">
+            <label>Airport Name</label>
+            <input value={form.airport_name || ""} onChange={(e) => setForm({ ...form, airport_name: e.target.value })} />
+          </div>
+          <div className="admin-field">
+            <label>Airport Location</label>
+            <input value={form.airport_location || ""} onChange={(e) => setForm({ ...form, airport_location: e.target.value })} />
           </div>
           <div className="admin-field">
             <label>Rating</label>

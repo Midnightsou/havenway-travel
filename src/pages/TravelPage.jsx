@@ -33,6 +33,10 @@ function TravelPage({
   onGoHome,
   onLegalNavigate,
 }) {
+  const activeHotel =
+    hotels?.find((hotel) => String(hotel.id) === String(selectedHotel)) ||
+    hotels?.[0];
+
   return (
     <>
       <Header
@@ -48,6 +52,7 @@ function TravelPage({
 
       <main>
         <SearchBar
+          hotel={activeHotel}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           travellers={travellers}
@@ -87,7 +92,6 @@ function TravelPage({
       />
 
       <MobileNav
-        activeTab={activeTab}
         onNavigate={onNavigate}
         onGoHome={onGoHome}
       />

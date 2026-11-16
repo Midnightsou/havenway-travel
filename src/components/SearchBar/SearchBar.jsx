@@ -3,7 +3,6 @@ import {
   MapPin,
   CalendarDays,
   Users,
-  Search,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -77,6 +76,7 @@ function differenceInDays(start, end) {
 }
 
 function SearchBar({
+  hotel,
   travellers,
   setTravellers,
   startDate,
@@ -334,7 +334,9 @@ function SearchBar({
               </span>
 
               <strong>
-                Los Angeles, California to washington, D.C.
+                {hotel
+                  ? `${hotel.location || hotel.name}${hotel.airportCode ? ` · ${hotel.airportCode}` : ""}`
+                  : "Choose a destination"}
               </strong>
 
             </div>
