@@ -2,6 +2,9 @@
 
 ## Local development
 
+Production deployments can run `npm start` after `npm run build`. The start
+script serves the built frontend on the port provided by the hosting platform.
+
 Run `node index.js` from `server/` and `npm run dev` from the project root
 in separate terminals. The Vite development server proxies `/api` requests
 to `http://127.0.0.1:5000`, so backend errors appear in the local server terminal.
