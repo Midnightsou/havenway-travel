@@ -16,8 +16,9 @@ change it. Copy the root `.env.example` to `server/.env` and set the Supabase
 credentials there; the server loads its environment from its working directory.
 Before using the catalog editor, run `server/schema.sql` in the Supabase SQL
 editor. This also creates the public `catalog-images` Storage bucket used for
-hotel, room, and car photos. Re-run the updated schema if your Supabase
-`admin_cars` table already existed so it gains the `images` column. In the admin dashboard, choose **Import current
+hotel, room, and car photos. Re-run the updated schema if the admin tables
+already existed so they gain newer catalog columns, including hotel airport
+details and activity hotel links. In the admin dashboard, choose **Import current
 listings** once to populate the editable hotel, room, flight, car, activity,
 and package catalog. After that, customer-facing pages load the saved catalog
 from the API. Hotel, room, and car photos can be selected from a phone or

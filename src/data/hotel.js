@@ -1,4 +1,4 @@
-import { chicoHotelImages } from "./chicoImages";
+import { chicoHotelImages } from "./chicoImages.js";
 
 const hotel = [
 
