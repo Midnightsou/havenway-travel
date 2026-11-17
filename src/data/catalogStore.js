@@ -93,6 +93,13 @@ function mergeChicoImages(item, starterImages) {
   return item;
 }
 
+function mergeChicoRoomImages(room, starterImages) {
+  const mergedRoom = mergeChicoImages(room, starterImages);
+  return Array.isArray(mergedRoom.images)
+    ? { ...mergedRoom, images: mergedRoom.images.slice(0, 3) }
+    : mergedRoom;
+}
+
 function mergeCarsWithStarterCatalog(savedCars) {
   const carsById = new Map(starterCars.map((car) => [String(car.id), car]));
   for (const car of savedCars) {
@@ -149,7 +156,7 @@ export function applyCatalog(catalog) {
       catalog.rooms.map((room) => {
         const starterRoom = starterChicoRooms.get(String(room.id));
         return starterRoom
-          ? mergeChicoImages(room, starterRoom.images)
+          ? mergeChicoRoomImages(room, starterRoom.images)
           : room;
       })
     );

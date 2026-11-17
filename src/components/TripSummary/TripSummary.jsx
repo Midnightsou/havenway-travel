@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import rooms from "../../data/rooms";
-import flights from "../../data/flight";
+import flights, { isChicoHotel } from "../../data/flight";
 import cars from "../../data/cars";
 import activities from "../../data/activities";
 import packages from "../../data/packages";
@@ -61,12 +61,16 @@ function TripSummary({
 
   const rentalDays = days;
 
-  const flightPlan = selectedFlight
+  const flightMatchesHotel =
+    selectedFlight &&
+    isChicoHotel(hotel) === String(selectedFlight).startsWith("chico-");
+  const flightPlan = flightMatchesHotel
     ? flights[selectedFlight]
     : null;
 
-  const flightTotal =
-    calculateFlightTotal(selectedFlight, travellers);
+  const flightTotal = flightPlan
+    ? calculateFlightTotal(selectedFlight, travellers)
+    : 0;
 
   const hotelTotal =
     calculateHotelTotal(selectedRoom, nights);

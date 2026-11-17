@@ -1,13 +1,9 @@
-import {
-  Menu,
-  User,
-} from "lucide-react";
-
 import "./Header.css";
 
 function Header({
   activeTab,
   onNavigate,
+  onGoHome,
 }) {
 
   const navItems = [
@@ -57,17 +53,8 @@ function Header({
 
         <div className="header-left">
           <button
-            className="icon-button menu-button"
-            aria-label="Open menu"
-          >
-            <Menu size={24} />
-          </button>
-
-          <button
             className="brand"
-            onClick={() =>
-              handleNavClick("Stays", null)
-            }
+            onClick={onGoHome}
           >
             Havenway
           </button>
@@ -94,18 +81,6 @@ function Header({
             ))}
 
           </nav>
-        </div>
-
-        <div className="header-right">
-
-
-          <button
-            className="icon-button user-button"
-            aria-label="Account"
-          >
-            <User size={21} />
-          </button>
-
         </div>
 
       </div>

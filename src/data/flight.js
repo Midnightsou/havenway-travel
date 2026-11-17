@@ -184,6 +184,10 @@ export const chicoAirport = {
   location: "150 Airpark Blvd, Chico, CA",
 };
 
+export const isChicoHotel = (hotel) =>
+  hotel?.airportCode === chicoAirport.code ||
+  /\bchico\b/i.test(`${hotel?.id || ""} ${hotel?.name || ""} ${hotel?.location || ""}`);
+
 export const chicoAirlineOptions = [
   {
     id: "frontier",

@@ -320,7 +320,7 @@ const oxfordImages = hotelRoomImageSets["oxford-suites-chico"];
 const doubletreeImages = hotelRoomImageSets["doubletree-by-hilton-chico"];
 const hamptonImages = hotelRoomImageSets["hampton-inn-suites-chico"];
 const heritageImages = hotelRoomImageSets["best-western-heritage-inn-chico"];
-const getChicoRoomImages = (_roomId, fallback) => fallback;
+const getChicoRoomImages = (_roomId, fallback) => fallback.slice(0, 3);
 
 const rooms = [
 

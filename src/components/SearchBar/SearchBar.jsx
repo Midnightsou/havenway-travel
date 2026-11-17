@@ -5,6 +5,7 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 
 import TravellerSelector from "../TravellerSelector/TravellerSelector";
@@ -83,6 +84,8 @@ function SearchBar({
   endDate,
   setStartDate,
   setEndDate,
+  hotels = [],
+  onSelectHotel,
 }) {
   /*
    * Normalize dates that may have been
@@ -99,6 +102,9 @@ function SearchBar({
   const [calendarOpen, setCalendarOpen] =
     useState(false);
 
+  const [destinationOpen, setDestinationOpen] =
+    useState(false);
+
   const [selectingReturn, setSelectingReturn] =
     useState(false);
 
@@ -109,6 +115,7 @@ function SearchBar({
     useState(new Date());
 
   const calendarRef = useRef(null);
+  const destinationRef = useRef(null);
 
   const today = startOfDay(new Date());
 
@@ -123,6 +130,12 @@ function SearchBar({
       ) {
         setCalendarOpen(false);
         setHoverDate(null);
+      }
+      if (
+        destinationRef.current &&
+        !destinationRef.current.contains(event.target)
+      ) {
+        setDestinationOpen(false);
       }
     }
 
@@ -321,26 +334,54 @@ function SearchBar({
 
           {/* DESTINATION */}
 
-          <button
-            type="button"
-            className="search-field location-field"
+          <div
+            className="search-destination-wrapper"
+            ref={destinationRef}
           >
-            <MapPin size={21} />
+            <button
+              type="button"
+              className="search-field location-field"
+              onClick={() => setDestinationOpen((open) => !open)}
+              aria-expanded={destinationOpen}
+              aria-haspopup="listbox"
+            >
+              <MapPin size={21} />
 
-            <div className="field-content">
+              <div className="field-content">
+                <span className="field-label">Destination</span>
+                <strong>
+                  {hotel
+                    ? `${hotel.location || hotel.name}${hotel.airportCode ? ` · ${hotel.airportCode}` : ""}`
+                    : "Choose a destination"}
+                </strong>
+              </div>
+              <ChevronDown size={18} aria-hidden="true" />
+            </button>
 
-              <span className="field-label">
-                Destination
-              </span>
-
-              <strong>
-                {hotel
-                  ? `${hotel.location || hotel.name}${hotel.airportCode ? ` · ${hotel.airportCode}` : ""}`
-                  : "Choose a destination"}
-              </strong>
-
-            </div>
-          </button>
+            {destinationOpen && (
+              <div className="destination-picker" role="listbox" aria-label="Available destinations">
+                {hotels.map((option) => (
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={String(option.id) === String(hotel?.id)}
+                    className="destination-option"
+                    key={option.id}
+                    onClick={() => {
+                      onSelectHotel?.(option.id);
+                      setDestinationOpen(false);
+                    }}
+                  >
+                    <strong>{option.name}</strong>
+                    <span>
+                      {option.location}
+                      {option.airportCode ? ` · ${option.airportCode}` : ""}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
 
           {/* DATES */}

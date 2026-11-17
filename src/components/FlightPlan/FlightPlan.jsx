@@ -7,7 +7,7 @@ import {
   Check,
 } from "lucide-react";
 
-import flights, { chicoAirport } from "../../data/flight";
+import flights, { chicoAirport, isChicoHotel } from "../../data/flight";
 
 import { formatDate } from "../../utils/dates";
 
@@ -297,7 +297,7 @@ function FlightPlan({
   onSelectFlight,
 }) {
 
-  const isChicoTrip = hotel?.airportCode === chicoAirport.code;
+  const isChicoTrip = isChicoHotel(hotel);
   const flightOptions = Object.entries(flights).filter(([id]) =>
     isChicoTrip
       ? id.startsWith("chico-")
@@ -348,7 +348,7 @@ function FlightPlan({
 
             <p>
               {isChicoTrip
-                  ? `Los Angeles International Airport (LAX) to ${chicoAirport.name} (CIC) · ${dateRange}`
+                  ? `Los Angeles International Airport (LAX) ⇄ ${chicoAirport.name} (CIC) · ${dateRange}`
                 : `Los Angeles to Washington · ${dateRange}`}
             </p>
           </div>

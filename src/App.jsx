@@ -36,7 +36,7 @@ import hotels from "./data/hotel";
 
 import rooms from "./data/rooms";
 import cars from "./data/cars";
-import flights from "./data/flight";
+import flights, { isChicoHotel } from "./data/flight";
 import activities, { getHotelActivities } from "./data/activities";
 
 import {
@@ -316,6 +316,20 @@ function AppRoutes() {
       setSelectedRoom(null);
     }
   }, [catalogRevision, selectedHotel]);
+
+  useEffect(() => {
+    if (!selectedHotel || !selectedFlight) return;
+
+    const hotel = hotels.find(
+      (item) => String(item.id) === String(selectedHotel)
+    );
+    if (!hotel) return;
+
+    const flightIsForChico = String(selectedFlight).startsWith("chico-");
+    if (isChicoHotel(hotel) !== flightIsForChico) {
+      setSelectedFlight(null);
+    }
+  }, [catalogRevision, selectedHotel, selectedFlight]);
 
 
   /*
@@ -961,7 +975,8 @@ function AppRoutes() {
      */
 
     const selectedFlightPlan =
-      selectedFlight
+      selectedFlight &&
+      isChicoHotel(hotel) === String(selectedFlight).startsWith("chico-")
         ? flights[selectedFlight]
         : null;
 
@@ -1270,6 +1285,7 @@ function AppRoutes() {
     selectedPackage,
     onSelectPackage: setSelectedPackage,
     selectedHotel,
+    onSelectHotel: handleSelectHotel,
     onContinue: handleContinueBooking,
     onNavigate: handleNavigate,
     onGoHome: handleGoHome,

@@ -10,7 +10,7 @@ const hotelIds = [
 
 const roomIds = [
   "diamond-standard-queen",
-  "diamond-premium-king",
+  "diamond-premium-king-bed",
   "diamond-standard-king",
   "diamond-two-full-beds",
   "diamond-premium-suite",

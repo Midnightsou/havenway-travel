@@ -18,6 +18,7 @@ function TravelPage({
   days,
   hotels,
   selectedHotel,
+  onSelectHotel,
   selectedRoom,
   onSelectRoom,
   selectedFlight,
@@ -53,6 +54,8 @@ function TravelPage({
       <main>
         <SearchBar
           hotel={activeHotel}
+          hotels={hotels}
+          onSelectHotel={onSelectHotel}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           travellers={travellers}
