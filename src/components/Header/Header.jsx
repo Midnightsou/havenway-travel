@@ -1,7 +1,6 @@
 import {
   Menu,
   User,
-  Shield,
 } from "lucide-react";
 
 import "./Header.css";
@@ -105,16 +104,6 @@ function Header({
             aria-label="Account"
           >
             <User size={21} />
-          </button>
-
-          <button
-            className="icon-button admin-button"
-            aria-label="Admin"
-            onClick={() => {
-              window.location.href = "/admin";
-            }}
-          >
-            <Shield size={21} />
           </button>
 
         </div>
