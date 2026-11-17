@@ -62,12 +62,9 @@ const PAYMENT_SESSION_VERSION = 1;
 function preserveSelectedDate(value) {
   if (!value) return null;
 
-  // Already a plain date string
-  if (
-    typeof value === "string" &&
-    /^\d{4}-\d{2}-\d{2}$/.test(value)
-  ) {
-    return value;
+  if (typeof value === "string") {
+    const dateOnly = value.match(/^(\d{4}-\d{2}-\d{2})(?:$|T)/);
+    if (dateOnly) return dateOnly[1];
   }
 
   // If it's a Date object, read exactly what the

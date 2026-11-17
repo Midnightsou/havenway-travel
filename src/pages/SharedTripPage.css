@@ -269,6 +269,16 @@
   border-top: 1px solid #e7ebf0;
 }
 
+.shared-flight-transfer-note {
+  margin: -8px 0 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f5f7fa;
+  color: #596579;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .shared-flight-leg:last-child {
   border-bottom: 1px solid #e7ebf0;
 }
@@ -491,6 +501,46 @@
   color: #596579;
   font-size: 12px;
   font-weight: 700;
+}
+
+.shared-activity-list {
+  display: grid;
+  gap: 14px;
+}
+
+.shared-activity-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #e7ebf0;
+}
+
+.shared-activity-item h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 15px;
+}
+
+.shared-activity-item span {
+  display: block;
+  margin-top: 5px;
+  color: #737d8d;
+  font-size: 12px;
+}
+
+.shared-activity-item p {
+  margin: 8px 0 0;
+  color: #596579;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.shared-activity-item > strong {
+  color: #172033;
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 

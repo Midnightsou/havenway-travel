@@ -18,7 +18,9 @@ import {
   Hotel,
   MapPin,
   Plane,
+  Package,
   ShieldCheck,
+  Ticket,
   Users,
   AlertCircle,
   Briefcase,
@@ -28,6 +30,8 @@ import hotels from "../data/hotel";
 import rooms from "../data/rooms";
 import flights from "../data/flight";
 import cars from "../data/cars";
+import activities from "../data/activities";
+import packages from "../data/packages";
 
 import Itinerary from "../components/Itinerary/Itinerary";
 
@@ -39,6 +43,8 @@ import {
   calculateFlightTotal,
   calculateHotelTotal,
   calculateCarTotal,
+  calculateActivitiesTotal,
+  calculatePackageTotal,
 } from "../utils/pricing";
 
 import "./SharedTripPage.css";
@@ -163,11 +169,28 @@ function SharedTripPage({
         )
       : null;
 
+    const activityIds = Array.isArray(trip.activityIds)
+      ? trip.activityIds
+      : [];
+    const activityItems = activityIds
+      .map((id) =>
+        activities.find((item) => String(item.id) === String(id))
+      )
+      .filter(Boolean);
+
+    const pkg = trip.packageId
+      ? packages.find(
+          (item) => String(item.id) === String(trip.packageId)
+        )
+      : null;
+
     return {
       hotel,
       room,
       flight,
       car,
+      activityItems,
+      pkg,
     };
   })();
 
@@ -177,6 +200,8 @@ function SharedTripPage({
         flightTotal: 0,
         hotelTotal: 0,
         carTotal: 0,
+        activityTotal: 0,
+        packageDiscount: 0,
         tripTotal: 0,
       };
     }
@@ -211,15 +236,30 @@ function SharedTripPage({
           )
         : 0;
 
+    const activityTotal = calculateActivitiesTotal(
+      Array.isArray(trip.activityIds) ? trip.activityIds : [],
+      trip.travellers || 1
+    );
+
+    const packageDiscount = calculatePackageTotal(
+      trip.packageId,
+      trip.travellers || 1,
+      trip.nights || 0
+    );
+
     return {
       flightTotal,
       hotelTotal,
       carTotal,
+      activityTotal,
+      packageDiscount,
 
       tripTotal:
         flightTotal +
         hotelTotal +
-        carTotal,
+        carTotal +
+        activityTotal -
+        packageDiscount,
     };
   })();
 
@@ -315,12 +355,16 @@ function SharedTripPage({
     room,
     flight,
     car,
+    activityItems,
+    pkg,
   } = resolved;
 
   const {
     flightTotal,
     hotelTotal,
     carTotal,
+    activityTotal,
+    packageDiscount,
     tripTotal,
   } = totals;
 
@@ -346,7 +390,9 @@ function SharedTripPage({
   const totalSelections =
     Number(Boolean(flight)) +
     Number(Boolean(room || hotel)) +
-    Number(Boolean(car));
+    Number(Boolean(car)) +
+    activityItems.length +
+    Number(Boolean(pkg));
 
   return (
     <div className="shared-trip-page">
@@ -495,8 +541,13 @@ function SharedTripPage({
                       ${flightTotal.toLocaleString()}
                     </strong>
                   </div>
-
                 </div>
+
+                {flight.groundTransferNote && (
+                  <p className="shared-flight-transfer-note">
+                    {flight.groundTransferNote}
+                  </p>
+                )}
 
                 <div className="shared-flight-leg">
 
@@ -856,6 +907,71 @@ function SharedTripPage({
               </section>
             )}
 
+            {activityItems.length > 0 && (
+              <section className="shared-trip-card">
+                <div className="shared-trip-card-heading">
+                  <div className="shared-trip-card-icon">
+                    <Ticket size={22} />
+                  </div>
+                  <div>
+                    <span>SELECTED ACTIVITIES</span>
+                    <h2>
+                      {activityItems.length}{" "}
+                      {activityItems.length === 1
+                        ? "experience"
+                        : "experiences"}
+                    </h2>
+                  </div>
+                  <div className="shared-trip-card-price">
+                    <span>Activities total</span>
+                    <strong>${activityTotal.toLocaleString()}</strong>
+                  </div>
+                </div>
+
+                <div className="shared-activity-list">
+                  {activityItems.map((activity) => (
+                    <article
+                      className="shared-activity-item"
+                      key={activity.id}
+                    >
+                      <div>
+                        <h3>{activity.name}</h3>
+                        <span>
+                          {activity.location}
+                          {activity.duration
+                            ? ` · ${activity.duration}`
+                            : ""}
+                        </span>
+                        {activity.description && <p>{activity.description}</p>}
+                      </div>
+                      <strong>
+                        ${(activity.pricePerPerson * travellers).toLocaleString()}
+                      </strong>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {pkg && (
+              <section className="shared-trip-card">
+                <div className="shared-trip-card-heading">
+                  <div className="shared-trip-card-icon">
+                    <Package size={22} />
+                  </div>
+                  <div>
+                    <span>SELECTED PACKAGE</span>
+                    <h2>{pkg.name}</h2>
+                    {pkg.description && <p>{pkg.description}</p>}
+                  </div>
+                  <div className="shared-trip-card-price">
+                    <span>Package savings</span>
+                    <strong>${packageDiscount.toLocaleString()}</strong>
+                  </div>
+                </div>
+              </section>
+            )}
+
           {trip.startDate && trip.endDate && (
             <Itinerary
               startDate={trip.startDate}
@@ -999,6 +1115,36 @@ function SharedTripPage({
                     ${carTotal.toLocaleString()}
                   </div>
 
+                </div>
+              )}
+
+              {activityItems.length > 0 && (
+                <div className="shared-trip-summary-section">
+                  <div className="shared-trip-summary-title">
+                    <Ticket size={17} />
+                    <span>Activities</span>
+                  </div>
+                  {activityItems.map((activity) => (
+                    <small key={activity.id}>
+                      {activity.name}
+                    </small>
+                  ))}
+                  <div className="shared-trip-summary-price">
+                    ${activityTotal.toLocaleString()}
+                  </div>
+                </div>
+              )}
+
+              {pkg && (
+                <div className="shared-trip-summary-section">
+                  <div className="shared-trip-summary-title">
+                    <Package size={17} />
+                    <span>Package</span>
+                  </div>
+                  <strong>{pkg.name}</strong>
+                  <small>
+                    ${packageDiscount.toLocaleString()} savings
+                  </small>
                 </div>
               )}
 
